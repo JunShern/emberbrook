@@ -277,6 +277,42 @@ git runs here, on branch `migration/3d-hybrid`.
   `mesh/grid/screen/weave` 0 in both arms (so the new canvas does not read as a screen door);
   quay-west darkness 4 → 1, lockfive 5 → 3 as indirect lift. **deep-stairs 4 → 7 with darkness
   0 → 3 is recorded UNEXPLAINED, not as noise** — the fix aimed there made its subject BRIGHTER.
+- **A SURVIVOR COUNT IS NOT A JUDGE-LANGUAGE COUNT, AND AT N=3 IT IS A COIN FLIP** (2026-08-10,
+  round 12 — the most important methodological finding in this loop). Round 11 reported
+  deep-stairs going **4 → 7 survivors with darkness 0 → 3** and honestly recorded it UNEXPLAINED.
+  Re-judged at **N=10 on both arms**: the RAW PER-LOOK rate is flat — findings 3.00±0.47 → 2.80±
+  0.42, darkness 1.50 → 1.60, cave/void 0.40 → 0.30, floating 0.80 → 0.80. The survivor count did
+  move (30 → 20) **and ALL of it is STAGE 2** (0/30 refuted before, 7/27 after). **A SURVIVOR
+  COUNT IS THE JUDGE'S FIRST LOOK CONVOLVED WITH THE REFUTER'S SECOND**, so it moves when either
+  stage does. Bootstrapping N=3 out of those twenty looks says "after worse" on darkness **43.0%
+  of the time** — round 11 drew one. **REPORT RAW PER-LOOK RATES FOR A PER-CAMERA CLAIM, AND
+  NEVER CARRY ONE AT N=3.**
+- **NO GLOBAL AMBIENT PARAMETER REACHES DELLHOLLOW'S NEAR-FIELD SHADOW FLOOR** (round 12, four
+  absurd-limit controls, near <25 m split from far >60 m). `diffuse_bounces` **4 → 32 is identical
+  to every printed digit** — transport is dead here. Zeroing ALL 23 FILL/CLIFF_BOUNCE lights costs
+  **0.4 levels** of near p05. The sky looked like a one-number win and is a **FAR-FIELD** lever
+  (lockfive far L +90% against near +11%) that milks the haze — **and p95, blown-pixel count and
+  chroma were all blind to it**. **EVERY GLOBAL AMBIENT TERM TOGETHER IS WORTH ~2 LEVELS OF 255 IN
+  THE NEAR FIELD.** The shadow floor (crushed 7.38-22.08%, `lf_shingle` 83.6 lit vs 2.5 shadowed)
+  is real and the answer is LOCAL SOURCES — which is what the night-grade doctrine said all along:
+  adding a source moves this town, adjusting one never has.
+- **tools/dh_clump_kit.py — THE THIRD FOLIAGE GRAMMAR HAD A DONOR IN THE MASTER ALL ALONG**
+  (round 12). What round 11 saw as "15 meshes on north-landing" is **89 meshes on ELEVEN cameras**:
+  `veg_nl_clump_*` (15) and `veg_wv_clump_*` (74) are the same three 9-sided tapered drums on
+  `lf_matte`, emitted by two functions of one file. **"There is no kit to copy" was FALSE** —
+  `v10_src_clump_a`/`_b` sit `hide_render` in the master at uv area **1.00000/face**, round 10's
+  own number, and 63 healthy in-town clumps already wear those signatures. So round 11's rim
+  clumps (41 meshes, 5.24% of cottage), declined as "authoring not carrying", shipped in the same
+  run as a COPY. **130 meshes carried; 171 primitives verified in BOTH bundles.** Judge: vegetation
+  0.90 → **0.00**, north-landing 0.70 → 0.00, **not one mention of a cone or lozenge in the after
+  arm** — and I looked: the cliff now carries leafy clumps where it carried smooth pale blobs.
+  **SIZE BY THE SUBJECT, NOT THE MATERIAL**: `lf_matte` is 14.85% of lockfive but most of that is
+  barges and bunting, so sizing by material would have been **6x too big**.
+  Also measured and asserted by the carrier: **`mat_leaf_green` and `mat_leaf_autumn` are IDENTICAL
+  node trees** (17 nodes, 18 links) and the autumn tint ramp drives nothing.
+  **AND CROSSING'S FOUR-ROUND "UNTEXTURED GREY POLYGON CLIPPING THROUGH THE WALKWAY" IS 78.5%
+  `qm_awning_0` AT 5.3 m** — the awning, named on the GEOMETRY for the first time. Rounds 8-11
+  treated it as relief, then value, then texture; **it is a silhouette/contact defect.**
 - **A CONTROL THAT DRIVES THE LEVER TO ITS ABSURD LIMIT IS WORTH MORE THAN THREE RUNGS OF IT**
   (2026-08-09, round 9; tools/qm_canvas_value.py, tools/dh_stair_stringer.py). Round 8 left the
   awning canvas's VALUE as its one unclosed judge verdict ("untextured", "white"). The frame's own
