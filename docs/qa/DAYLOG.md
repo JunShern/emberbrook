@@ -24047,3 +24047,63 @@ can now see what it is describing. The count this round set out to move is 8 -> 
     progress check is the ARTIFACT's mtime, never the queue's log.
   * A foreground tool call with a timeout **kills the Blender it is waiting on**. Two plate
     renders were lost that way. Launch long bakes detached and poll the artifact.
+
+## 2026-08-10 — ODESSA'S PINK RIM: PAINT, NOT MATTE, AND NO GATE IN THIS FAMILY SEES IT
+
+The user looked at the deployed site and found a visible magenta rim on `odessa/cutin-stern`
+(down the left edge of her coat, plus a patch at her left shoulder) and a milder one on
+`cutin-worried`. **Every gate passed both** — stern read halo +11.9, chroma_rim 0.00000,
+key_rim −0.00019, PASS.
+
+**SETTLED AS PAINT BY THE ONLY TRIAGE THAT SEPARATES THE TWO, AND THE INSTRUMENT IS THE
+MATTE ITSELF.** Run `matte_key` on the studio source and difference its own output against
+its own input at the firing pixels: **`out − src` is 0.0 at the MEDIAN AND at the 95th
+PERCENTILE, at thresholds (R+B)/2−G > 30, 50 and 70, on all five of her plates.** The matte
+is a NO-OP on every magenta pixel the eye can see. Those pixels sit **135–210 levels from
+key0** (100% of them past 120, none inside 60), i.e. they are not the key colour at all —
+they are a soft magenta RIM LIGHT the model painted onto the coat, 15–30 px wide and
+*inside* the drawn outline. Cross-checked at 1:1 on the source: it is a gradient band on the
+leather, not a fringe on the cut. No matte arithmetic may touch it, and none did.
+
+**THE TWO LANES' READINGS RECONCILE ON A DATE, NOT A MECHANISM.** The shipping lane's
+"painted spill, only 27% within 3 px of the cut" and the deploy lane's "the two new plates
+differ sharply from three siblings matted in the same session" are both true: the mattes are
+all from 2026-08-09, but the DRAWINGS are not — `grave` and `warm` were re-rolled that
+evening under the new `extra` clause, while `stern`/`worried`/`rest` are the 2026-08-02
+batch. Same pipeline, different rolls. Within the old batch it is roll variance: `rest` reads
+25 px above (R+B)/2−G > 50 and `stern` reads 2010.
+
+**WHY NO GATE CAUGHT IT, AND WHY `key_rim` STILL MUST NOT GATE.** Measured on all 122 shipped
+plates, four ways — absolute magenta count, shell-minus-core share at T = 40/56/72, mean
+shell-minus-core excess, and a wide-band (0–12 px) minus deep-interior (16–40 px) mean:
+**Vesper's ten plates outrank odessa/stern on every one of them.** stern: key_rim −0.00019,
+mg_shell_core +1.57, wide−deep +5.43, 2010 px. Vesper: key_rim 0.003–0.028, mg_shell_core
++10.2…+18.4, wide−deep +6.8…+13.6, 1573–3273 px. There is no bar in this family that refuses
+stern and passes the character the framing gate is calibrated on. A local-excess form (pixel
+minus its own 14 px opaque neighbourhood) narrows it to 1.6x at one threshold and INVERTS on
+odessa/worried, which sits below nine Vesper plates. **RECOMMENDATION: `key_rim` stays
+reported and ungated.**
+
+**WHAT DOES SEPARATE IS SHAPE, NOT AMOUNT: A RIM IS A LINE AND STRAND-TIP SPILL IS DOTS.**
+Largest 4-connected run of local-excess pixels, over the cast's top 20: **odessa/cutin-stern
+561 px spanning 121 px; every other plate 8–75 px spanning 4–25 px** (vesper/thinking, the
+worst of hers, is 75/23). 7.5x on run, 4.8x on span — the shape of a real threshold. It is
+NOT shipped as a gate: it rests on ONE labelled positive, it does not fire on odessa/worried
+(33 px), and `chroma_rim`'s own doctrine is that a bar comes from a population, not a plate.
+Banked as the candidate form if a labelled positive set ever exists.
+
+**OUTCOME: THE TWO MOODS ARE DROPPED.** The `extra` clause was extended to ban the key acting
+as a LIGHT (the global prompt already bans magenta TRIM, a second magenta OUTLINE and magenta
+in the HAIR — not this) and both plates were re-rolled once, $0.078. stern improved 5x and is
+STILL pink to the eye (2010 → 402 px, run 561 → 72); worried came back WORSE (295 → 351, run
+33 → 68) and off-grammar. Neither mood is scripted — her floor is `grave`+`warm` — so per the
+standing ruling that a pink rim on a named story character is worse than a smaller mood set,
+`stern` and `worried` are out of the manifest AND out of `cutins.spec.json`'s `moods`: leaving
+them in the spec would silently re-draw and re-promote the defect on the next full run,
+because **the gate passes them**. Odessa ships `rest`/`grave`/`warm`, all three byte-identical
+to their previous bytes (the re-mat is deterministic and the A/B says so), identity intact
+across the row — braided greying hair, cream cable-knit gansey, dark leather coat with the
+short cape sleeve, brass whistle on its cord. Cast **120/122 → 118/120** — the two dropped
+plates were PASSING plates, so the pass count falls by exactly two and **the failure count is
+unchanged at 2** (mochi/cutin, tally/cutin, both already banked as drawings and not pipeline).
+`dialogue_test` green; `cutin_edge --selftest` and `gen-cutin --selftest` both PASS.
