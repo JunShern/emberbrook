@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 1.0,
+   "exposure": 0.7799999713897705,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6499999761581421,
+   "sky": 0.6000000238418579,
    "sunEnergy": 0.75,
-   "moon": 3.75,
+   "moon": 2.0,
    "moonColor": [
     0.65,
     0.75,
@@ -39,11 +39,15 @@
    ],
    "moonZenithDeg": 50.0,
    "moonAzimuthDeg": 90.0,
-   "warmAnchorGlow": null,
+   "warmAnchorGlow": 0.35,
    "lampWatts": null,
-   "waystoneLanternW": null,
-   "waystoneLanternAt": null,
-   "waystoneLanternOn": null
+   "waystoneLanternW": 900.0,
+   "waystoneLanternAt": [
+    56.9,
+    -12.6,
+    2.0
+   ],
+   "waystoneLanternOn": "emb_dress_waystone_lanternglass"
   }
  },
  "cameras": [
@@ -90,8 +94,8 @@
    "spawnFrom": "walk_lm_arrival-clearing",
    "visibleFrac": 1.0,
    "probes": 40,
-   "baked": "2026-08-10T05:58:29Z",
-   "seconds": 272.3,
+   "baked": "2026-08-10T14:04:41Z",
+   "seconds": 314.0,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
@@ -123,14 +127,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    61.326,
-    -41.864,
-    20.188
+    61.32,
+    -41.833,
+    20.161
    ],
    "aim": [
     55.992,
     -11.617,
-    0.997
+    0.989
    ],
    "fov": 20,
    "clip": [
@@ -138,12 +142,12 @@
     1400
    ],
    "rtClip": [
-    9.3528,
-    85.088
+    9.3347,
+    84.97
    ],
    "depth": {
-    "near": 18.705631256103516,
-    "far": 53.1799430847168,
+    "near": 18.669353485107422,
+    "far": 53.10639190673828,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -153,15 +157,15 @@
     "depth": "cameras/waystone/depth.png"
    },
    "spawn": [
-    56.259,
-    -0.2,
-    10.609
+    56.363,
+    -0.184,
+    10.186
    ],
-   "spawnFrom": "walk_e_arrival-clearing__waystone_l6",
-   "visibleFrac": 0.8438,
+   "spawnFrom": "walk_pad_waystone",
+   "visibleFrac": 0.8594,
    "probes": 64,
-   "baked": "2026-08-10T05:58:29Z",
-   "seconds": 324.3,
+   "baked": "2026-08-10T17:18:27Z",
+   "seconds": 366.8,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
@@ -193,14 +197,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    49.117,
-    -32.75,
-    9.64
+    49.118,
+    -32.742,
+    9.637
    ],
    "aim": [
     56.542,
     9.359,
-    1.329
+    1.327
    ],
    "fov": 20,
    "clip": [
@@ -208,12 +212,12 @@
     1400
    ],
    "rtClip": [
-    11.0513,
-    281.564
+    11.047,
+    281.534
    ],
    "depth": {
-    "near": 22.10268783569336,
-    "far": 175.97772216796875,
+    "near": 22.094051361083984,
+    "far": 175.9585723876953,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -224,14 +228,14 @@
    },
    "spawn": [
     60,
-    0.07,
+    0.048,
     -8
    ],
    "spawnFrom": "walk_pad_road-gate",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-10T05:45:39Z",
-   "seconds": 397.1,
+   "baked": "2026-08-10T16:15:39Z",
+   "seconds": 466.3,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -296,8 +300,8 @@
    "spawnFrom": "walk_lm_orchard",
    "visibleFrac": 0.6,
    "probes": 10,
-   "baked": "2026-08-09T23:17:18Z",
-   "seconds": 491.7,
+   "baked": "2026-08-10T14:41:58Z",
+   "seconds": 488.2,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -362,8 +366,8 @@
    "spawnFrom": "walk_e_road-gate__square-plaza_l4",
    "visibleFrac": 0.5,
    "probes": 50,
-   "baked": "2026-08-10T07:11:52Z",
-   "seconds": 424.1,
+   "baked": "2026-08-10T14:51:17Z",
+   "seconds": 469.5,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -391,14 +395,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    69.66,
-    76.241,
-    31.105
+    69.676,
+    76.251,
+    31.125
    ],
    "aim": [
-    64.186,
-    45.193,
-    2.718
+    64.197,
+    45.177,
+    2.715
    ],
    "fov": 35,
    "clip": [
@@ -406,12 +410,12 @@
     1400
    ],
    "rtClip": [
-    11.7397,
-    114.56
+    11.7512,
+    114.638
    ],
    "depth": {
-    "near": 23.479480743408203,
-    "far": 71.60025787353516,
+    "near": 23.502399444580078,
+    "far": 71.64855194091797,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -426,10 +430,10 @@
     -45.8
    ],
    "spawnFrom": "walk_lm_square-plaza.032",
-   "visibleFrac": 0.7969,
+   "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-10T06:36:33Z",
-   "seconds": 447.2,
+   "baked": "2026-08-10T17:10:32Z",
+   "seconds": 520.1,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -457,14 +461,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    58.66,
-    46.62,
-    10.174
+    58.659,
+    46.619,
+    10.17
    ],
    "aim": [
     82.638,
     50.847,
-    2.263
+    2.258
    ],
    "fov": 35,
    "clip": [
@@ -472,12 +476,12 @@
     1400
    ],
    "rtClip": [
-    4.8788,
-    420.127
+    4.8742,
+    420.11
    ],
    "depth": {
-    "near": 9.75760269165039,
-    "far": 262.5794677734375,
+    "near": 9.748340606689453,
+    "far": 262.56890869140625,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -488,14 +492,14 @@
    },
    "spawn": [
     79.6,
-    1.22,
+    1.179,
     -47.9
    ],
    "spawnFrom": "walk_pad_pips-den",
    "visibleFrac": 0.3906,
    "probes": 64,
-   "baked": "2026-08-10T04:54:28Z",
-   "seconds": 437.9,
+   "baked": "2026-08-10T17:10:32Z",
+   "seconds": 547.5,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -523,14 +527,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    52.826,
-    23.427,
-    34.248
+    52.837,
+    23.395,
+    34.269
    ],
    "aim": [
     40.676,
     56.808,
-    3.367
+    3.359
    ],
    "fov": 20,
    "clip": [
@@ -538,12 +542,12 @@
     1400
    ],
    "rtClip": [
-    10.978,
-    97.614
+    10.9973,
+    97.679
    ],
    "depth": {
-    "near": 21.955934524536133,
-    "far": 61.00902557373047,
+    "near": 21.994611740112305,
+    "far": 61.049102783203125,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -554,14 +558,14 @@
    },
    "spawn": [
     41.111,
-    2.27,
+    2.204,
     -60.556
    ],
    "spawnFrom": "walk_pad_elder-house",
    "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-08-10T06:27:16Z",
-   "seconds": 744.7,
+   "baked": "2026-08-10T16:32:27Z",
+   "seconds": 900.0,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -589,14 +593,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    101.17,
+    101.171,
     63.609,
-    42.301
+    42.3
    ],
    "aim": [
     65.595,
     69.882,
-    3.563
+    3.56
    ],
    "fov": 20,
    "clip": [
@@ -604,12 +608,12 @@
     1400
    ],
    "rtClip": [
-    16.9248,
-    105.81
+    17.0059,
+    105.806
    ],
    "depth": {
-    "near": 33.84968566894531,
-    "far": 66.13134765625,
+    "near": 34.01174545288086,
+    "far": 66.12863159179688,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -620,14 +624,14 @@
    },
    "spawn": [
     66.311,
-    2.47,
+    2.41,
     -71.416
    ],
    "spawnFrom": "walk_pad_barn",
    "visibleFrac": 0.5781,
    "probes": 64,
-   "baked": "2026-08-10T07:03:20Z",
-   "seconds": 704.2,
+   "baked": "2026-08-10T16:49:09Z",
+   "seconds": 891.6,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -692,8 +696,8 @@
    "spawnFrom": "walk_e_barn__gate-court_l11",
    "visibleFrac": 0.6875,
    "probes": 64,
-   "baked": "2026-08-10T06:11:56Z",
-   "seconds": 696.3,
+   "baked": "2026-08-10T15:40:02Z",
+   "seconds": 830.2,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
@@ -758,8 +762,8 @@
    "spawnFrom": "walk_lm_gate-court",
    "visibleFrac": 0.9833,
    "probes": 60,
-   "baked": "2026-08-09T22:49:48Z",
-   "seconds": 752.3,
+   "baked": "2026-08-10T15:40:02Z",
+   "seconds": 787.1,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
