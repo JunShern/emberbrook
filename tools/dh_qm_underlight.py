@@ -80,7 +80,26 @@ SUBJECT = "qm_stair_underworks"
 SHRINK = opt("--shrink", 3.0)
 CUTOFF = opt("--cutoff", 16.0)
 STANDOFF = opt("--standoff", 4.5)     # metres gorge-ward (+y) of the mass's own face
-N = opt("--n", 3)
+N = opt("--n", 4)
+WATT = opt("--watt", 0.0)             # 0 = keep the source's own shrunk wattage
+# THE RUN THIS FILLS THE GAP IN.  Round 12 measured round 11's dose at 2% of the
+# distance and named the cause: the cards were laid across the SUBJECT'S WHOLE BBOX
+# (x 35.33..60.01), so two of three landed at x >= 47 where the existing fill already
+# reaches.  Round 13 measured where the darkness actually is, by reconstructing world
+# XYZ from the shipped plate's own solved camera and depth and reading luminance
+# inside the subject's ray mask (241,891 plate px, 5.86% of deep-stairs):
+#
+#     x 35..37   59,155 px   L p50  6.7   64.5% at L<=8
+#     x 37..39  113,543 px   L p50 10.9   35.0%
+#     x 39..41   42,910 px   L p50 13.3   13.3%
+#     x 47..49      940 px   L p50 84.4    4.1%
+#     x 53..55   10,919 px   L p50 29.6    1.9%
+#
+# **215,608 px — 89.1% of the subject's visible pixels — are at x < 41, and everything
+# past x 47 is already lit.**  So the row is now clipped to the gap, and the gap's own
+# east edge is DERIVED FROM THE LIGHTS IN THE MASTER rather than typed: the westmost
+# card of the existing gorge-ward fill class.  Move that run and this row re-derives.
+RUN_PFX = ("KEYW_CLIFF_", "CLIFF_BOUNCE_wf_", "CLIFF_BOUNCE_lf_")
 
 # ------------------------------------------------------------------- revert ----
 old = [o for o in bpy.data.objects if o.name.startswith(PREFIX)]
@@ -107,9 +126,21 @@ z0, z1 = min(v.z for v in ws), max(v.z for v in ws)
 print("%s world bbox  x %.2f..%.2f  y %.2f..%.2f  z %.2f..%.2f"
       % (SUBJECT, x0, x1, y0, y1, z0, z1))
 
+run = [o for o in bpy.data.objects
+       if o.type == 'LIGHT' and o.name.startswith(RUN_PFX) and not o.name.startswith(PREFIX)]
+assert run, "no existing gorge-ward fill run found (%s) — the gap cannot be derived" % (RUN_PFX,)
+xrun = min(o.location.x for o in run)
+print("existing fill run: %d cards, westmost at x = %.2f" % (len(run), xrun))
+xe = min(x1, xrun)
+assert xe > x0 + 0.5, (
+    "the subject (x %.2f..%.2f) does not reach west of the existing run (x %.2f): "
+    "there is no gap to fill" % (x0, x1, xrun))
+print("GAP: x %.2f..%.2f  (%.1f%% of the subject's x span; the rest is already lit "
+      "by the run)" % (x0, xe, 100.0 * (xe - x0) / (x1 - x0)))
+
 cy = y1 + STANDOFF
 cz = z0 + (z1 - z0) * 0.55
-AT = [(x0 + (x1 - x0) * (i + 0.5) / N, cy, cz) for i in range(N)]
+AT = [(x0 + (xe - x0) * (i + 0.5) / N, cy, cz) for i in range(N)]
 for p in AT:
     print("   card at (%.2f, %.2f, %.2f)" % p)
 
@@ -130,7 +161,7 @@ for i, p in enumerate(AT):
     d = src.data.copy()
     d.size /= SHRINK
     d.size_y /= SHRINK
-    d.energy /= SHRINK * SHRINK
+    d.energy = WATT if WATT else (d.energy / (SHRINK * SHRINK))
     d.use_shadow = False                 # a faked card must not also cast
     d.use_custom_distance = True
     d.cutoff_distance = CUTOFF
