@@ -24486,3 +24486,83 @@ dead-level top edge to a panel cut to the roof rake with its 0.24 m board seams 
     the day before. A comparison started before the sweep finished would have silently diffed
     round 2 against somebody else's frames. Check the mtimes, or `rm -rf` the directory first —
     arm B's script does, arm A's did not.
+
+## 2026-08-10 — EMBERBROOK ROUND 2, THE RECEIPT: 97 → 87 survivors, geometry 37 → 28, and the residual named itself
+
+(Continues the round-2 entry above; that one was written before the bake.)
+
+### 10. THE VERDICT AS A LANGUAGE COUNT
+
+Re-judge over ALL ELEVEN plates — including the two the draft A/B refused, deliberately, so
+they act as a CONTROL on judge noise. Same judge, same modes, N=3, 66 calls
+(`docs/qa/redteam/run-20260810-emb-round2-after/`).
+
+    judge language over the survivors                 r1-after   r2-after
+    floating / clipping paving slab  (the target)          8          2
+    black void / tear / hole in the ground                10          6
+    untextured / flat / placeholder / blank                2          3
+    rim / staircase / jagged / blocky-step                 0          3
+    darkness / pitch-black / cannot see                   15         14
+    category geometry                                     37         28
+    category occlusion                                    13         18
+    survivors, total                                      94*        87    (*97 at r1-after)
+
+    plate       geometry      total     note
+    square      4 -> 1        19 ->  9  the "black void seams" are gone
+    arch        3 -> 3        14 ->  6  the pad's riser is gone; the ribbon still reads
+    homerow     4 -> 2         7 ->  8  THE GABLE IS NOT MENTIONED AT ALL
+    pondlane    8 -> 6        14 -> 17  all six remaining are the EMPTY-HOLE class
+    northlane   2 -> 1         4 ->  7
+    therise     5 -> 5         7 ->  9
+    orchard     1 -> 0         9 -> 10  NOT REBAKED (refused at 0.000%) — judge noise
+    gatefield   3 -> 3         7 ->  7  NOT REBAKED (refused at 0.005%) — see below
+
+**THE RESIDUAL NAMED ITSELF, AND IT IS THE ONE THIS ROUND MEASURED AND DID NOT FIX.** NINE of
+the 28 surviving geometry findings are the EMPTY-HOLE class — pondlane's five, gatefield's
+three, arch's F8. That is the 37.3 m2 measured in §4. **And `gatefield` is the clean
+confirmation that the refusal was right**: the draft A/B refused it at 0.005% of frame, so its
+plate is byte-identical to round 1's, and its three findings survive because the defect does.
+
+**THE HONEST COUNTER-MOVE: `waystone`'s three geometry findings now say "STEP gaps" and
+"step-like seams" where they used to say "floating".** That is correct, and it is the taper's
+own limit: seating the RIM removes the riser, and the two surfaces are still stacked
+65-78 mm apart in their INTERIORS. The heights have to be reconciled at source.
+
+### 11. AND THE PICTURE CAUGHT A DEFECT NO RECEIPT DID — TWICE IN ONE ROUND
+
+**THE GABLE'S RAKE IS A STAIRCASE AND NOTHING CAPPED IT.** The board tops step
+(RIDGE-EAVE)/(hd/2+OVER) x 0.24 = **0.119 m each**. On `homerow` that showed as a stepped rake
+with black gaps to the shingles; on `square` — where the mill is 26-39 m away and the gable is
+seen nearly EDGE-ON, so the camera sees its top edge as a LINE — it photographed as a lit
+**SAWTOOTH** along the beam, which is precisely the "jagged / blocky-step" language round 1 had
+taken from 8 to 0. Every receipt was green: the carrier printed *88 members built, 0 boards
+REFUSED*, the homerow draft A/B looked right, and the whole-town A/B ranked `square` FIRST at
+3.379% **without saying why**. Fixed by making the barge-board straddle the gable's own plane
+and be wider than one step (`max(0.24, step * 1.9)`) instead of standing outboard of it.
+  THE SECOND A/B IS THE POINT: the barge change was measured the same way, against `draftB`
+(the pre-cap arm) — **northlane 0.116% and therise 0.088% REBAKE, arch and gateroad REFUSED at
+0.000%** — so the two far cameras were refused on a NUMBER instead of on the frustum argument
+that the mill is 70-96 m away there.
+
+### 12. THE METAL KERNEL CACHE BIT `homerow` AGAIN, ON THE SAME CAMERA
+
+SIGABRT at render start, `ccl::MetalKernelPipeline::compile` in
+`~/Library/Logs/DiagnosticReports/Blender-2026-08-10-055656.ips` — round 1 lost this exact
+camera to this exact cause twice. Quarantining 79 MB of
+`/var/folders/*/C/org.blenderfoundation.blender` fixed it on the next attempt (the plate then
+took 734.8 s instead of ~440 s, which is the kernel recompile).
+  **AND THE BAKE DRIVER MADE IT WORSE THAN IT HAD TO BE**: a bare `execFileSync` threw, and the
+throw took the FIVE GROUPS QUEUED BEHIND IT. `emb_bake_shipped` now names every failed group
+with its signal, says its plates keep their OLD art, and exits 1.
+
+### 13. GATES
+`cine_test --town emberbrook` PASS 480/0 + 2 soft · `slice_test` 776/0 · `findability_test`
+69/0 + 11 warnings · `routes_derive --town emberbrook --check` clean (11 shots) ·
+**`walk_engine_gate` GREEN on BOTH bundles** — `emb-cine` and `emb-townwalk`, 7,467 standable
+cells / 1,512.1 m2 in the FILE and the same in the ENGINE, 0 lost, 0 extra, height agreement
+median 0.000 m, `SIM.bvh().fail 0` · `walk_bodygate --scene emb-cine` 0.15% of steps blocked
+and every blocker an authored barrier (identical to round 1).
+  **`walk_bodygate` OOMs on `emb-townwalk`** (a 94 MB dressed bundle against an 11 MB blockout)
+and that is not a walk finding: `emb_padstack` reads the two bundles as IDENTICAL — 222 walk
+nodes, 24,349 floor faces, 106.0 m2 double-covered, every band equal — so the `emb-cine` body
+gate covers both tiers. Fixing the tool's memory is round 3's, not this round's.
