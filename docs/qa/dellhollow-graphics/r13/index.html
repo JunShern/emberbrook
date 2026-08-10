@@ -1,0 +1,144 @@
+<meta charset="utf-8">
+<title>Dellhollow graphics — round 13</title>
+<style>
+ body{background:#14110f;color:#e8ddd0;font:15px/1.55 -apple-system,Segoe UI,sans-serif;
+      max-width:1180px;margin:0 auto;padding:28px}
+ h1{font-size:26px;margin:0 0 4px} h2{font-size:19px;margin:34px 0 8px;color:#f0c98a}
+ h3{font-size:16px;margin:22px 0 6px;color:#cbb69a}
+ table{border-collapse:collapse;margin:10px 0;font-size:13.5px}
+ th,td{border:1px solid #3a332c;padding:3px 9px;text-align:right}
+ th:first-child,td:first-child{text-align:left}
+ th{background:#221d19;color:#f0c98a}
+ .g{color:#8fd07a} .r{color:#e8846a} .d{color:#9a8f82}
+ img{max-width:100%;border:1px solid #3a332c;margin:8px 0}
+ code{background:#221d19;padding:1px 5px;border-radius:3px;font-size:13px}
+ p,li{max-width:88ch}
+ blockquote{border-left:3px solid #6b5a45;margin:8px 0;padding:2px 0 2px 14px;color:#cbb69a}
+</style>
+
+<h1>Dellhollow graphics — round 13</h1>
+<p class=d>Carriers <code>tools/dh_produce_kit.py</code> and <code>tools/dh_cloth_smooth.py</code>
+(both new), plus edits to <code>tools/qm_awning_canvas.py</code> and
+<code>tools/dh_qm_underlight.py</code>. Footprint measurement off one
+<code>dh_objmap dump</code> (15 cameras &times; 240&times;135 = 486,000 marched rays); world
+positions from <code>plate_probe</code>'s reconstruction of the shipped plates; contact from a
+real <code>BVHTree.overlap</code>; everything else numpy on rendered frames. Evidence and
+instruments in <code>docs/qa/dellhollow-graphics/r13/evidence/</code>.</p>
+
+<h2>Target 1 — the <code>t2c_</code> prefix is a PASS, not a subject, and sizing by it would
+have been thirty times too big</h2>
+<p>Round 12 asked for a census of the whole prefix before fixing one member. Censused:
+<b>38 objects, 3.69% of the town's fifteen frames</b>, up to 8.18% of waterfront. The two
+members the judge named have one thing in common that nothing else in the family has —
+<b><code>mat_pumpkin</code> is the only material in the family with no texture at all</b>
+(2 nodes: a Principled and an Output), where ten of the sixteen carry the town's standard
+21-node / 4-image recipe. That material is <b>0.125% of the town's rays</b>.</p>
+<p><b>And the material is not the defect, because the same material reads fine elsewhere.</b>
+Nine meshes wear it, in exactly two shapes:</p>
+<table>
+<tr><th>shape</th><th>meshes</th><th>polygon sides</th><th>use_smooth</th><th>per unit</th></tr>
+<tr><td><code>shelf_clutter</code>, <code>qm_clutter_0/4</code>, <code>gate_clutter</code>, <code>barge_*</code></td>
+    <td>68 units</td><td>4, 10</td><td class=g>100%</td><td>20 v / 12 f — a 10-gon drum</td></tr>
+<tr><td><code>t2c_W7_keeper_boxes</code>, <code>t2c_LH3_rail_flowerbox</code>,
+        <code>t2c_F5_fish_floats</code>, <code>t2c_G8_cliff_baskets</code>,
+        <code>t2c_W5_flowerbox_rail</code></td>
+    <td>17 units</td><td>4</td><td class=r>0%</td><td>8 v / 6 f — <b>a literal <code>obox()</code></b></td></tr>
+</table>
+<p>Round 12's <code>dh_clump_kit</code> finding again, in a different district and a different
+grammar: <b>the town already owns the kit and one pass invented its own.</b> So the fix is a
+CARRY and the material needs no edit — which is the control that says so. 30 cuboids were
+carried (the container material <code>mat_timber</code> stays a box, because a crate IS one).</p>
+<img src="evidence/cottage-keeperboxes-before-after.jpg" alt="cottage keeper boxes before and after">
+<p class=d>cottage, <code>t2c_W7_keeper_boxes</code> — before (top) and after (bottom).</p>
+
+<h2>Target 2 — it does not clip, and it is not untextured. It is twenty-four non-planar
+quads shaded flat.</h2>
+<p>Rounds 8–11 worked this surface as relief, then value, then texture. Round 12 handed over
+the word <em>clipping</em>. Both inherited words are refuted on measurement:</p>
+<ul>
+<li><b>It does not clip.</b> A real triangle&ndash;triangle <code>BVHTree.overlap</code> of all
+nine awnings against every other mesh in town: <code>qm_awning_0</code> has <b>zero overlaps</b>
+and a minimum per-vertex down-ray gap of <b>2.075 m</b> (max 3.412) over
+<code>qm_paving</code>&thinsp;/&thinsp;<code>qm_planking</code>&thinsp;/&thinsp;<code>qm_stall_1</code>.
+That is <code>AWN_CLEAR</code> doing its job. Three other awnings <em>do</em> overlap something and
+none of them is the complained-about one.</li>
+<li><b>It is not untextured.</b> On its own eroded ray mask the shipped plate reads
+<b>5&times;5 SD p50 8.29</b>, against <code>mat_qm_paving</code>'s 6.40 in round 11's own table
+and the 0.00–3.56 it had before.</li>
+</ul>
+<p><b>What it is, exactly: 24 of 24 quads non-planar, 0% smooth, worst deviation 0.0705 m —
+which is <code>SAG_MID</code> (0.073).</b> The scallop lifts alternate columns, so every quad
+spans one lifted rib column and one unlifted mid column and cannot be planar; flat-shaded, the
+renderer's two triangles get different normals and there is a razor crease down every panel.
+The cause is arithmetic and was predictable from <code>qm_build.awning()</code> before anything
+was rendered. Town-wide, 52 meshes carry non-planar quads and 35 are at 0% smooth — <b>the
+cliffs are 75–99% non-planar and 100% smooth, so the town's own convention already knows this
+and the cloth pass never got it.</b></p>
+<p><b>And the judge had already named the mechanism in its own words.</b> The before arm, on
+crossing:</p>
+<blockquote>&ldquo;An untextured <b>triangular</b> polygon mesh clips into view at the
+bottom-right edge of the screen.&rdquo;<br>
+&ldquo;An unfinished grey <b>triangular</b> mesh clips through the wooden walkway terrain at the
+bottom right corner.&rdquo;</blockquote>
+<p>The load-bearing word was never <em>clipping</em>. It was <em>triangular</em>.</p>
+<h3>The second half: a regular lattice at exactly Nyquist does not average out, it aliases</h3>
+<p>Round 11 put a 4.1 mm weave in the canvas on the reasoning that &ldquo;a 3–4 mm weave is two
+pixels and the denoiser will take most of it&rdquo;. <b>An FFT of a 128 px patch of the awning
+inside its own ray mask on the shipped plate puts a peak at k = 62 of a possible 64 — period
+2.06 plate px = 4.5 mm on the cloth, reproducing that file's own thread pitch to 10% — carrying
+8.4e5 of power against 1–5e4 in every neighbouring high-band bin, i.e. forty times its own
+band.</b> It aliased into a diamond gauze that photographs as wire screen. A normal map is a
+SLOPE, and a slope at Nyquist is the lighting amplifying the alias — so the weave came out of
+the height field and stays in the diffuse and the roughness, where it modulates two quantities
+the eye integrates.</p>
+<img src="evidence/crossing-awning-before-after.jpg" alt="crossing awning before and after">
+<p class=d>crossing, <code>qm_awning_0</code> at 5.3 m — before (left) and after (right).</p>
+
+<h2>Target 3 — the near-field shadow floor, with the hole located in world coordinates</h2>
+<p>Round 12 refuted every global ambient lever and left this owing LOCAL sources. Round 11's
+three cards reached 2% of the distance; round 12 named the cause (the row was laid across the
+subject's whole bbox) without sizing it. Sized here by reconstructing world XYZ from the plate's
+own solved camera and depth inside the subject's ray mask (241,891 px, 5.86% of deep-stairs):</p>
+<table>
+<tr><th>world x</th><th>px</th><th>L p50</th><th>crushed (L&le;8)</th></tr>
+<tr><td>35–37</td><td>59,155</td><td>6.7</td><td class=r>64.5%</td></tr>
+<tr><td>37–39</td><td>113,543</td><td>10.9</td><td class=r>35.0%</td></tr>
+<tr><td>39–41</td><td>42,910</td><td>13.3</td><td>13.3%</td></tr>
+<tr><td>47–49</td><td>940</td><td>84.4</td><td class=g>4.1%</td></tr>
+<tr><td>53–55</td><td>10,919</td><td>29.6</td><td class=g>1.9%</td></tr>
+</table>
+<p><b>215,608 px — 89.1% of the subject's visible pixels — are at x &lt; 41, and everything past
+x 47 is already lit.</b> The row is now clipped to the gap, and the gap's east edge is
+<b>derived from the lights in the master</b> (the westmost card of the existing gorge-ward fill
+run, x = 44.00) rather than typed, so moving that run re-derives this one.</p>
+<h3>The dose ladder, and why the picture overrules the knee</h3>
+<table>
+<tr><th>arm (deep-stairs)</th><th>L p05</th><th>L p50</th><th>crushed</th><th>frame p95</th><th>blown</th></tr>
+<tr><td>baseline: 3 cards, 13.33 W, whole bbox</td><td>4.1</td><td>10.6</td><td class=r>38.2%</td><td>141.0</td><td>0.070</td></tr>
+<tr><td>4 cards in the gap, 13.33 W</td><td>4.6</td><td>11.3</td><td>31.1%</td><td>141.0</td><td>0.070</td></tr>
+<tr><td>4 cards, 60 W</td><td>8.0</td><td>16.9</td><td>4.5%</td><td>141.5</td><td>0.070</td></tr>
+<tr><td><b>4 cards, 150 W — shipped</b></td><td>13.5</td><td>27.5</td><td class=g>0.4%</td><td>142.5</td><td>0.070</td></tr>
+<tr><td>4 cards, 360 W</td><td>21.5</td><td>47.4</td><td class=g>0.1%</td><td>145.3</td><td>0.070</td></tr>
+</table>
+<p>The <em>crushed</em> knee is at 60 W and <b>the picture is why that is not the pick</b>: at 60
+the mass is lifted and still unreadable, at 150 the deck structure, the ladder and the platform
+read, and at 360 the whole left mass flattens to one even brown with the under-deck shadows gone.
+Cost of 150 W: frame p95 +1.5 of 255, <b>blown pixels identical to three decimals</b>, and the
+same material 20 m away at waterfront moves +4.1 — the card is local, which is what
+<code>use_shadow = False</code> plus a 16 m cutoff is for.</p>
+<img src="evidence/underlight-ladder-deepstairs.jpg" alt="deep-stairs at baseline, 60 W and 150 W">
+<p class=d>deep-stairs — baseline, 60 W, 150 W.</p>
+
+<h2>Target 4 — refuted, and not built</h2>
+<p>Round 12 attributed north-landing's <em>&ldquo;white stepping stones floating flat on the
+water&rdquo;</em> to <code>lf_crest_bay_02</code>&thinsp;/&thinsp;<code>lf_spill_bay_01</code> on
+<code>mat_blackstone</code>, &ldquo;with no immersion at the waterline&rdquo;. Both halves are
+refuted. A ray census of the judge's own region: <b><code>lf_dam_boil | mat_boil</code> 28.3%
+against <code>mat_blackstone</code>'s 0.5%</b>. The bay stone reads <b>L p50 66.3, RGB
+75.8/60.3/44.5</b> — a dark warm brown wall, not a white slab. And the foam is <b>0.09 m proud
+of the pool</b> (world z p50 &minus;3.71 against the water's &minus;3.80), which is exactly what
+<code>locksfoot_kit.spill_bay</code>'s own comment aimed for. What makes it read as a stone is
+that it is opaque, near-neutral (RGB 149/146/131 in a teal frame), <b>33% brighter than the
+water it sits in</b>, and has four hard straight-edged wedge silhouettes. That is a material and
+opacity question, and it belongs to round 14.</p>
+<img src="evidence/north-landing-bay-and-boil.jpg" alt="north-landing, the bay boxed and the foam below it">
