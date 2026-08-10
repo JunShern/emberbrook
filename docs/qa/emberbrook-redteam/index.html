@@ -662,6 +662,48 @@ shingles and on <code>square</code> (26&ndash;39 m, gable seen EDGE-ON) as a lit
 <b>Only the picture said so</b> &mdash; the carrier's receipt was 88 members / 0 refused, and the draft A/B
 ranked <code>square</code> first at 3.379% without saying why.</p>
 
+
+<h3>THE VERDICT AS A LANGUAGE COUNT — and the residual names itself</h3>
+<p>Re-judge over all eleven plates, same judge, same modes, N=3, 66 calls
+(<code>docs/qa/redteam/run-20260810-emb-round2-after/</code>). <b>The two REFUSED plates were judged too, and
+they are the control</b>: nothing about them changed, so their movement is the judge's own noise.</p>
+<table>
+<tr><th>judge language over the survivors</th><th class="num">round 1 after</th><th class="num">round 2 after</th></tr>
+<tr><td>floating / clipping paving slab &mdash; <b>the class this round targeted</b></td><td class="num">8</td><td class="num"><b>2</b></td></tr>
+<tr><td>black void / tear / hole in the ground</td><td class="num">10</td><td class="num">6</td></tr>
+<tr><td>untextured / flat / placeholder / blank</td><td class="num">2</td><td class="num">3</td></tr>
+<tr><td>rim / staircase / jagged / blocky-step</td><td class="num">0</td><td class="num">3</td></tr>
+<tr><td>darkness / pitch-black / cannot see</td><td class="num">15</td><td class="num">14</td></tr>
+<tr><td>category <code>geometry</code></td><td class="num">37</td><td class="num"><b>28</b></td></tr>
+<tr><td>category <code>occlusion</code></td><td class="num">13</td><td class="num">18</td></tr>
+<tr><td><b>survivors, total</b></td><td class="num">97</td><td class="num"><b>87</b></td></tr>
+</table>
+<table>
+<tr><th>plate</th><th class="num">geometry</th><th class="num">total</th><th>note</th></tr>
+<tr><td>square</td><td class="num">4 &rarr; <b>1</b></td><td class="num">19 &rarr; <b>9</b></td><td>the &ldquo;black void seams&rdquo; are gone</td></tr>
+<tr><td>arch</td><td class="num">3 &rarr; 3</td><td class="num">14 &rarr; <b>6</b></td><td><code>walk_pad_road-gate</code>'s riser gone; the ribbon still reads</td></tr>
+<tr><td>homerow</td><td class="num">4 &rarr; <b>2</b></td><td class="num">7 &rarr; 8</td><td><b>the gable is not mentioned at all</b>; what is left is the lucam and the wheel</td></tr>
+<tr><td>northlane</td><td class="num">2 &rarr; 1</td><td class="num">4 &rarr; 7</td><td></td></tr>
+<tr><td>pondlane</td><td class="num">8 &rarr; 6</td><td class="num">14 &rarr; 17</td><td><b>all six remaining are the EMPTY-HOLE class</b></td></tr>
+<tr><td>therise</td><td class="num">5 &rarr; 5</td><td class="num">7 &rarr; 9</td><td></td></tr>
+<tr><td>orchard</td><td class="num">1 &rarr; 0</td><td class="num">9 &rarr; 10</td><td class="warn">NOT REBAKED &mdash; refused at 0.000%. This is judge noise.</td></tr>
+<tr><td>gatefield</td><td class="num">3 &rarr; 3</td><td class="num">7 &rarr; 7</td><td class="warn">NOT REBAKED &mdash; refused at 0.005%. Its three are the pillar cutouts, unchanged BY CONSTRUCTION.</td></tr>
+</table>
+<div class="card lead">
+<p style="margin:0"><b>THE RESIDUAL NAMED ITSELF, AND IT IS THE ONE THIS ROUND MEASURED AND DID NOT FIX.</b> Nine of
+the 28 surviving geometry findings are the EMPTY-HOLE class &mdash; pondlane's five (<i>&ldquo;sharp triangular
+holes that expose black void underneath&rdquo;</i>, <i>&ldquo;mesh tearing&hellip;visible black holes&rdquo;</i>),
+gatefield's three (<i>&ldquo;square cutouts revealing empty black space beneath the terrain&rdquo;</i>,
+<i>&ldquo;empty black voids underneath the pillars&rdquo;</i>) and arch's F8. That is <b>37.3 m&sup2;</b>, measured
+in &sect;9 above. <b>gatefield is the clean confirmation</b>: the draft A/B refused it at 0.005% of frame, so its
+plate is byte-identical to round 1's &mdash; and its three findings survive, because the defect does. A refusal
+that is right looks exactly like this.</p>
+<p style="margin:8px 0 0"><b>And the honest counter-move: <code>waystone</code>'s three geometry findings now say
+&ldquo;STEP gaps&rdquo; and &ldquo;step-like seams&rdquo; where they used to say &ldquo;floating&rdquo;.</b> That
+is correct and it is the taper's own limit: seating the RIM removes the riser, and the two surfaces are still
+stacked 65&ndash;78 mm apart in their interiors. The heights have to be reconciled at source.</p>
+</div>
+
 <p class="cap" id="r2foot">Round 2 evidence: <code>docs/qa/emberbrook-redteam/round2-draft-ab.json</code>, <code>padstack-before.json</code>, <code>padstack-after-master.json</code>. Instruments: <code>tools/emb_padstack.mjs</code>, <code>tools/emb_ray_census.py</code>, <code>tools/plate_ab.py</code>, <code>tools/emb_bake_shipped.mjs</code>, <code>tools/emb_millgable.py</code>.</p>
 
 </main>
