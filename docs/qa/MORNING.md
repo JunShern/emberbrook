@@ -1,3 +1,72 @@
+# UPDATE — 2026-08-10 morning (the overnight: both towns advanced two rounds, and a gate that lied)
+
+**LIVE: deploy 24, built from `e2d82700`, static_verify 29/0 local AND against the URL, first run.**
+Four deploys landed overnight (21-24), each with **three kinds of provenance** rather than a byte-match
+alone: the git commit that last touched each file, **cache arithmetic** (predict the miss count from the
+diff — deploy 24 predicted 12 and got exactly 12), and **pixel evidence on the downloaded bytes**.
+
+**EMBERBROOK'S FOURTEEN LAMPS HAD NEVER LIT IT** (round 1). Each is a 680 W point light **sealed inside
+its own opaque emissive glass box** — a shadow-ray grid found **165 of 192 rays blocked by the lamp's own
+housing**, not one sample reaching the light. One visibility flag: **homerow L≤8 66.1% → 37.9%, square
+41.6% → 19.6%**, nothing new clipping. **THIS OVERTURNS A PIECE OF THIS FILE'S OWN DOCTRINE** — the
+night-grade note said "adjusting an existing light has never moved this town; lamp wattage, twice: inert."
+That was an accurate record of a broken prop wearing the costume of a law about lighting, and it steered a
+week of work away from the cause. Corrected in place, not deleted.
+Round 1 also closed the ranked-#1 defect (**the paving IS the walk network**, one detached box per cell,
+axis-aligned boundary 67.5% → 33.2%, judge rim/staircase language **8 → 0**) and diagnosed the black
+quadrilateral by grandmother's bench as **two walk pads in one plane**.
+
+**AND ROUND 2 SHOWED ROUND 1 HAD FIXED 5% OF THAT DEFECT.** `emb_padstack`: **106.0 m² — 7% of the town's
+paving — is TWO walk surfaces stacked** (three height sources that never compare: pads from terrain at
+their doorstep, edges from smoothed waypoints, landmarks from their own floor). **Only 4.82 m² is
+coincident enough to z-fight, which is ALL the round-1 instrument could see.** Round 2 also found the
+watermill panel is **one box with a dead-level top closing a pitched roof**, and that it was never
+untextured: its only frequency is **38 mm = 2 plate pixels, so the denoiser takes it**. Survivors
+**97 → 87**, geometry **37 → 28**, square **19 → 9**.
+
+**DELLHOLLOW ROUND 10: 41 FOLIAGE MESHES WERE NOT RENDERING AT ALL.** Built from fresh primitives, they
+carried no `Col` and no UV — and **the two fail in opposite directions**: missing colour is BLACK in
+Cycles, missing UV makes the cutout constant and the mesh **INVISIBLE** in Cycles while glTF's defaults
+drew it **WHITE** in the runtime. One defect, three appearances. **A RAY CENSUS CANNOT SEE THE SECOND
+BECAUSE A RAY-CASTER IGNORES ALPHA** — which is how round 9 misattributed weave's black to these clumps.
+That attribution is now known-wrong and **weave's remaining black has never been measured** (round 11 is
+on it). Round 10 also refuted deep-stairs' "harsh cast shadow": `SUN_key` is blocked **383 of 440 times by
+the stair mass itself** — it is a back face, and a cast shadow is a boundary that isn't there.
+
+**`playthrough_test` WAS REPORTING WORKING BEATS AS FAILURES.** One tree, one build: **84/1 · 44/16 ·
+86/0**. The ledger is written at the END of a beat's `do` chain and the poll window was flat, so a beat
+that was legitimately presenting itself timed out — **`ch2.landing`'s 75 s window contained 67.45 s of
+presentation, a 7.55 s window wearing a 75 s label**, and it was measured taking 171 s under load. The
+proof was always in the harness's own next line (`FAIL beat ch2.landing fired` directly above `beats
+completed: 28 — … ch2.landing`). Fixed three ways, with `--slack=<sec>` as a **fault injector** that
+reproduces the race on demand in 102 s. **A red now names its own attribution**: `director idle` is a game
+defect, `grace expired while busy` is a load verdict.
+
+**THE WHOLE GAUNTLET RAN and the game is not regressed** — sixteen gates green or exactly at baseline,
+`transition_test` **168/0 twice with flat per-state counts** (the determinism fix holds), `arena_playtest
+organic` **14/14**. The three known-reds were re-derived and trace to a rebuild on the 6th; rounds 8-10 are
+not implicated.
+
+**THE CUT-IN CAST IS 118/120**, and Odessa's live pink rim was diagnosed by **differencing the matte's own
+output against its own input** (`out − src` = 0.0 at p50 AND p95): painted spill, not matte residue, so no
+pipeline fix could reach it. One re-roll failed to clear it and **both moods were dropped** — from the
+manifest AND from the spec, because leaving a mood in the spec when the gate passes its defect re-draws it
+on the next run. **`key_rim` still cannot gate**: Vesper outranks the defect on all four magenta axes.
+What separates is **shape — a rim is a line, strand spill is dots** (run length 561 px vs 8-75 cast-wide),
+banked as a candidate, not shipped on one labelled positive.
+
+**THE RECURRING LESSON OF THE NIGHT: FOUR TIMES A PICTURE CAUGHT WHAT EVERY RECEIPT MISSED** — an awning
+that photographed as a ladder of separate plates, a fern colour that measured right and read as lime
+blocks, a UV scale 29× wrong that made each clump one leaf, and a gable that baked a **lit sawtooth** while
+its carrier printed *88 members, 0 refused* and the draft A/B **ranked its plate FIRST without saying
+why**. A ranking is not a diagnosis.
+
+**IN FLIGHT:** Dellhollow round 11 (weave's unattributed black, fern tuft geometry, the awning's texture
+frequency against the plate's mm/px). **QUEUED:** Emberbrook round 3 (37.3 m² of empty enclosed paving
+holes; reconcile the three walk-height sources at source).
+
+---
+
 # UPDATE — 2026-08-09 evening (round 9, the cut-in cast, the sceptic audit, deploy 20)
 
 **LIVE: deploy 20, built from `d4b24031`, static_verify 29/0 local AND against the URL.** All ten of
