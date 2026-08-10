@@ -23689,6 +23689,104 @@ OWED / NAMED FOR ROUND 9:
      The stair-tread family is the loudest thing in Dellhollow that nobody has measured.
 
 
+## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 11 (measurements banked before any build):
+## WEAVE HAS NO BLACK OF ITS OWN, THE AWNING IS NOT BELOW NYQUIST, AND THE FERNS ARE
+## STILL LITERAL CUBES
+
+Instruments: one `dh_objmap dump` (15 cameras, 240x135 = 486,000 marched rays), `plate_probe
+crushed` on all 15 shipped plates, one Blender property probe, all read against the SHIPPED
+plates. Scratch at the round-11 lane dir; every number below is reproducible from those two
+artifacts with no further Blender.
+
+### THE SOUNDNESS CONDITION FOR READING A RAY-CASTER AS AN ATTRIBUTION OF RENDERED PIXELS
+Round 10 established that `dh_objmap`/`dh_pixel_census` CANNOT see an alpha cutout, which is
+how round 9 attributed weave's black to five clumps that were not rendering at all. The
+condition under which the ray-caster is nevertheless exact is checkable and was checked:
+**exactly 5 of Dellhollow's 148 materials contain a Transparent BSDF** — `mat_leaf_autumn`,
+`mat_leaf_autumn_far`, `mat_leaf_creeper`, `mat_leaf_green`, `mat_leaf_green_far`. Every
+other material is opaque, so on those pixels the marcher and the renderer agree BY
+CONSTRUCTION. At weave the whole cutout class is **1.33% of frame** and **1.6% of the
+crushed set**, so the attribution below is exact to within 1.6%. Say the condition, do not
+assume it: at gate the cutout class is 10.16% of frame and at deep-stairs 5.49%, where the
+same reading would NOT be safe.
+
+### TARGET 1 — WEAVE'S REMAINING BLACK IS NOT WEAVE'S, AND IT IS NOT A HOLE. IT IS THE
+### SHADOWED SIDE OF THE TOWN'S OWN BUILT FABRIC, AT 4.6x TO 33.5x THE LIT SIDE.
+`plate_probe crushed` (L <= 24/255 AND 5x5 SD <= 2 — dark AND flat) over all fifteen
+shipped plates:
+
+    lockfive 22.08 · deep-stairs 22.02 · shelf-west 20.44 · crossing 19.89 · fishdock 19.62 ·
+    quay-west 19.46 · WEAVE 17.86 · cottage 17.25 · shelf-east 16.24 · lockhead 12.35 ·
+    loop-stairs 10.71 · gate 9.18 · waterfront 7.68 · north-landing 7.58 · boatyard 7.38
+
+**WEAVE RANKS SEVENTH OF FIFTEEN AGAINST A TOWN MEDIAN OF 17.25%.** There is no weave
+anomaly to explain. Round 9 invented a cave, round 10 refuted the cave and named the
+foliage, and the residual it handed on turns out to be the town's own shadow floor.
+
+Attribution of weave's 17.86% (objmap, condition above):
+
+    by MATERIAL   lf_deck 21.9% of crushed · mat_rock 12.5 · lf_stone 10.7 ·
+                  lf_shingle 10.5 · lf_matte 9.2 · mat_rock_townwall 6.3 ·
+                  mat_timber_dark 5.0 · m_water 4.8 · mat_leaf_creeper 1.6
+    by OBJECT     no object exceeds 9.5% of the crushed set; the top twelve are twelve
+                  different huts, decks, pile clusters and grounds
+
+THE NUMBER THAT NAMES THE MECHANISM — the SAME material, in the SAME frame, crushed vs not:
+
+    lf_shingle        crushed L p50  2.5   |  rest L p50  83.6   ratio 33.5x
+    lf_deck           crushed L p50  4.8   |  rest L p50  64.4   ratio 13.5x
+    mat_timber_dark   crushed L p50  4.1   |  rest L p50  44.1   ratio 10.9x
+    lf_matte          crushed L p50  8.4   |  rest L p50  43.4   ratio  5.2x
+    mat_rock          crushed L p50  8.5   |  rest L p50  42.8   ratio  5.1x
+    lf_stone          crushed L p50  4.7   |  rest L p50  21.7   ratio  4.6x
+
+A material at 83.6 in the light and 2.5 in its own shadow is not a dark material and not a
+missing mesh: it is a shadow with nothing in it. **THE PICTURE SAYS THE SAME THING AND SAYS
+IT FASTER** — masking L<=8 magenta over the weave plate draws the railings' cast shadows on
+the pale terrace, the underside of every deck, and the shadow side of every post. It is a
+distributed, structural black, not a place.
+CLASS: LIGHT TRANSPORT, TOWN-WIDE — NOT a weave item, NOT geometry, NOT albedo.
+Budget as found: `diffuse_bounces 4`, `volume_bounces 0`, clamp indirect 10.0, world
+Background strength 2.100 with its colour LINKED to a gradient, AgX Medium High Contrast,
+exposure 0.150, 193 lights (2 SUN / 77 SPOT / 71 POINT / 43 AREA).
+
+### TARGET 3 — "UNTEXTURED" IS LITERAL. THE EMBERBROOK BELOW-NYQUIST HYPOTHESIS IS REFUTED
+### WITH THE PLATE'S OWN SAMPLING RATE.
+`qm_awning` at crossing is **1.45% of frame at 5.3 m — the NEAREST significant surface in
+that frame — and the plate resolves it at 1.9 mm per pixel.** Median local SD of luminance
+by box scale, silhouette/depth-step pixels dropped:
+
+    subject          dist   mm/px |  SD 3px    SD 5px    SD 9px   SD 17px
+    qm_awning         5.3     1.9 |   0.00      3.56      5.06      6.64
+    mat_qm_paving    10.5     3.9 |   4.26      6.40      7.54      8.63
+    mat_deck         30.1    11.3 |   6.09      8.34     12.33     19.62
+    mat_timber       20.3     8.5 |   3.53      5.27     11.13     20.99
+    mat_rock         91.3    35.4 |   1.21      1.66      2.18      2.87
+
+**THE AWNING IS THE ONLY SURFACE IN THE FRAME WHOSE MEDIAN 3x3 SD IS EXACTLY ZERO, AND IT
+IS THE SURFACE THE PLATE SAMPLES TWO TO EIGHTEEN TIMES MORE FINELY THAN ANY OTHER.** Below
+Nyquist would look like signal at coarse scales and none at fine; this is none at 6 mm on a
+surface that could carry detail down to ~4 mm. It is untextured, full stop.
+AND THE FIX IS SMALLER THAN ROUND 10 THOUGHT. The probe says `mat_qm_awning` is
+Principled + VertexColor and the five `qm_awning_*` meshes carry `Col` and **NO UV LAYER AT
+ALL** — but **61 of the town's 148 materials already carry image textures** (25 images,
+including `mat_qm_deck`, `mat_qm_paving`, `mat_qm_sack`), so the glTF path for an image
+texture is standard here and shipped. Round 10's "vertex-colour-only for glTF survival"
+constraint is real about PROCEDURAL texture and does not bind an image: glTF multiplies
+`baseColorTexture` by `COLOR_0` natively, so an image can carry the cloth and the vertex
+colour keeps carrying the thirteen stripe columns, in both renderers, with no divergence.
+
+### TARGET 2 — THE FERNS ARE CUBES, MEASURED, AND THE HOLD IS STILL RIGHT
+`veg_lf_fern_*`: **78 meshes, 8 verts and 6 faces each** — a literal `obox()` — 1.0-1.9 m
+across and 0.5-0.85 m tall, wearing `mat_fern`/`mat_grass`, **0 UV layers and 0 colour
+attributes** (so round 10's HOLD did ship: their `Col` is still absent and they are still
+dark furniture rather than lime blocks). Where they are, by ray census:
+lockfive 1.34% of frame @29 m · north-landing 0.62% @19 m · fishdock 0.38% @44 m ·
+weave 0.16% @52 m.
+`veg_lf_rimclump_*`: 41 meshes, 66 verts / 41 faces each, 2.2-5.0 m across, and NOW carrying
+1 UV layer and 1 colour attribute (round 10's repair, verified in the master).
+cottage 5.24% of frame @22 m · crossing 0.72% @32 m · weave 0.68% @59 m.
+
 ## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 10: THE CLUMPS WERE NEVER BLACK, THEY WERE
 ## INVISIBLE; THE DEEP-STAIRS "CAST SHADOW" IS NOT A SHADOW; AND THE CANVAS'S RESIDUAL
 ## IS SPATIAL FREQUENCY, WHICH NEITHER NAMED LEVER TOUCHES
