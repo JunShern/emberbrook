@@ -1,0 +1,184 @@
+[
+ {
+  "fid": "F4",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "occlusion",
+  "where": "central wooden staircase across the ravine",
+  "bbox": [
+   0.29,
+   0.32,
+   0.7,
+   0.73
+  ],
+  "severity": 2,
+  "desc": "Harsh, high-contrast shadows completely mask the staircase geometry and landing, making it difficult to discern if this is a usable path.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The staircase is brightly illuminated by direct sunlight across its span, keeping its geometry clearly visible."
+  }
+ },
+ {
+  "fid": "F8",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "central diagonal staircase and mid-level landing",
+  "bbox": [
+   0.29,
+   0.32,
+   0.7,
+   0.72
+  ],
+  "severity": 2,
+  "desc": "The central staircase plunges into deep shadow and merges with overlapping background structures, making the playable path visually confusing.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Direct sunlight highlights the staircase clearly against the dark background, preventing path confusion."
+  }
+ },
+ {
+  "fid": "F10",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "long central diagonal wooden staircase",
+  "bbox": [
+   0.34,
+   0.32,
+   0.7,
+   0.72
+  ],
+  "severity": 2,
+  "desc": "The steps blend heavily into the dark background geometry, making the precise width and surface profile of the path hard to distinguish.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The sunlit steps create high visual contrast against the dark background shadow, making step edges easy to distinguish."
+  }
+ },
+ {
+  "fid": "F12",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "central wooden staircase ascending along the cliffside",
+  "bbox": [
+   0.296,
+   0.328,
+   0.708,
+   0.732
+  ],
+  "severity": 2,
+  "desc": "Deep cast shadow visually cuts across the middle of the staircase, concealing whether the steps continue or drop off.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Sunlight hits the steps continuously across the flight, clearly demonstrating that the path is continuous."
+  }
+ },
+ {
+  "fid": "F17",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "central elevated wooden staircase",
+  "bbox": [
+   0.28,
+   0.32,
+   0.7,
+   0.73
+  ],
+  "severity": 2,
+  "desc": "The central stair structure spans across open space and merges into shadow and upper buildings, making player access and connection points ambiguous.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": " reached endpoints and the lit staircase structure are clearly visible and legible."
+  }
+ },
+ {
+  "fid": "F21",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "central ascending wooden staircase",
+  "bbox": [
+   0.3,
+   0.325,
+   0.7,
+   0.72
+  ],
+  "severity": 2,
+  "desc": "The staircase steps visual contrast merges into the dark shadows and rock face behind them, making step edges and path continuity hard to discern.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Bright sunlight on the steps provides sharp contrast against the shadowed background wall."
+  }
+ },
+ {
+  "fid": "F27",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "deep-stairs",
+  "item": null,
+  "category": "navigation",
+  "where": "central wooden staircase and lower walkways",
+  "bbox": [
+   0.31,
+   0.38,
+   0.7,
+   0.72
+  ],
+  "severity": 2,
+  "desc": "The complex overlapping staircases blend into deep shadows, making it difficult to discern walkable paths from surrounding structure.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Strong direct sunlight clearly distinguishes the playable staircase from the surrounding shadowed structures."
+  }
+ }
+]
