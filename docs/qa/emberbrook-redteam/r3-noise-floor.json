@@ -1,0 +1,40 @@
+{
+ "a": "/private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/draftB",
+ "b": "/private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/draftB2",
+ "floor": 0.01,
+ "rebake": [],
+ "rows": [
+  {
+   "shot": "gateroad",
+   "p4": 0.0,
+   "p12": 0.0,
+   "dmed": 0.0,
+   "la": 0.9277999997138977,
+   "lb": 0.9277999997138977
+  },
+  {
+   "shot": "orchard",
+   "p4": 0.0,
+   "p12": 0.0,
+   "dmed": 0.0,
+   "la": 7.35699987411499,
+   "lb": 7.35699987411499
+  },
+  {
+   "shot": "waystone",
+   "p4": 0.0,
+   "p12": 0.0,
+   "dmed": 0.0,
+   "la": 7.140399932861328,
+   "lb": 7.140399932861328
+  },
+  {
+   "shot": "woodroad",
+   "p4": 0.0,
+   "p12": 0.0,
+   "dmed": 0.0,
+   "la": 8.995999336242676,
+   "lb": 8.995999336242676
+  }
+ ]
+}

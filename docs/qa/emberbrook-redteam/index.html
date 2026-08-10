@@ -811,6 +811,58 @@ hang off it and there was nothing for them to come out of. <code>tools/emb_millu
 gable's own 0.24 m pitch, puts a two-leaf loading door with a lintel and a bressummer in the outward face, and
 adds four corner posts &mdash; 36 members. Outward is DERIVED from the roof deck's own centroid, never assumed.</p>
 
+
+<h3>The rebake list, derived from rendered frames &mdash; ELEVEN OF ELEVEN, and the floor was re-measured to earn it</h3>
+<p>Arm A is the pre-round-3 dressed master (the untouched blend, placed back INSIDE
+<code>tools/blends</code> so its <code>//../textures</code> paths resolve &mdash; a blend copied elsewhere renders
+MAGENTA); arm B is the shipping one. Both arms at the SAME draft grade, both through the SAME re-solved cameras,
+so the only thing that differs is the geometry.</p>
+<table>
+<tr><th>shot</th><th class="num">chg&gt;4/255</th><th class="num">chg&gt;12/255</th><th class="num">medshift</th><th>verdict</th></tr>
+<tr><td>homerow</td><td class="num">2.003%</td><td class="num">0.657%</td><td class="num">&minus;6.06</td><td>REBAKE</td></tr>
+<tr><td>square</td><td class="num">1.471%</td><td class="num">0.585%</td><td class="num">&minus;4.76</td><td>REBAKE</td></tr>
+<tr><td>pondlane</td><td class="num">0.543%</td><td class="num">0.153%</td><td class="num">+4.28</td><td>REBAKE</td></tr>
+<tr><td>northlane</td><td class="num">0.441%</td><td class="num">0.038%</td><td class="num">&minus;4.48</td><td>REBAKE</td></tr>
+<tr><td>gatefield</td><td class="num">0.423%</td><td class="num">0.011%</td><td class="num">&minus;7.50</td><td>REBAKE &mdash; <b>round 2 REFUSED this plate at 0.005% and said why: what that camera looks at is the 16.63 m&sup2; of empty hole. It moved the moment the hole was filled.</b></td></tr>
+<tr><td>therise</td><td class="num">0.303%</td><td class="num">0.143%</td><td class="num">&minus;7.43</td><td>REBAKE</td></tr>
+<tr><td>arch</td><td class="num">0.215%</td><td class="num">0.051%</td><td class="num">+5.57</td><td>REBAKE</td></tr>
+<tr><td>gateroad</td><td class="num">0.112%</td><td class="num">0.017%</td><td class="num">&minus;4.57</td><td>REBAKE</td></tr>
+<tr><td>orchard</td><td class="num">0.075%</td><td class="num">0.007%</td><td class="num">+4.50</td><td>REBAKE &mdash; round 2 refused it at 0.000%</td></tr>
+<tr><td>waystone</td><td class="num">0.040%</td><td class="num">0.002%</td><td class="num">+4.53</td><td>REBAKE</td></tr>
+<tr><td>woodroad</td><td class="num">0.019%</td><td class="num">0.000%</td><td class="num">&minus;4.14</td><td>REBAKE</td></tr>
+</table>
+<div class="card lead"><p style="margin:0"><b>ELEVEN OF ELEVEN LOOKS GLOBAL, SO THE FLOOR WAS RE-MEASURED.</b>
+Arm B was rendered a SECOND time from the same blend at the same grade, on the FOUR SMALLEST MOVERS, and every
+one came back at <b>0.000% / 0.000% / +0.00 median</b> (<code>r3-noise-floor.json</code>). So woodroad's 0.019% is
+not noise, and the zero-refusal list is real: this round moved the paving, and every camera in Emberbrook can see
+paving.</p></div>
+<p><img src="ev/r3-court-ab.jpg" style="max-width:520px" alt="the gate court before and after"><br>
+<span class="cap">The gate court, A/B at the draft grade (numeric gain on BOTH arms for the eye only). LEFT: pale
+isolated slabs around the pier bases with dark between them &mdash; <i>&ldquo;square cutouts revealing empty black
+space beneath the terrain&rdquo;</i>. RIGHT: one continuous surface at one height. Measured over that region, the
+near-black fraction falls 17.4% &rarr; 14.7% and p05 rises 0.0 &rarr; 1.1.</span></p>
+<p><img src="ev/r3-well-ab.jpg" style="max-width:520px" alt="the well before and after"><br>
+<img src="ev/r3-lucam-ab.jpg" style="max-width:520px" alt="the lucam before and after"><br>
+<span class="cap">The well's black wedge is gone; the lucam's blank face is boarded, with a corner post, a lintel
+band and the loading door's recess. <b>The draft is a RULER, not a picture</b> &mdash; both arms are at exposure
+0.55, so the eye verdict belongs to the shipped bake.</span></p>
+
+<h3>The walk gates, with a control</h3>
+<p><code>walk_engine_gate</code> GREEN on BOTH bundles &mdash; 7595 cells / 1538.0 m&sup2; in the FILE and the same
+in the ENGINE, 0 lost, 0 extra, height agreement median 0.000 m, <code>SIM.bvh().fail 0</code> (round 2: 7467 /
+1512.1). <code>slice_test</code> 776/0. <code>findability_test</code> 69/0 + 11 warnings.
+<code>routes_derive --check</code> clean. <code>cine_test</code> 479/1 + 2 soft, the 1 being <code>square</code>'s
+<i>baked camera is the solved camera</i> &mdash; it moved 0.028 m because its region grew, and it is the only one
+of eleven that moved at all.</p>
+<p><b><code>walk_bodygate</code> went 0.15% &rarr; 0.23% and the delta was run against a CONTROL</b> (the round-2
+bundle out of git, through <code>--glb</code>), so it is attributed rather than argued: <b>1,564 of the 1,982 new
+blocked steps are the three lamp posts whose holes were filled</b> (596 + 488 + 480) and 418 are the brook-bridge
+rails, which are relatively taller now that <code>walk_pad_brook-bridge</code> sits 0.076 m lower. Every blocker
+is an authored solid and no new one is unexplained. <b>The one real cost is named: <code>--clear</code> is 0.28 m
+and the body's radius is 0.30 m</b>, so paving now reaches a ring of cells a 0.6 m body cannot enter &mdash; stuck
+samples 686 &rarr; 1006. Those cells cannot be ENTERED either, so they are dead rather than a trap, and
+<code>walk_bodygate</code> does not model the slide that <code>walkStep</code> actually performs. Round 4: run
+<code>emb_padfill --clear 0.32</code>.</p>
 <p class="cap" id="r3foot">Round 3 instruments: <code>tools/emb_padfill.py</code>, <code>tools/emb_padlevel.py</code>,
 <code>tools/emb_millucam.py</code>, <code>tools/emb_padstack.mjs</code>, <code>tools/plate_ab.py</code>,
 <code>tools/emb_bake_shipped.mjs</code>. Decision record: <code>tools/blends/districts/emb_padfill.cells.json</code>.</p>
