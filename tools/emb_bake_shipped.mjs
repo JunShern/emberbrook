@@ -93,8 +93,31 @@ console.log(`emb_bake_shipped — ${jobs.length} camera(s) in ${cmds.length} gra
             `1-wide serial (dressed Emberbrook saturates the GPU; N-wide measured no faster)`);
 for (const a of cmds) console.log('  ' + BLENDER + ' ' + a.join(' '));
 if (PRINT) process.exit(0);
+// A CRASHED GROUP MUST NOT COST THE GROUPS BEHIND IT, AND MUST NOT PASS EITHER.  Measured
+// 2026-08-10: `homerow` SIGABRTed at render start — `ccl::MetalKernelPipeline::compile` in
+// the .ips, CLAUDE.md's Metal-kernel-cache case, and the SAME camera round 1 lost twice —
+// and because the first cut of this file used a bare `execFileSync`, the throw took the
+// five groups queued behind it with it.  A crashed plate WRITES NOTHING and leaves the old
+// art in place, so the only honest progress check is the artifact; the run now carries on,
+// names every failure with its signal, and EXITS 1.
+const failed = [];
 for (const a of cmds) {
-  console.log('\n=== ' + a[a.indexOf('--cams') + 1] + ' ===');
-  execFileSync(BLENDER, a, {cwd: ROOT, stdio: 'inherit'});
+  const cams = a[a.indexOf('--cams') + 1];
+  console.log('\n=== ' + cams + ' ===');
+  try {
+    execFileSync(BLENDER, a, {cwd: ROOT, stdio: 'inherit'});
+  } catch (e) {
+    failed.push({cams, signal: e.signal || null, status: e.status});
+    console.error(`!! GROUP FAILED: ${cams}  signal=${e.signal} status=${e.status} — ` +
+                  `its plates keep their OLD art; continuing with the rest`);
+  }
+}
+if (failed.length) {
+  console.error('\nemb_bake_shipped FAILED groups: ' +
+                failed.map((f) => `${f.cams} (${f.signal || 'exit ' + f.status})`).join(', ') +
+                '\n  A SIGABRT at render start with ccl::MetalKernelPipeline::compile in ' +
+                '~/Library/Logs/DiagnosticReports/Blender-*.ips is the Metal kernel cache: ' +
+                'quarantine /var/folders/*/C/org.blenderfoundation.blender and re-run those cams.');
+  process.exit(1);
 }
 console.log('\nemb_bake_shipped DONE');
