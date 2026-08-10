@@ -1251,6 +1251,44 @@ git runs here, on branch `migration/3d-hybrid`.
   mistyped or abbreviated stamp printed a neatly formatted table of **ZEROES** — a census that
   looks like a measurement and is a typo. Both fixed; the census now names what it could not read
   and lists the stamps that exist.
+- **EMBERBROOK ROUND 1 SHIPPED (2026-08-09/10) — three carriers, and the biggest find was not on
+  the worklist.** `tools/emb_lightbodies.py`: **`emb_lamp_<id>_glass` is a CLOSED 0.30 m box
+  wearing an OPAQUE emissive surface (Alpha 1.0, no transmission) with a 680 W point light
+  standing INSIDE it** — a 16x12 shadow-ray grid from the pad outside Lake's home found
+  **165 of 192 rays blocked by the lamp's own housing (85.9%)** and not one sample reaching the
+  light. One `visible_shadow` flag, nothing else touched: **homerow L≤8/255 66.1% → 37.9%, square
+  41.6% → 19.6%, clipping unchanged.** Half the crushed frame, from a prop bug — see the
+  night-grade entry above, which this overturns.
+  `tools/emb_pavechop.py`: the paving IS the walk network, **8.00 verts per up-face in every
+  family — one detached box per cell** — axis-aligned boundary **67.5% → 33.2%**, aprons
+  100.0% → 3.7-9.5%, judge rim/staircase language **8 → 0**. `tools/emb_padcoplanar.py`: the
+  black quad is **TWO WALK PADS IN ONE PLANE** (`lake-home` and `grandmothers-bench`, both
+  z 1.930..2.070, overlapping 1.81x1.55 m) — shipped as a 4 mm nudge, NOT the `hide_render` the
+  control used, because 55 coincident pairs exist town-wide and hiding a 65%-swallowed pad
+  deletes the rest of it; plate ≤8/255 now **0.0%**, and the separate "Grandmother's bench:
+  ABSENT" verdict died with it. Gates: cine_test 481/0, **`walk_engine_gate` GREEN on BOTH
+  bundles** (7,467 cells, 0 lost, 0 extra), `walk_bodygate` 0.15% and every blocker authored.
+  **THE TRAP THAT WOULD HAVE SHIPPED SILENTLY: A WHOLE-TOWN REBAKE REGRADES EVERY PLATE TO
+  `cameras.json`'s `defaults.exposure`, AND THAT IS NOT THE SHIPPED GRADE.** The shipped grade is
+  PER PLATE in `cine.json`'s `appliedGrade` — exposure 1.00 on eight, 0.78 on three, moon
+  1.5-3.75, plus `warmAnchorGlow` and a 900 W waystone lantern on two. Measured: homerow p50
+  **27.4 vs 3.0**, square 37.8 vs 12.0, gatefield 13.0 vs 1.0. A plain `cine_bake --town
+  emberbrook` darkens nine plates by **0.45-0.86 stops with every gate green**. `appliedGrade` is
+  RECORDED AND UNENFORCED; bake from a script that reads each plate's own.
+  **AND A GATE WITH A CEILING AND NO FLOOR PASSES AN ABSENCE PERFECTLY**: the Heartlight bar was
+  "zero clipped pixels on the flame", so **a flame you cannot see scores full marks**. The board's
+  `lm_heartlight_flame` does not exist in the dressed master (that attribution came from the GRAY
+  BLOCKOUT bundle); the real `emb_dress_heartflame0..4` at **x12 emission moved 0.54% of frame** —
+  the knob is inert and what clips is the cap under a 5200 W point. REFUTED, nothing shipped.
+  **TWO THINGS ONLY THE PICTURE CAUGHT, both green on every receipt in their broken versions**:
+  proximity is the wrong junction test (it pinned 587 of 603 ribbon boundary verts, because the
+  next segment along the SAME road is 0.36 m away in the direction the rim runs), and its first
+  fix — an outward step per VERTEX — photographed every road as **a ladder of separate plates**,
+  because a one-quad segment has only corners. The step is per boundary EDGE at its midpoint,
+  boundary subdivided first.
+  **AND THE HONEST JUDGE RESULT IS THAT SURVIVORS WENT UP, 94 → 97**: rim/staircase 8 → 0,
+  occlusion 22 → 13, darkness 35 → 31 — but geometry 29 → **37**, because **a town too dark to
+  read was hiding its own geometry.**
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
