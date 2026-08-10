@@ -1,0 +1,4709 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "r12-before",
+ "generated": "2026-08-10T10:17:25.936Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive"
+ ],
+ "n": 10,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/r12/before",
+ "cine": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/r12/before/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "cottage",
+   "name": "Keepers' Spur",
+   "replayOf": null,
+   "baked": "2026-08-10T08:59:48Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T10:13:34.771Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "crossing",
+   "name": "The Crossing",
+   "replayOf": null,
+   "baked": "2026-08-10T08:59:48Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T10:13:35.167Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "weave",
+   "name": "The Weave",
+   "replayOf": null,
+   "baked": "2026-08-10T08:59:48Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T10:13:35.027Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "waterfront",
+   "name": "The Waterfront — winch foot",
+   "replayOf": null,
+   "baked": "2026-08-10T08:59:48Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T10:13:35.100Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "fishdock",
+   "name": "The Fish Dock",
+   "replayOf": null,
+   "baked": "2026-08-10T08:59:48Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T10:13:34.932Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "north-landing",
+   "name": "North Landing",
+   "replayOf": null,
+   "baked": "2026-08-10T08:59:48Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T10:13:34.858Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  }
+ ],
+ "raw": 140,
+ "survivors": [
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "center ramp structure",
+   "bbox": [
+    0.26,
+    0.4,
+    0.9,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "The broken, layered wooden ramps visually collide and overlap, making it unclear which surfaces are walkable paths and which are dynamic debris or dead ends.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The fractured, overlapping planks on the central ramp create visual chaos that makes path readability difficult for navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "shadowed alcove under the upper structure",
+   "bbox": [
+    0.31,
+    0.32,
+    0.6,
+    0.52
+   ],
+   "severity": 2,
+   "desc": "Deep, pitch-black shadows beneath the upper wooden shelter completely obscure whether there is an playable opening or wall inside.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Deep cast shadows under the upper shelter pitch the interior into complete darkness, obscuring playable space."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "central broken wooden walkways",
+   "bbox": [
+    0.22,
+    0.26,
+    0.85,
+    0.95
+   ],
+   "severity": 2,
+   "desc": "The fractured, overlapping green ramps and broken wooden planks make it difficult to distinguish traversable paths from non-interactive visual debris.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The chaotic pile of angled wooden boards obscures where the player can safely step versus falling through gaps."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "long ladder along right cliff face",
+   "bbox": [
+    0.68,
+    0.37,
+    0.85,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "The ladder structure floats diagonally without visible attachment points or physical anchors to the cliff or platform.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "78.2,85.9,15.3,23.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.2,85.9,15.3,23.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The long ladder spans along the cliff without any visible anchors, brackets, or support framework attaching it to the rock."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F14",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "shadowed recess beneath central bridge",
+   "bbox": [
+    0.35,
+    0.3,
+    0.55,
+    0.58
+   ],
+   "severity": 1,
+   "desc": "Extremely dark shadows completely obscure the space and geometry underneath the bridge structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Extremely dark cast shadows beneath the bridge structure obscure geometry and obscure potential pathways."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F17",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "center shadowed gorge area",
+   "bbox": [
+    0.31,
+    0.32,
+    0.52,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Harsh cliff shadows completely black out the central wooden structure and walkways, making navigable paths impossible to discern.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Harsh environmental shadows cast across the central area obscure walkways and navigation lines."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F18",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "long ladder on the right cliff",
+   "bbox": [
+    0.685,
+    0.375,
+    0.848,
+    0.995
+   ],
+   "severity": 2,
+   "desc": "The long ladder structure clips directly into uneven rock faces without visible support mounts or logical grounding.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "79.3,85.8,15.4,23.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79.3,85.8,15.4,23.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The ladder clips directly into uneven rock faces near its base without mounting hardware."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F27",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "center broken wooden walkways",
+   "bbox": [
+    0.265,
+    0.235,
+    0.936,
+    0.848
+   ],
+   "severity": 2,
+   "desc": "The chaotic overlap of broken ramps, sharp angled planks, and gaps makes it ambiguous where walkable paths end and fall hazards begin.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Disjointed planks and gaps along the main bridge incline make it ambiguous where walkable collision ends."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F28",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "long ladder on the right cliff face",
+   "bbox": [
+    0.384,
+    0.686,
+    0.992,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "The metal ladder structure floats unanchored in mid-air along the cliff side without attachment brackets or base support.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "76,92,16.7,22.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 76,92,16.7,22.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The long ladder lacks structural wall attachments or base supports along the cliff."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F35",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "broken ramp on the lower-left wooden bridge",
+   "bbox": [
+    0.235,
+    0.608,
+    0.48,
+    0.932
+   ],
+   "severity": 2,
+   "desc": "Individual wooden planks on the broken ramp float in mid-air and clip through each other without visible fasteners or structural supports.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "86.6,95.6,17.7,24.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.6,95.6,17.7,24.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Several planks on the collapsed section float freely and clip through one another without joins or fasteners."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F36",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "shadowed alcove beneath the upper structure",
+   "bbox": [
+    0.325,
+    0.32,
+    0.52,
+    0.62
+   ],
+   "severity": 2,
+   "desc": "Harsh, pitch-black shadows completely hide the structure's interior and any potential doorway or path continuing inward.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Black shadows beneath the upper shelter obscure whether an entrance or playable space exists inside."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F42",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "central broken wooden ramp",
+   "bbox": [
+    0.41,
+    0.27,
+    0.84,
+    0.63
+   ],
+   "severity": 2,
+   "desc": "The broken wooden ramp overlaps chaotically, making it ambiguous whether this is a walkable path or an impassable obstacle.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The overlapping broken ramp planks make it visually ambiguous whether the incline is traversable."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F43",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "ladder on the right cliff face",
+   "bbox": [
+    0.69,
+    0.77,
+    0.76,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "The wooden ladder clips directly into the solid rock face near its base.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "80.4,85.4,16.7,23.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 80.4,85.4,16.7,23.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The bottom portion of the ladder clips straight into the solid cliff geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F44",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "wooden support structure below the bridge",
+   "bbox": [
+    0.41,
+    0.51,
+    0.62,
+    0.89
+   ],
+   "severity": 1,
+   "desc": "Multiple support beams and floor planks clip through each other without structural joins.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "83.7,91.8,16.3,23",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 83.7,91.8,16.3,23"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Underneath the bridge, multiple support stilts clip directly through floorboards without proper structural joins."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F49",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "broken wooden ramp in the lower center",
+   "bbox": [
+    0.23,
+    0.52,
+    0.48,
+    0.93
+   ],
+   "severity": 2,
+   "desc": "The collapsed wooden ramp consists of floating and clipping planks with disjointed angles, making it ambiguous whether it functions as a walkable path or debris.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "86.6,96,16.3,24.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.6,96,16.3,24.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Floating, disjointed planks on the lower central ramp blur the distinction between walkable geometry and debris."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F50",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "dark recess beneath the central roof",
+   "bbox": [
+    0.33,
+    0.31,
+    0.51,
+    0.59
+   ],
+   "severity": 2,
+   "desc": "Harsh cast shadows obscure the space beneath the roof, making it impossible to see if there is an open passage or entrance.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Heavy cast shadows under the roof line block line of sight into the structure's opening."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F51",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "metal ladder on the right cliff face",
+   "bbox": [
+    0.68,
+    0.38,
+    0.85,
+    0.99
+   ],
+   "severity": 1,
+   "desc": "The ladder lacks wall mounts and clips directly into the jagged rock face at its base.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "78.2,85.9,15.5,23.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.2,85.9,15.5,23.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The ladder lacks visible mounting brackets and clips into the lower rock face."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F57",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "central wooden ramp and walkway collapse",
+   "bbox": [
+    0.417,
+    0.267,
+    0.853,
+    0.854
+   ],
+   "severity": 2,
+   "desc": "The overlapping, broken wooden planks and scaffolding form a chaotic visual cluster that makes it hard to distinguish walkable paths from non-walkable debris.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The jumble of broken scaffolding and angled ramps makes it difficult for a player to discern navigable routes."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F58",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "shadow-covered area beneath the center bridge and hut",
+   "bbox": [
+    0.328,
+    0.321,
+    0.506,
+    0.58
+   ],
+   "severity": 2,
+   "desc": "Deep harsh shadows completely obscure the structure and ground beneath the upper bridge, hiding potential paths or openings.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Shadows under the central bridge hide ground detail and obscure potential lower paths."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F59",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "ladder leaning against upper walkway",
+   "bbox": [
+    0.69,
+    0.386,
+    0.851,
+    0.989
+   ],
+   "severity": 1,
+   "desc": "The long ladder clips directly through the platform edge without a cutout or mounting structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "78.2,85.7,14.9,23.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.2,85.7,14.9,23.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The top of the ladder clips directly into the solid edge of the wooden platform above."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F62",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "collapsed central wooden walkway",
+   "bbox": [
+    0.23,
+    0.27,
+    0.85,
+    0.94
+   ],
+   "severity": 2,
+   "desc": "The central wooden ramp is fractured into overlapping, jagged planks, making it unclear whether this is a traversable path or impassable scenery.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The fractured central ramp leaves path continuity visually ambiguous."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F63",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "long ladder on the right cliffside",
+   "bbox": [
+    0.68,
+    0.38,
+    0.85,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "The long ladder connects directly into the solid underside of the wooden walkway without an opening or hatch for access.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "78.2,85.9,15.5,23.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.2,85.9,15.5,23.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The top of the ladder runs straight into the solid underside of the platform without an opening or hatch."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F67",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "dark shadow under central building and bridge",
+   "bbox": [
+    0.32,
+    0.33,
+    0.52,
+    0.62
+   ],
+   "severity": 2,
+   "desc": "Deep harsh shadows obscuring the central area make it impossible to tell if the path continues into a cave, onto a lower platform, or terminates.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Pitch-black shadows under the central structure obscure where the lower path leads."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F68",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "collapsed wooden ramp near center",
+   "bbox": [
+    0.38,
+    0.5,
+    0.6,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "The broken planks on the ramp clip awkwardly into support beams and float at irregular angles, making walkable surfaces ambiguous.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "84.3,92.5,16.3,22.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84.3,92.5,16.3,22.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Planks on the collapsed ramp intersect support beams at irregular angles without logical placement."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner",
+   "bbox": [
+    0.786,
+    0.919,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "An untextured grey polygon is clipping through the terrain in the bottom right corner.",
+   "support": 5,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "61.4,68.1,13.7,17.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,68.1,13.7,17.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A large untextured gray mesh wedge clearly clips through the wooden path in the bottom right corner."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "occlusion",
+   "where": "lower-center building shadows",
+   "bbox": [
+    0.48,
+    0.54,
+    0.98,
+    0.82
+   ],
+   "severity": 2,
+   "desc": "Extremely dark cast shadows obscure the walkable surface and path around the central structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cast shadows are completely pitch-black, hiding ground details and walkable surfaces in shadow."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "immersion",
+   "where": "lower-left wooden pier walkway",
+   "bbox": [
+    0.74,
+    0.203,
+    0.892,
+    0.381
+   ],
+   "severity": 1,
+   "desc": "Broken wooden planks float in the air without visible support beams beneath them.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "73.9,80.6,12.7,18.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 73.9,80.6,12.7,18.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Several broken wooden planks on the lower-left platform hover in mid-air without underlying framing."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner",
+   "bbox": [
+    0.915,
+    0.78,
+    1,
+    0.998
+   ],
+   "severity": 2,
+   "desc": "A sharp, flat grey polygon clips through the wooden ramp in the bottom right corner.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "61.4,69.7,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,69.7,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An untextured flat gray mesh wedge intersects directly through the wooden ramp in the bottom right corner."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "occlusion",
+   "where": "center foreground roofs",
+   "bbox": [
+    0.445,
+    0.472,
+    0.74,
+    0.995
+   ],
+   "severity": 2,
+   "desc": "Large foreground roof structures obscure the walkway below, making it hard to see the path underneath.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large foreground rooftops obstruct the camera's view of the walkways directly beneath them."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F19",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "occlusion",
+   "where": "foreground rooftop and shadow area",
+   "bbox": [
+    0.41,
+    0.47,
+    0.75,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "The large roof structure and dense cast shadows heavily obscure the wooden walkway beneath, making navigable paths hard to discern.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Large roof structures combined with solid black cast shadows completely block the view of the path underneath."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F20",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "lower-left wooden pier stairs",
+   "bbox": [
+    0.14,
+    0.74,
+    0.45,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "The wooden steps and platform contain floating, disconnected planks and disjointed support beams that lack proper structural anchoring.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "71,83.5,20.3,38",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 71,83.5,20.3,38"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The lower-left wooden stair and pier section contains floating planks and unanchored support beams."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F24",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner of the screen",
+   "bbox": [
+    0.918,
+    0.772,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "A raw gray wedge of mesh clips into the camera view in the bottom right corner.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "61.4,69.8,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,69.8,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A raw gray triangular polygon clips into the camera view in the bottom right foreground."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F25",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "navigation",
+   "where": "center-foreground wooden walkways and roofs",
+   "bbox": [
+    0.43,
+    0.475,
+    0.78,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "Heavy visual noise and deep shadows make it hard to tell walkable paths apart from roof geometry.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Pitch-black shadows and overlapping roof geometry obscure walkable path layouts in the foreground."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F26",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "broken pier platform in the lower left",
+   "bbox": [
+    0.175,
+    0.738,
+    0.435,
+    0.99
+   ],
+   "severity": 1,
+   "desc": "The wooden planks on the lower walkway section feature disconnected and awkwardly clipping structural beams.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "71.2,85.2,21.6,37.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 71.2,85.2,21.6,37.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The broken pier structure in the lower left features disconnected wooden beams and floating planks."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F34",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "occlusion",
+   "where": "central roof shadow area",
+   "bbox": [
+    0.45,
+    0.475,
+    0.76,
+    0.82
+   ],
+   "severity": 1,
+   "desc": "Harsh pitch-black shadows from the foreground roof obscure the floor space and potential paths beneath.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The directional shadows cast by the central roof are pure black and hide the underlying floor surface entirely."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F40",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "navigation",
+   "where": "center-right roofs and walkway",
+   "bbox": [
+    0.44,
+    0.47,
+    0.8,
+    1
+   ],
+   "severity": 2,
+   "desc": "Harsh pitch-black shadows and overlapping roofs obscure the path below, making player navigation difficult to discern.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Pitch-black cast shadows conceal path geometry beneath the central-right roof structure."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F41",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom left-center wooden platform",
+   "bbox": [
+    0.17,
+    0.74,
+    0.38,
+    0.9
+   ],
+   "severity": 1,
+   "desc": "Broken wooden planks tilt and float disjointed without visible structural support underneath.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "71,87.3,21.6,38",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 71,87.3,21.6,38"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Broken planks on the lower-left platform tilt and float in open space without support joists beneath."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F47",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner",
+   "bbox": [
+    0.918,
+    0.77,
+    1,
+    0.995
+   ],
+   "severity": 2,
+   "desc": "Untextured gray polygon faces are visible along the bottom-right corner of the viewport.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "61.4,69.8,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,69.8,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Untextured gray polygon geometry clips noticeably along the bottom-right edge of the viewport."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F48",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "navigation",
+   "where": "central wooden walkways and rooftops",
+   "bbox": [
+    0.42,
+    0.47,
+    0.75,
+    0.8
+   ],
+   "severity": 2,
+   "desc": "Harsh, pitch-black directional shadows obscure elevation changes and make it difficult to identify walkable paths.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The pitch-black shadows lack ambient fill, making it difficult to discern elevation changes and paths."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F52",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right corner of the path",
+   "bbox": [
+    0.92,
+    0.748,
+    1,
+    1
+   ],
+   "severity": 2,
+   "desc": "An untextured gray mesh wedge clips directly through the wooden walkway surface.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "61.4,70.2,12.7,17.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,70.2,12.7,17.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An untextured gray mesh wedge penetrates through the wooden walkway surface in the bottom right corner."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F53",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "occlusion",
+   "where": "center foreground roof and structures",
+   "bbox": [
+    0.442,
+    0.473,
+    0.762,
+    1
+   ],
+   "severity": 2,
+   "desc": "The large roof and intense cast shadows completely block line of sight to the ground-level walkways beneath them.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The large foreground roof and its intense cast shadow block all visibility to the ground-level paths below."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F54",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "navigation",
+   "where": "lower left broken dock platforms",
+   "bbox": [
+    0.145,
+    0.742,
+    0.396,
+    0.996
+   ],
+   "severity": 2,
+   "desc": "The fragmented, broken wooden walkways make it ambiguous whether the platform is navigable or a fall hazard.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Floating and disconnected broken planks on the lower-left dock create severe visual confusion regarding player navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F60",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom right foreground edge",
+   "bbox": [
+    0.92,
+    0.765,
+    1,
+    0.99
+   ],
+   "severity": 2,
+   "desc": "Grey untextured mesh geometry clips awkwardly through the ground plane at the bottom right corner.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "61.4,69.1,12.7,17.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 61.4,69.1,12.7,17.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An untextured gray polygon clips through the ground plane in the bottom right corner of the screen."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F61",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "immersion",
+   "where": "broken wooden platform at lower left-center",
+   "bbox": [
+    0.207,
+    0.738,
+    0.385,
+    0.885
+   ],
+   "severity": 1,
+   "desc": "The damaged wooden planks hover in mid-air over the water without underlying support beams.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "69.5,87.6,21.6,36.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 69.5,87.6,21.6,36.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Damaged planks on the lower-left wooden walkway float above the water without structural crossbeams."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F66",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "geometry",
+   "where": "lower left wooden walkway structure",
+   "bbox": [
+    0.78,
+    0.15,
+    0.99,
+    0.38
+   ],
+   "severity": 1,
+   "desc": "Wooden planks and stair segments overlap and float without clear structural joins or supports.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "70.7,93.3,11,17.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 70.7,93.3,11,17.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Planks and stair treads on the lower-left walkway float disconnectedly without visible structural joins."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "the dense wooden village center",
+   "bbox": [
+    0.14,
+    0.298,
+    0.89,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "Walkable paths, roof slopes, and decorative scaffolding blend together into a uniform brown material, making walkable routes indistinguishable from impassable roofs.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Identical brown wood materials across roofs and walkways in the village center create extreme readability issues for playable paths."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "the wooden walkway clipping through the roof tiles",
+   "bbox": [
+    0.64,
+    0.348,
+    0.874,
+    0.529
+   ],
+   "severity": 2,
+   "desc": "The elevated wooden boardwalk clips directly through the green-shingled roof below without structural framing or cutouts.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "48.3,61.3,8.6,21.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 48.3,61.3,8.6,21.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The elevated boardwalk intersects directly through the green roof panels below without framing or cutouts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "the orange rock cluster on the upper cliff",
+   "bbox": [
+    0.26,
+    0.052,
+    0.33,
+    0.182
+   ],
+   "severity": 1,
+   "desc": "The orange rock formation clips abruptly into the grey cliff face without a natural transition or blending.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "82.9,132.1,-1.8,18.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 82.9,132.1,-1.8,18.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The bright orange rock asset on the upper cliff abruptly intersects the grey rock face without any blending or transitional geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F15",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center village boardwalks and rooftops",
+   "bbox": [
+    0.14,
+    0.12,
+    0.92,
+    0.88
+   ],
+   "severity": 2,
+   "desc": "Uniform brown and olive texturing across roofs, walkways, and rock faces creates heavy visual noise, making playable paths and ramps difficult to distinguish.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Monochromatic brown and olive textures across roofs, ramps, and rocks cause heavy visual noise that hides playable routes."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F16",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "far left edge behind the cliffs",
+   "bbox": [
+    0,
+    0.39,
+    0.11,
+    0.53
+   ],
+   "severity": 2,
+   "desc": "The cliff geometry ends in a sharp, unrendered vertical boundary exposing the empty background void.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "102,147.8,13,32.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 102,147.8,13,32.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cliff face on the far left cuts off sharply, revealing the unrendered black background void."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F21",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center-left wooden ramps and rooftops",
+   "bbox": [
+    0.14,
+    0.28,
+    0.5,
+    0.7
+   ],
+   "severity": 2,
+   "desc": "Identical wood textures and dense overlapping structures make it difficult to distinguish playable walkways from inaccessible rooftops.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Walkable ramps and impassable rooftops share the same wood material and overlapping structure, confusing player navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F22",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "far left water and cliff border",
+   "bbox": [
+    0,
+    0.4,
+    0.06,
+    0.62
+   ],
+   "severity": 2,
+   "desc": "The terrain abruptly terminates into an empty black void at the edge of the screen, exposing the map boundary.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "86.1,147.4,18.2,34.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.1,147.4,18.2,34.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The water body and cliff terrain terminate abruptly at the left edge of the screen into an open black void."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F23",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "occlusion",
+   "where": "lower ground beneath the wooden stilts",
+   "bbox": [
+    0.3,
+    0.48,
+    0.54,
+    0.8
+   ],
+   "severity": 1,
+   "desc": "Overlapping ramps and stilt structures heavily shadow and obscure any potential ground-level pathways below.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Deep shadows cast by the dense stilts and platforms completely obscure the visibility of the ground level."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F30",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center midground village structures",
+   "bbox": [
+    0.16,
+    0.3,
+    0.55,
+    0.65
+   ],
+   "severity": 2,
+   "desc": "Walkways, rooftops, and elevated platforms share identical textures and lighting, making walkable paths visually indistinguishable from non-navigable roofs.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A lack of texture and lighting distinction between rooftops and walkways makes midground navigation ambiguous."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F31",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "bottom center stilts and water area",
+   "bbox": [
+    0.28,
+    0.68,
+    0.48,
+    1
+   ],
+   "severity": 1,
+   "desc": "Stilts supporting upper wooden platforms clip directly into lower foliage and ground terrain without clear structural joints or foundations.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "56.3,67.8,21.8,32.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 56.3,67.8,21.8,32.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden support stilts pass directly through foliage models and ground geometry without foundation footings."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F37",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "sloped green roof near center",
+   "bbox": [
+    0.532,
+    0.419,
+    0.623,
+    0.513
+   ],
+   "severity": 1,
+   "desc": "A wooden step structure clips directly through the green roof surface without support framing.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "55.8,64.6,17.5,21.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 55.8,64.6,17.5,21.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Wooden steps clip straight through the sloped green roof panel in the center area without support structures or cutouts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F38",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "bottom right prayer flags",
+   "bbox": [
+    0.794,
+    0.856,
+    0.902,
+    0.938
+   ],
+   "severity": 1,
+   "desc": "The line holding the colorful flags terminates in mid-air on the right without attaching to a post or wall.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "43,52,16.7,26.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 43,52,16.7,26.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The string carrying the prayer flags at the bottom right floats unattached in mid-air at its right end."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F39",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "upper left walkway network",
+   "bbox": [
+    0.154,
+    0.2,
+    0.365,
+    0.54
+   ],
+   "severity": 2,
+   "desc": "Densely layered scaffolding, ramps, and roofs overlap with identical textures and shading, making the intended path hard to discern.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The scaffolding, ramps, and roofs in the upper-left network blend together under uniform shading, obscuring the path forward."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F45",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "middle region of overlapping wooden structures",
+   "bbox": [
+    0.15,
+    0.3,
+    0.95,
+    0.8
+   ],
+   "severity": 2,
+   "desc": "The dense stacking of identical wooden rooftops, platforms, and railings makes it difficult to visually separate walkable paths from background scenery.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Stacked wooden platforms and rooftops share identical materials, making walkable surfaces indistinguishable from background props."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F46",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "far left edge of the water body",
+   "bbox": [
+    0,
+    0.39,
+    0.05,
+    0.5
+   ],
+   "severity": 2,
+   "desc": "The water plane and environment geometry end abruptly at the left edge of the screen, revealing the empty background void.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "103.9,147.8,19,32.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 103.9,147.8,19,32.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The water plane ends abruptly along a straight line on the left edge, exposing the empty void behind the map."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F55",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "water plane at left screen edge",
+   "bbox": [
+    0,
+    0.4,
+    0.06,
+    0.62
+   ],
+   "severity": 2,
+   "desc": "The water plane terminates abruptly at a straight edge over the background void, revealing the edge of the map geometry.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "86.1,147.4,18.2,34.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.1,147.4,18.2,34.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The map geometry cuts off on the far left, leaving a sharp artificial edge over the empty background."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F56",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "overlapping walkways and roofs in center-right",
+   "bbox": [
+    0.53,
+    0.34,
+    0.92,
+    0.56
+   ],
+   "severity": 2,
+   "desc": "Layered wooden walkways and rooftops overlap closely with uniform coloring and shadows, making walkable paths ambiguous to distinguish from non-walkable roofs.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Homogeneous wood tones and lighting obscure whether the center-right surfaces are walkable paths or steep rooftops."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F64",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "middle-left overlapping wooden platforms",
+   "bbox": [
+    0.15,
+    0.3,
+    0.5,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Multiple layers of wooden walkways, stairs, and roofs share identical textures and lighting, making playable paths ambiguous.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Overlapping stairs and roofs share the same texture and lighting, creating ambiguous pathing on the middle-left platforms."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F65",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "top-left elevated walkway",
+   "bbox": [
+    0.32,
+    0.11,
+    0.39,
+    0.23
+   ],
+   "severity": 1,
+   "desc": "The elevated track terminates directly against a solid cliff wall without an opening or visual transition.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The upper-left elevated track runs straight into a flat, solid rock wall without a tunnel entrance or doorway."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F70",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "far left edge of the map",
+   "bbox": [
+    0,
+    0.4,
+    0.045,
+    0.65
+   ],
+   "severity": 2,
+   "desc": "The water and terrain abruptly terminate into empty dark space, exposing the edge of the game world.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "85.8,147.4,22.2,36.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 85.8,147.4,22.2,36.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The terrain and water abruptly stop at the left edge of the frame, exposing the void outside the map boundaries."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F71",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center-left wooden walkways and roofs",
+   "bbox": [
+    0.15,
+    0.32,
+    0.4,
+    0.58
+   ],
+   "severity": 2,
+   "desc": "Uniform dark brown tones and overlapping roofs obscure navigable walkways from decorative rooftops, making paths difficult to discern.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Dark brown wood texturing on both roofs and walkways obscures the intended navigation routes in the center-left area."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F72",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center-right area of overlapping roofs and walkways",
+   "bbox": [
+    0.3,
+    0.15,
+    0.85,
+    0.9
+   ],
+   "severity": 2,
+   "desc": "Dense, monochromatic wooden structures make walkable paths visually merge with non-walkable roofs and railings, making navigation ambiguous.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Dense, monochromatic wooden construction visually merges walkable walkways with non-walkable roofs in the center-right region."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F73",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "far left edge of the scene",
+   "bbox": [
+    0.39,
+    0,
+    0.46,
+    0.05
+   ],
+   "severity": 1,
+   "desc": "The terrain geometry cuts off abruptly at the map edge, exposing the empty background void.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "94.5,106.5,-2.9,1.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 94.5,106.5,-2.9,1.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The environment geometry terminates abruptly at the left boundary of the frame into empty black space."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F74",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "wooden platform over the water gap",
+   "bbox": [
+    0.418,
+    0.64,
+    0.52,
+    0.708
+   ],
+   "severity": 2,
+   "desc": "A small wooden platform floats in mid-air above the water gap without any visible supports or suspension.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.4,43.7,22.3,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.4,43.7,22.3,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A rectangular wooden platform in the lower center hovers completely in mid-air over the water gap without any supporting beams or posts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F75",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "tangled staircases and scaffolding in the center",
+   "bbox": [
+    0.43,
+    0.05,
+    0.78,
+    0.7
+   ],
+   "severity": 2,
+   "desc": "Multiple overlapping wooden staircases and ramps create visual clutter, making walkable pathways ambiguous.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense, overlapping web of stairs, ramps, and scaffolding in the center makes it very difficult for a player to identify valid walkable paths."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F76",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "boat hull embedded in dock structure on the right",
+   "bbox": [
+    0.828,
+    0.268,
+    0.95,
+    0.35
+   ],
+   "severity": 2,
+   "desc": "The boat hull clips directly through the wooden support posts of the surrounding structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "17.9,26.4,30.7,38.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.9,26.4,30.7,38.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden boat on the right clips directly into the adjacent wooden posts and concrete wall structure."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F79",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "center bottom, floating plank platform above water gap",
+   "bbox": [
+    0.417,
+    0.641,
+    0.52,
+    0.706
+   ],
+   "severity": 2,
+   "desc": "A wooden plank platform floats in mid-air over the water gap without any visible supporting posts or framework.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.4,43.7,22.3,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.4,43.7,22.3,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden plank section above the lower water gap floats without any structural support underneath or behind it."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F80",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "center stairs and wooden walkways",
+   "bbox": [
+    0.466,
+    0.26,
+    0.72,
+    0.56
+   ],
+   "severity": 2,
+   "desc": "The overlapping staircases, ramps, and wooden beams create visual clutter where walkable paths cannot be distinguished from decorative scaffolding.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Multiple intersecting wooden ramps and stairs clutter the central area, blurring the distinction between playable surfaces and non-interactive geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F81",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "far right center, boat hull near dam wall",
+   "bbox": [
+    0.83,
+    0.27,
+    0.948,
+    0.345
+   ],
+   "severity": 2,
+   "desc": "A boat hull is suspended horizontally in mid-air next to the concrete structure without resting on water or physical supports.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "17.9,26.5,30.8,38.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.9,26.5,30.8,38.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The boat on the right hangs elevated against the concrete wall without resting on water, ropes, or a support cradle."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F86",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "floating wooden platform bridging the water gap",
+   "bbox": [
+    0.417,
+    0.641,
+    0.519,
+    0.706
+   ],
+   "severity": 2,
+   "desc": "A wooden platform section floats mid-air without any supporting posts or connections underneath.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.4,43.7,22.3,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.4,43.7,22.3,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform segment over the water channel is entirely unattached to any surrounding structure or pillars."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F87",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "central wooden staircases and scaffolding",
+   "bbox": [
+    0.465,
+    0.25,
+    0.75,
+    0.68
+   ],
+   "severity": 2,
+   "desc": "The dense layer of overlapping ramps, stairs, clutter, and an overturned boat makes it ambiguous which path is walkable.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An overturned boat, loose planks, and overlapping ramps create significant visual clutter, obscuring navigable routes through the middle of the screen."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F88",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "boat suspended against the wall on the right",
+   "bbox": [
+    0.824,
+    0.266,
+    0.951,
+    0.345
+   ],
+   "severity": 1,
+   "desc": "The wooden boat on the right clips awkwardly into the concrete wall and pier structure without resting on water or supports.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "17.9,25.6,30.6,38.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.9,25.6,30.6,38.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The hull of the boat near the right wall clips directly through the wooden framework and concrete wall without logical support."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F93",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "center-left wooden stairs and ramps complex",
+   "bbox": [
+    0.44,
+    0.043,
+    0.831,
+    0.725
+   ],
+   "severity": 2,
+   "desc": "The dense network of overlapping ramps, stairs, and scaffolding lacks clear visual cues, making it ambiguous which surfaces form a walkable path.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The complex mesh of stairs and ramps around the cliffside lacks clear visual hierarchy, making pathfinding confusing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F94",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "floating wooden plank step above the water gap",
+   "bbox": [
+    0.418,
+    0.638,
+    0.52,
+    0.706
+   ],
+   "severity": 2,
+   "desc": "A wooden plank platform hovers in mid-air over the gap without any visible support posts or attachment.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.4,43.7,22.3,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.4,43.7,22.3,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The plank step in the lower-center water gap hovers in mid-air with visible space under all sides."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F98",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "center staircase and scaffolding ramps",
+   "bbox": [
+    0.467,
+    0.255,
+    0.715,
+    0.56
+   ],
+   "severity": 2,
+   "desc": "The overlapping staircases, ramps, and wooden beams create a visually confusing cluster where playable paths are ambiguous.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The chaotic arrangement of stairs and scaffolding in the center makes it unclear which ramps lead up and which are background decorative geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F99",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "lower center wooden platform over water",
+   "bbox": [
+    0.419,
+    0.638,
+    0.52,
+    0.706
+   ],
+   "severity": 2,
+   "desc": "A wooden platform section floats detached over the water gap without visible structural support or connection.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.4,43.7,22.4,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.4,43.7,22.4,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform bridging the lower water gap floats suspended without legs or mounting points."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F100",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "boat embedded in right-side building structure",
+   "bbox": [
+    0.827,
+    0.266,
+    0.951,
+    0.345
+   ],
+   "severity": 1,
+   "desc": "The boat is lodged awkwardly into the side of the concrete wall with clipping along its hull.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "17.9,25.6,30.7,38.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.9,25.6,30.7,38.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The boat's geometry visibly intersects and clips into the right-hand concrete building wall."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F106",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "central staircase and ramp complex",
+   "bbox": [
+    0.47,
+    0.25,
+    0.81,
+    0.63
+   ],
+   "severity": 2,
+   "desc": "Overlapping stairs, ramps, and planks create a visually chaotic path structure where valid walkable paths cannot be clearly distinguished.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Tangled ramps, stairs, and planks obscure where a player can actually step or traverse in the center area."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F107",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "wooden plank platform above the water channel",
+   "bbox": [
+    0.42,
+    0.64,
+    0.52,
+    0.71
+   ],
+   "severity": 2,
+   "desc": "A wooden platform segment floats unnaturally in mid-air above the water without any visual support.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.4,43.7,22.4,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.4,43.7,22.4,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform step above the water channel lacks any attached beams or physical connection to the nearby platforms."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F110",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "wooden board platform near the center bottom gap",
+   "bbox": [
+    0.418,
+    0.637,
+    0.52,
+    0.706
+   ],
+   "severity": 2,
+   "desc": "A wooden platform section floats in mid-air across the gap with no visible structural supports or beams attached.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.3,43.7,22.3,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.3,43.7,22.3,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The plank platform near the bottom gap clearly floats in mid-air with no structural foundation beneath it."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F111",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "central wooden scaffolding and stairs",
+   "bbox": [
+    0.458,
+    0.128,
+    0.73,
+    0.62
+   ],
+   "severity": 2,
+   "desc": "The chaotic overlap of wooden walkways, stairs, and structural beams makes it ambiguous which surfaces are walkable paths.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Overlapping wooden walkways and structural beams in the center obscure clear player pathing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F112",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "upper staircase leading up the cliff",
+   "bbox": [
+    0.465,
+    0.017,
+    0.58,
+    0.255
+   ],
+   "severity": 1,
+   "desc": "The upper staircase steps float independently without continuous stringers or clear underlying structural support.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "24.7,44.7,18.2,30",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 24.7,44.7,18.2,30"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The individual treads of the upper central staircase float in space without continuous stringers or supportive frames underneath."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F119",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "central complex of wooden stairs and ramps",
+   "bbox": [
+    0.43,
+    0.02,
+    0.81,
+    0.74
+   ],
+   "severity": 2,
+   "desc": "Multiple overlapping staircases, ladders, and ramps crisscross densely without clear visual cues showing which surfaces are walkable paths versus background structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense crisscrossing of ladders, ramps, and stairs creates visual ambiguity regarding walkable routes."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F120",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "boat on the right near the dam wall",
+   "bbox": [
+    0.827,
+    0.269,
+    0.951,
+    0.345
+   ],
+   "severity": 2,
+   "desc": "The wooden boat clips directly into the concrete wall and adjacent wooden scaffolding.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "17.9,25.6,30.7,38.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.9,25.6,30.7,38.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The hull of the boat on the right clips straight through the concrete wall and wooden scaffolding posts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F124",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "center bottom floating platform over water",
+   "bbox": [
+    0.417,
+    0.637,
+    0.519,
+    0.706
+   ],
+   "severity": 2,
+   "desc": "A wooden platform section floats suspended over the water gap without support posts or beam connections underneath.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "37.3,43.7,22.3,28.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 37.3,43.7,22.3,28.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The small wooden platform above the water gap in the lower-center is completely unanchored and floating."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F125",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "geometry",
+   "where": "middle right wooden boat on scaffolding",
+   "bbox": [
+    0.688,
+    0.165,
+    0.781,
+    0.303
+   ],
+   "severity": 2,
+   "desc": "The wooden boat rests precariously on thin scaffolding beams with no secure cradle or rigging, appearing to float or clip into the incline.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "-54.3,32.8,22.9,32.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -54.3,32.8,22.9,32.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The boat resting on the middle-right ramp lacks any holding cradle or rigging and clips directly into the underlying planks."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F127",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "navigation",
+   "where": "tangled staircase and ramp structure in the center",
+   "bbox": [
+    0.465,
+    0.25,
+    0.75,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "Multiple overlapping ramps, stairs, and planks create an ambiguous path where playable surfaces are hard to distinguish from background geometry.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The chaotic central stair structure makes it difficult to distinguish playable walkways from background visual noise."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F128",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "waterfront",
+   "item": null,
+   "category": "immersion",
+   "where": "boat hanging high on the concrete structure on the right",
+   "bbox": [
+    0.831,
+    0.268,
+    0.95,
+    0.346
+   ],
+   "severity": 2,
+   "desc": "A wooden boat is wedged sideways high above the water level on a wall without logical support or rigging.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "17.9,26.5,30.8,38.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 17.9,26.5,30.8,38.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The boat suspended high on the right wall has no visible slings, cranes, or support structures holding it up."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F77",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "water on the right side of the frame",
+   "bbox": [
+    0.599,
+    0.701,
+    0.772,
+    0.814
+   ],
+   "severity": 2,
+   "desc": "A wooden dock platform floats in mid-air directly above the small boat without any supports.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.7,52.4,26,34.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.7,52.4,26,34.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A green wooden platform hovers in mid-air directly over the small boat on the right without any supporting legs or posts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F78",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "geometry",
+   "where": "platform on the right side of the frame",
+   "bbox": [
+    0.806,
+    0.269,
+    0.998,
+    0.403
+   ],
+   "severity": 2,
+   "desc": "The long diagonal wooden ladder clips directly through the platform railing.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "40.4,49.2,17.4,22.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 40.4,49.2,17.4,22.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The long diagonal wooden beam on the right clips directly through the railing of the pier platform."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F85",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "floating platform above boat in the lower right water area",
+   "bbox": [
+    0.598,
+    0.702,
+    0.772,
+    0.863
+   ],
+   "severity": 2,
+   "desc": "A wooden platform hovers in mid-air directly over a small boat without any supporting posts or stilts.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.5,52.4,26.1,35.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.5,52.4,26.1,35.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform section above the rowboat in the lower right floats unsupported in the air."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F92",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "geometry",
+   "where": "long wooden beam on the far right",
+   "bbox": [
+    0.876,
+    0.03,
+    1,
+    0.622
+   ],
+   "severity": 1,
+   "desc": "A long diagonal wooden beam on the right side clips directly into the floorboards of the pier deck.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "40,47.3,19.7,30",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 40,47.3,19.7,30"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The long diagonal beam on the right side clips straight through the floorboards and railing of the pier."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F97",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "floating platform above boat at lower right",
+   "bbox": [
+    0.7,
+    0.598,
+    0.816,
+    0.774
+   ],
+   "severity": 2,
+   "desc": "A wooden platform section floats unsupported in mid-air directly above the rowboat with no legs or supports anchoring it.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44,49.9,22.4,34.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44,49.9,22.4,34.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The platform above the lower-right rowboat is floating in mid-air without any legs or attached framework."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F104",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "floating platform above the boat on the lower right",
+   "bbox": [
+    0.6,
+    0.7,
+    0.77,
+    0.86
+   ],
+   "severity": 2,
+   "desc": "A wooden dock platform hovers unnaturally directly over a small rowboat without any visible support structures.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.6,52.4,26,35.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.6,52.4,26,35.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A wooden dock platform hovers unnaturally directly over the rowboat with no visible supports."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F109",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "floating platform over rowboat at bottom right",
+   "bbox": [
+    0.6,
+    0.702,
+    0.773,
+    0.814
+   ],
+   "severity": 2,
+   "desc": "A wooden platform floats directly in mid-air over a rowboat without any structural supports or attachments.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.7,52.3,26.1,34.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.7,52.3,26.1,34.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform floats in mid-air directly above the rowboat without structural connections."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F116",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "geometry",
+   "where": "small boat on the lower right",
+   "bbox": [
+    0.6,
+    0.702,
+    0.773,
+    0.814
+   ],
+   "severity": 2,
+   "desc": "A wooden platform appears to hover directly over and clip into a small boat without proper structural support.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.7,52.3,26.1,34.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.7,52.3,26.1,34.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform hovers directly over the rowboat without any supporting posts anchoring it."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F117",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "rope posts in foreground water",
+   "bbox": [
+    0.368,
+    0.75,
+    0.85,
+    0.998
+   ],
+   "severity": 1,
+   "desc": "The rope barrier connecting the posts in the water consists of rigid floating cylinder segments without proper rope sagging.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "42.7,56.7,27,40.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 42.7,56.7,27,40.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The rope barrier in the foreground consists of rigid, straight cylindrical segments instead of naturally sagging rope."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F118",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "geometry",
+   "where": "far right diagonal wooden plank",
+   "bbox": [
+    0.873,
+    0.031,
+    0.998,
+    0.62
+   ],
+   "severity": 1,
+   "desc": "A long diagonal wooden beam stretches across the right side without support joints or clear functional geometry.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "40.1,47.4,17,30",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 40.1,47.4,17,30"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The long diagonal wooden beam on the right lacks support joints or realistic anchoring where it meets the walkway."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F126",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "floating platform above the rowboat in the lower right",
+   "bbox": [
+    0.7,
+    0.6,
+    0.86,
+    0.77
+   ],
+   "severity": 2,
+   "desc": "A wooden dock section floats unsupported in mid-air directly above a rowboat without any pillars or connections to the water or surrounding structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "43.1,50.6,22.4,34.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 43.1,50.6,22.4,34.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden dock section floats unsupported in mid-air directly above the rowboat."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F132",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "floating platform above rowboat on the right",
+   "bbox": [
+    0.599,
+    0.701,
+    0.775,
+    0.814
+   ],
+   "severity": 2,
+   "desc": "A wooden deck platform hovers above a small rowboat without any posts or structural connections linking it to the boat or water.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.7,52.4,26,34.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.7,52.4,26,34.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The deck platform hovers above the rowboat with no structural posts linking it to the boat or water."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F133",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "geometry",
+   "where": "long diagonal beam on the right side",
+   "bbox": [
+    0.872,
+    0.025,
+    0.998,
+    0.626
+   ],
+   "severity": 1,
+   "desc": "An extremely long, thin beam stretches from the upper structure down to the pier railing without any supporting framework along its length.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "40,47.4,17.1,26.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 40,47.4,17.1,26.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The diagonal beam stretches continuously across the frame without intermediate braces or supporting joints."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F136",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "immersion",
+   "where": "wooden platform on small boat in lower right water",
+   "bbox": [
+    0.599,
+    0.701,
+    0.775,
+    0.814
+   ],
+   "severity": 2,
+   "desc": "A heavy wooden platform is floating rigidly directly over a tiny rowboat without realistic buoyancy or support structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "44.7,52.4,26,34.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 44.7,52.4,26,34.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden platform floats in mid-air over the rowboat without proper supports or structural logic."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F82",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "sheer cliff face on the left",
+   "bbox": [
+    0.06,
+    0.208,
+    0.297,
+    0.995
+   ],
+   "severity": 1,
+   "desc": "Stylized conical plant assets protrude horizontally directly out of the vertical cliff face without stems or natural attachment points.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "96.7,111.6,17.7,27.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 96.7,111.6,17.7,27.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The conical plant models protrude horizontally directly out of the smooth cliff face without trunks, roots, or ledges."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F83",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "geometry",
+   "where": "water wheel near the center",
+   "bbox": [
+    0.679,
+    0.398,
+    0.742,
+    0.631
+   ],
+   "severity": 1,
+   "desc": "The left side of the water wheel clips directly into the concrete dam structure without visible axle mountings or a housing cutout.",
+   "support": 2,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "85.8,93.6,31,36.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 85.8,93.6,31,36.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The water wheel clips straight into the adjacent grey structure without proper housing clearance or an axle housing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F84",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "raised wooden bridge leading inward",
+   "bbox": [
+    0.471,
+    0.247,
+    0.586,
+    0.574
+   ],
+   "severity": 2,
+   "desc": "The main elevated walkway narrows significantly and visually blends into dense background scaffolding, making the forward route hard to distinguish.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The path forward narrows into a tangled maze of wooden scaffolding where walkable paths blend into background support beams."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F89",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "stepping stones in the water near the waterwheel",
+   "bbox": [
+    0.751,
+    0.609,
+    0.912,
+    0.691
+   ],
+   "severity": 2,
+   "desc": "The stepping stones lead directly into a solid concrete wall with no ladder, ledge, or door to continue along.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The white stepping stones end directly at a smooth, tall concrete wall with no ladder or doorway to continue."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F95",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "cliff face on the left",
+   "bbox": [
+    0.21,
+    0.05,
+    0.98,
+    0.3
+   ],
+   "severity": 1,
+   "desc": "Multiple stylized tree assets clip straight into the vertical rock face without trunks or bases.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "-27.9,102.4,19.2,82.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region -27.9,102.4,19.2,82.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Multiple conical foliage assets clip into the rock wall at right angles without visible bases or trunks."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F96",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "scaffolded walkway in the center background",
+   "bbox": [
+    0,
+    0.35,
+    0.52,
+    0.6
+   ],
+   "severity": 2,
+   "desc": "The main path continues into a dense tangle of wooden beams and platforms, making it difficult to discern walkable routes from background clutter.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The visually dense scaffolding background lacks visual readability for player movement and navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F101",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "geometry",
+   "where": "hole in the circular wooden platform in the foreground",
+   "bbox": [
+    0.332,
+    0.848,
+    0.497,
+    0.956
+   ],
+   "severity": 2,
+   "desc": "A large square opening cut into the wooden floor reveals unfinished internal geometry without railings, ladders, or clear visual purpose.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "105.3,110.8,24.1,30.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 105.3,110.8,24.1,30.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The rectangular hole cut into the wooden platform lacks finished rimming or logical internal framing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F102",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "wooden scaffolding along the cliffside",
+   "bbox": [
+    0.34,
+    0,
+    0.6,
+    0.48
+   ],
+   "severity": 2,
+   "desc": "The dense maze of wooden scaffolding and support beams against the cliff makes walkable paths and stairs difficult to distinguish from background structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The heavy overlap of beams along the cliff obscures playable routes and stairs from non-walkable structure."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F103",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "vegetation assets on the cliff face",
+   "bbox": [
+    0.208,
+    0.21,
+    0.298,
+    0.42
+   ],
+   "severity": 1,
+   "desc": "Conical plant models are embedded sideways directly into the sheer vertical rock wall without visible stems, roots, or soil ledges.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "96.7,103.3,19.2,23.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 96.7,103.3,19.2,23.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The vegetation models stick horizontally out of the vertical rock face without roots or soil."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F108",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "center of the circular wooden dock in the foreground",
+   "bbox": [
+    0.332,
+    0.848,
+    0.496,
+    0.958
+   ],
+   "severity": 2,
+   "desc": "A square hole in the platform floor drops into dark structure underneath without a ladder or visual cue indicating if it is a path or a hazard.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The unguarded square hole in the platform creates navigation ambiguity as there is no ladder or indication of function."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F113",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "cliff face on the left",
+   "bbox": [
+    0.21,
+    0.211,
+    0.253,
+    0.319
+   ],
+   "severity": 1,
+   "desc": "Stylized conical plants stick horizontally out of the vertical cliff face without roots or soil, appearing like floating or misaligned geometry.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "98.2,102.5,19.2,23",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 98.2,102.5,19.2,23"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The plant models protrude horizontally from the vertical cliff, looking like misaligned geometric placements."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F114",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "wooden platform floor in foreground",
+   "bbox": [
+    0.332,
+    0.848,
+    0.497,
+    0.959
+   ],
+   "severity": 2,
+   "desc": "An unguarded square hole in the middle of the walkable wooden platform creates an ambiguous hazard without any railing or visible ladder.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The unguarded hole on the main circular floor creates an ambiguous fall hazard."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F115",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "elevated wooden structure along cliff",
+   "bbox": [
+    0.35,
+    0,
+    0.6,
+    0.48
+   ],
+   "severity": 2,
+   "desc": "The dense, overlapping wooden scaffolding visually blends together, making it hard to discern where the walkable path continues.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense arrangement of wooden beams makes it difficult to read where the path continues into the background."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F121",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "tangled wooden scaffolding in the middle distance",
+   "bbox": [
+    0.345,
+    0,
+    0.61,
+    0.45
+   ],
+   "severity": 2,
+   "desc": "The dense overlap of wooden beams, stairs, and supports makes it visually ambiguous where playable paths continue.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Visual clutter in the midground scaffolding masks playable routes."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F122",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "conical tree models along the cliff face",
+   "bbox": [
+    0.21,
+    0.205,
+    0.252,
+    0.318
+   ],
+   "severity": 1,
+   "desc": "Tree models stick directly horizontally out of the vertical rock face without roots or proper orientation.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "98.2,102.5,19.3,23",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 98.2,102.5,19.3,23"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The conical trees extend sideways horizontally from the sheer cliff face."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F123",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "geometry",
+   "where": "opening in the foreground wooden deck",
+   "bbox": [
+    0.332,
+    0.848,
+    0.501,
+    0.953
+   ],
+   "severity": 1,
+   "desc": "The cutout hole in the platform floor shows raw clipped geometry and incomplete framing underneath.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "105.3,110.9,24.1,30.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 105.3,110.9,24.1,30.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The floor opening reveals raw clipped support geometry beneath the deck."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F129",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "geometry",
+   "where": "vegetation on cliff wall",
+   "bbox": [
+    0.114,
+    0.591,
+    0.187,
+    0.781
+   ],
+   "severity": 1,
+   "desc": "The conical tree models stick horizontally out of the vertical cliff face without visible trunks or roots.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "101.9,107.8,19,24",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 101.9,107.8,19,24"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cone trees clip horizontally into the rock wall without trunks."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F130",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "stepping stones on water surface",
+   "bbox": [
+    0.75,
+    0.608,
+    0.911,
+    0.693
+   ],
+   "severity": 1,
+   "desc": "The rectangular stepping stones float unsupported on top of the water without sub-surface geometry.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "86.8,95.4,33,42.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.8,95.4,33,42.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The stepping stones appear floating on the water surface without sub-surface bases or anchors."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F131",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "scaffolding complex on upper left cliff",
+   "bbox": [
+    0.353,
+    0.034,
+    0.608,
+    0.532
+   ],
+   "severity": 2,
+   "desc": "Dense wooden structures along the cliff side obscure accessible paths, making it unclear which levels are playable.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The scaffolding structure obscures path continuity and playable vertical levels."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F134",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "geometry",
+   "where": "green plant models on the cliff face",
+   "bbox": [
+    0.11,
+    0.208,
+    0.345,
+    0.99
+   ],
+   "severity": 1,
+   "desc": "The green cone-shaped vegetation models clip directly out of the rock face without roots or natural blending.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "94.4,111.3,18.2,28.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 94.4,111.3,18.2,28.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green cone plants stick straight out from the rock without natural transition geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F135",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "scaffolding and upper walkways on the left side",
+   "bbox": [
+    0.345,
+    0,
+    0.58,
+    0.48
+   ],
+   "severity": 2,
+   "desc": "The dense, overlapping wooden beams make it difficult to discern navigable paths from non-walkable background clutter.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Path readability is severely hindered by dense overlapping wooden beams along the route."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F138",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "navigation",
+   "where": "scaffolding and walkway structures in the upper-left background",
+   "bbox": [
+    0.345,
+    0,
+    0.63,
+    0.42
+   ],
+   "severity": 2,
+   "desc": "The visual density of overlapping structural scaffolding makes it hard to distinguish walkable surfaces from non-walkable framing.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Background scaffolding clutter creates visual confusion regarding walkable surfaces."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F139",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "stylized cone trees on the left cliff wall",
+   "bbox": [
+    0.267,
+    0.324,
+    0.298,
+    0.415
+   ],
+   "severity": 1,
+   "desc": "Cone-shaped vegetation models stick straight out horizontally from the steep rock face without roots or natural placement.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "97.3,101.8,20.2,23.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 97.3,101.8,20.2,23.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The stylized tree cones are placed perpendicularly straight out of the cliff face."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F140",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "geometry",
+   "where": "cutout hole in the foreground wooden deck",
+   "bbox": [
+    0.332,
+    0.847,
+    0.499,
+    0.959
+   ],
+   "severity": 1,
+   "desc": "An unbordered rectangular hole in the middle of the circular deck exposes raw structural pillars without a hatch or ladder.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "105.3,110.8,24.1,30.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 105.3,110.8,24.1,30.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The rectangular hole cut into the deck floor lacks edge trim, a ladder, or hatch framing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "orange foliage at top left-center",
+   "bbox": [
+    0,
+    0.215,
+    0.29,
+    0.452
+   ],
+   "severity": 1,
+   "desc": "The stylized orange tree geometry exhibits harsh, unmerged jagged cutout shells that create unnaturally sharp silhouette holes.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "91.7,113,0.7,21.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,113,0.7,21.6"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The stylized cutout geometry of the orange trees is standard for this low-poly/stylized art style and does not hinder gameplay."
+   }
+  },
+  {
+   "fid": "F29",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "row of orange crates on the left cliff side",
+   "bbox": [
+    0.553,
+    0.238,
+    0.628,
+    0.415
+   ],
+   "severity": 1,
+   "desc": "A row of small orange crates rests on a thin track that floats in space without visible wall mounts or posts.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "84,89,12.3,18.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84,89,12.3,18.8"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The row of orange crates sits atop a visible wooden ledge supported by structural beams anchored to the rock."
+   }
+  },
+  {
+   "fid": "F69",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "upper right walkway and roof junction",
+   "bbox": [
+    0.6,
+    0.25,
+    0.98,
+    0.5
+   ],
+   "severity": 2,
+   "desc": "The green wooden platform textures and elevated shelter roofs visually merge, making it hard to discern where the walkway ends and roofs begin.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The upper right walkway and shelter roof are clearly separated in elevation and easy to distinguish."
+   }
+  },
+  {
+   "fid": "F33",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "crossing",
+   "item": null,
+   "category": "immersion",
+   "where": "top right background shelter",
+   "bbox": [
+    0.755,
+    0.028,
+    0.87,
+    0.12
+   ],
+   "severity": 2,
+   "desc": "A slanted roof panel floats in the air near the top right slope without adequate supporting structure.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "79.7,94.7,11.8,18.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79.7,94.7,11.8,18.4"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The slanted roof panel in the top right background is properly anchored to vertical support posts and framing."
+   }
+  },
+  {
+   "fid": "F32",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "upper left cliff peak",
+   "bbox": [
+    0.259,
+    0.05,
+    0.332,
+    0.185
+   ],
+   "severity": 1,
+   "desc": "The small rocky pinnacle has sharp, unnatural low-poly geometric edges and repetitive textures that stand out against the surrounding cliff faces.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "82.7,131.9,-1.7,18.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 82.7,131.9,-1.7,18.2"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The low-poly geometry of the pinnacle is consistent with the simplified, stylized treatment of the surrounding cliffs."
+   }
+  },
+  {
+   "fid": "F91",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "navigation",
+   "where": "shadowed space underneath upper stilts",
+   "bbox": [
+    0.36,
+    0.18,
+    0.6,
+    0.5
+   ],
+   "severity": 2,
+   "desc": "Pitch-black shadows beneath the stilted structures obscure ground level geometry and potential walkways.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Lanterns and ambient light clearly reveal ground details, props, and structural posts underneath the stilts rather than pitch-black shadow."
+   }
+  },
+  {
+   "fid": "F105",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "occlusion",
+   "where": "dark shadowed area under the central wooden structures",
+   "bbox": [
+    0.25,
+    0.1,
+    0.55,
+    0.5
+   ],
+   "severity": 1,
+   "desc": "Deep shadows obscure the ground level beneath the stilted buildings, making it difficult to discern whether paths exist under the structures.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Ground props, plants, lantern lighting, and terrain are clearly readable beneath the central stilted structures."
+   }
+  },
+  {
+   "fid": "F137",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "fishdock",
+   "item": null,
+   "category": "occlusion",
+   "where": "dark shadowed cliff recess in the center background",
+   "bbox": [
+    0.4,
+    0.15,
+    0.75,
+    0.5
+   ],
+   "severity": 2,
+   "desc": "Extreme dark shadows completely black out the structures and ground behind the stilts, making navigation through this central area unreadable.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Ambient lighting and lanterns illuminate the central background area, making the cliff wall and stilt geometry easily readable."
+   }
+  },
+  {
+   "fid": "F90",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "north-landing",
+   "item": null,
+   "category": "immersion",
+   "where": "bunting flags on the left above the wooden deck",
+   "bbox": [
+    0.344,
+    0.431,
+    0.545,
+    0.597
+   ],
+   "severity": 1,
+   "desc": "The left end of the flag line floats in mid-air instead of anchoring to the rock face or a post.",
+   "support": 1,
+   "of": 10,
+   "census": null,
+   "hint": {
+    "region": "87.9,109.9,21.5,30.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 87.9,109.9,21.5,30.9"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The bunting string is attached directly to the top of the vertical wooden support post on the canopy frame."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 66,
+  "promptTok": 101944,
+  "replyTok": 108091,
+  "errors": 0,
+  "byStage": {
+   "naive": 60,
+   "refute-naive": 6
+  }
+ },
+ "bboxAgreement": {
+  "n": 0,
+  "hit": 0,
+  "frac": null
+ },
+ "aimCensus": {
+  "n": 0,
+  "refuted": 0,
+  "onSubject": 0,
+  "absenceClaim": 0,
+  "unmeasurable": 0,
+  "min": 0.02,
+  "applied": true,
+  "byFamily": {}
+ },
+ "rhetoric": {
+  "n": 9,
+  "intent": 2,
+  "byClass": {
+   "foliage-other": {
+    "n": 1,
+    "intent": 1
+   },
+   "rest": {
+    "n": 5,
+    "intent": 1
+   },
+   "occlusion-nonfoliage": {
+    "n": 3,
+    "intent": 0
+   }
+  },
+  "byMode": {
+   "naive": {
+    "n": 9,
+    "intent": 2
+   }
+  },
+  "byCategory": {
+   "geometry": {
+    "n": 1,
+    "intent": 1
+   },
+   "immersion": {
+    "n": 4,
+    "intent": 1
+   },
+   "navigation": {
+    "n": 2,
+    "intent": 0
+   },
+   "occlusion": {
+    "n": 2,
+    "intent": 0
+   }
+  },
+  "examples": []
+ },
+ "calibration": null
+}

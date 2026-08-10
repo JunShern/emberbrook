@@ -1,0 +1,251 @@
+[
+ {
+  "fid": "F6",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "geometry",
+  "where": "orange foliage at top left-center",
+  "bbox": [
+   0,
+   0.215,
+   0.29,
+   0.452
+  ],
+  "severity": 1,
+  "desc": "The stylized orange tree geometry exhibits harsh, unmerged jagged cutout shells that create unnaturally sharp silhouette holes.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "91.7,113,0.7,21.6",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,113,0.7,21.6"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The stylized cutout geometry of the orange trees is standard for this low-poly/stylized art style and does not hinder gameplay."
+  }
+ },
+ {
+  "fid": "F29",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "row of orange crates on the left cliff side",
+  "bbox": [
+   0.553,
+   0.238,
+   0.628,
+   0.415
+  ],
+  "severity": 1,
+  "desc": "A row of small orange crates rests on a thin track that floats in space without visible wall mounts or posts.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "84,89,12.3,18.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84,89,12.3,18.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The row of orange crates sits atop a visible wooden ledge supported by structural beams anchored to the rock."
+  }
+ },
+ {
+  "fid": "F69",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "navigation",
+  "where": "upper right walkway and roof junction",
+  "bbox": [
+   0.6,
+   0.25,
+   0.98,
+   0.5
+  ],
+  "severity": 2,
+  "desc": "The green wooden platform textures and elevated shelter roofs visually merge, making it hard to discern where the walkway ends and roofs begin.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The upper right walkway and shelter roof are clearly separated in elevation and easy to distinguish."
+  }
+ },
+ {
+  "fid": "F33",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "crossing",
+  "item": null,
+  "category": "immersion",
+  "where": "top right background shelter",
+  "bbox": [
+   0.755,
+   0.028,
+   0.87,
+   0.12
+  ],
+  "severity": 2,
+  "desc": "A slanted roof panel floats in the air near the top right slope without adequate supporting structure.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "79.7,94.7,11.8,18.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79.7,94.7,11.8,18.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The slanted roof panel in the top right background is properly anchored to vertical support posts and framing."
+  }
+ },
+ {
+  "fid": "F32",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "immersion",
+  "where": "upper left cliff peak",
+  "bbox": [
+   0.259,
+   0.05,
+   0.332,
+   0.185
+  ],
+  "severity": 1,
+  "desc": "The small rocky pinnacle has sharp, unnatural low-poly geometric edges and repetitive textures that stand out against the surrounding cliff faces.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "82.7,131.9,-1.7,18.2",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 82.7,131.9,-1.7,18.2"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The low-poly geometry of the pinnacle is consistent with the simplified, stylized treatment of the surrounding cliffs."
+  }
+ },
+ {
+  "fid": "F91",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "navigation",
+  "where": "shadowed space underneath upper stilts",
+  "bbox": [
+   0.36,
+   0.18,
+   0.6,
+   0.5
+  ],
+  "severity": 2,
+  "desc": "Pitch-black shadows beneath the stilted structures obscure ground level geometry and potential walkways.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Lanterns and ambient light clearly reveal ground details, props, and structural posts underneath the stilts rather than pitch-black shadow."
+  }
+ },
+ {
+  "fid": "F105",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "occlusion",
+  "where": "dark shadowed area under the central wooden structures",
+  "bbox": [
+   0.25,
+   0.1,
+   0.55,
+   0.5
+  ],
+  "severity": 1,
+  "desc": "Deep shadows obscure the ground level beneath the stilted buildings, making it difficult to discern whether paths exist under the structures.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Ground props, plants, lantern lighting, and terrain are clearly readable beneath the central stilted structures."
+  }
+ },
+ {
+  "fid": "F137",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "fishdock",
+  "item": null,
+  "category": "occlusion",
+  "where": "dark shadowed cliff recess in the center background",
+  "bbox": [
+   0.4,
+   0.15,
+   0.75,
+   0.5
+  ],
+  "severity": 2,
+  "desc": "Extreme dark shadows completely black out the structures and ground behind the stilts, making navigation through this central area unreadable.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Ambient lighting and lanterns illuminate the central background area, making the cliff wall and stilt geometry easily readable."
+  }
+ },
+ {
+  "fid": "F90",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "north-landing",
+  "item": null,
+  "category": "immersion",
+  "where": "bunting flags on the left above the wooden deck",
+  "bbox": [
+   0.344,
+   0.431,
+   0.545,
+   0.597
+  ],
+  "severity": 1,
+  "desc": "The left end of the flag line floats in mid-air instead of anchoring to the rock face or a post.",
+  "support": 1,
+  "of": 10,
+  "census": null,
+  "hint": {
+   "region": "87.9,109.9,21.5,30.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 87.9,109.9,21.5,30.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The bunting string is attached directly to the top of the vertical wooden support post on the canopy frame."
+  }
+ }
+]
