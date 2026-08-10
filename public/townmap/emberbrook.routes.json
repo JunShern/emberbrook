@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-10T00:54:23Z",
+ "generated": "2026-08-10T17:31:10Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -392,16 +392,16 @@
        -0.456
       ],
       "px": [
-       590,
+       589,
        559
       ],
       "onScreen": true,
       "edgeMargin": 0.544,
-      "depth": 34.219,
+      "depth": 34.178,
       "charPx": 108,
       "headNdc": [
        -0.126,
-       -0.223
+       -0.222
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -434,7 +434,7 @@
       "behind": false,
       "ndc": [
        0.098,
-       0.07
+       0.071
       ],
       "px": [
        738,
@@ -442,11 +442,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.902,
-      "depth": 39.221,
+      "depth": 39.18,
       "charPx": 94,
       "headNdc": [
        0.1,
-       0.285
+       0.287
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -493,11 +493,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.261,
-      "depth": 32.04,
+      "depth": 31.999,
       "charPx": 116,
       "headNdc": [
        -0.256,
-       -0.498
+       -0.497
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -534,19 +534,19 @@
       "behind": false,
       "ndc": [
        0.17,
-       0.253
+       0.255
       ],
       "px": [
        786,
-       287
+       286
       ],
       "onScreen": true,
-      "edgeMargin": 0.747,
-      "depth": 41.337,
+      "edgeMargin": 0.745,
+      "depth": 41.296,
       "charPx": 90,
       "headNdc": [
        0.174,
-       0.461
+       0.463
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -665,7 +665,7 @@
      "seam:arrival-clearing__waystone"
     ],
     "minCharPx": 90,
-    "visibleFrac": 0.8438
+    "visibleFrac": 0.8594
    }
   },
   "arch": {
@@ -704,7 +704,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.369,
-      "depth": 51.999,
+      "depth": 51.99,
       "charPx": 71,
       "headNdc": [
        -0.635,
@@ -749,7 +749,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.855,
-      "depth": 47.283,
+      "depth": 47.274,
       "charPx": 78,
       "headNdc": [
        0.146,
@@ -785,7 +785,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.343,
+       0.344,
        -0.666
       ],
       "px": [
@@ -794,7 +794,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.334,
-      "depth": 31.897,
+      "depth": 31.889,
       "charPx": 116,
       "headNdc": [
        0.347,
@@ -845,7 +845,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.228,
-      "depth": 53.185,
+      "depth": 53.177,
       "charPx": 70,
       "headNdc": [
        -0.777,
@@ -894,7 +894,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.924,
-      "depth": 49.903,
+      "depth": 49.895,
       "charPx": 74,
       "headNdc": [
        0.076,
@@ -943,11 +943,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.159,
-      "depth": 29.105,
+      "depth": 29.097,
       "charPx": 127,
       "headNdc": [
        0.373,
-       -0.522
+       -0.521
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1698,20 +1698,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.049,
-       0.435
+       0.05,
+       0.434
       ],
       "px": [
        705,
        217
       ],
       "onScreen": true,
-      "edgeMargin": 0.565,
-      "depth": 52.917,
+      "edgeMargin": 0.566,
+      "depth": 52.94,
       "charPx": 39,
       "headNdc": [
-       0.05,
-       0.522
+       0.051,
+       0.521
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1743,19 +1743,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.57,
+       -0.569,
        -0.286
       ],
       "px": [
-       289,
+       290,
        494
       ],
       "onScreen": true,
-      "edgeMargin": 0.43,
-      "depth": 40.623,
+      "edgeMargin": 0.431,
+      "depth": 40.646,
       "charPx": 51,
       "headNdc": [
-       -0.586,
+       -0.585,
        -0.193
       ],
       "headOnScreen": true,
@@ -1789,7 +1789,7 @@
       "behind": false,
       "ndc": [
        0.607,
-       -0.315
+       -0.316
       ],
       "px": [
        1080,
@@ -1797,7 +1797,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.393,
-      "depth": 39.333,
+      "depth": 39.356,
       "charPx": 53,
       "headNdc": [
        0.625,
@@ -1833,16 +1833,16 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.082,
-       -0.609
+       0.083,
+       -0.61
       ],
       "px": [
-       727,
+       728,
        618
       ],
       "onScreen": true,
-      "edgeMargin": 0.391,
-      "depth": 36.463,
+      "edgeMargin": 0.39,
+      "depth": 36.486,
       "charPx": 57,
       "headNdc": [
        0.085,
@@ -1887,10 +1887,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.67,
-      "depth": 39.852,
+      "depth": 39.875,
       "charPx": 52,
       "headNdc": [
-       -0.29,
+       -0.289,
        -0.236
       ],
       "headOnScreen": true,
@@ -1903,7 +1903,7 @@
      "kind": "door",
      "at": [
       68.57,
-      1.39,
+      1.49,
       -41.26
      ],
      "from": "emb-item-int",
@@ -1916,20 +1916,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.199,
-       0.076
+       -0.198,
+       0.081
       ],
       "px": [
-       538,
-       355
+       539,
+       353
       ],
       "onScreen": true,
-      "edgeMargin": 0.801,
-      "depth": 45.63,
+      "edgeMargin": 0.802,
+      "depth": 45.583,
       "charPx": 45,
       "headNdc": [
-       -0.204,
-       0.168
+       -0.203,
+       0.173
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1958,16 +1958,16 @@
        0.181
       ],
       "px": [
-       816,
-       314
+       817,
+       315
       ],
       "onScreen": true,
       "edgeMargin": 0.785,
-      "depth": 47.259,
+      "depth": 47.282,
       "charPx": 44,
       "headNdc": [
        0.22,
-       0.273
+       0.272
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1978,34 +1978,34 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      54.62,
-      1.46,
-      -44.38
+      54.71,
+      1.41,
+      -44.87
      ],
      "from": "emb-bakery-int",
      "via": "emb-bakery-int>emb-cine@bakery",
      "label": "Leave Poppy's bakery",
      "aim": [
-      0.805,
-      -0.593
+      0.802,
+      -0.597
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.373,
-       0.05
+       0.376,
+       0.023
       ],
       "px": [
-       923,
-       365
+       925,
+       375
       ],
       "onScreen": true,
-      "edgeMargin": 0.627,
-      "depth": 45.096,
+      "edgeMargin": 0.624,
+      "depth": 44.781,
       "charPx": 46,
       "headNdc": [
-       0.382,
-       0.143
+       0.386,
+       0.116
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2019,7 +2019,7 @@
      "kind": "door",
      "at": [
       71.06,
-      1.57,
+      1.5,
       -39.76
      ],
      "to": "emb-item-int",
@@ -2036,20 +2036,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.302,
-       0.132
+       -0.301,
+       0.128
       ],
       "px": [
-       469,
-       333
+       470,
+       335
       ],
       "onScreen": true,
-      "edgeMargin": 0.698,
-      "depth": 46.281,
+      "edgeMargin": 0.699,
+      "depth": 46.351,
       "charPx": 45,
       "headNdc": [
-       -0.31,
-       0.224
+       -0.309,
+       0.22
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2061,7 +2061,7 @@
      "kind": "door",
      "at": [
       56.68,
-      1.57,
+      1.5,
       -38.14
      ],
      "to": "emb-inn-int",
@@ -2079,19 +2079,19 @@
       "behind": false,
       "ndc": [
        0.227,
-       0.3
+       0.296
       ],
       "px": [
        824,
-       269
+       270
       ],
       "onScreen": true,
-      "edgeMargin": 0.7,
-      "depth": 49.322,
+      "edgeMargin": 0.704,
+      "depth": 49.392,
       "charPx": 42,
       "headNdc": [
        0.232,
-       0.39
+       0.386
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2103,7 +2103,7 @@
      "kind": "door",
      "at": [
       51.82,
-      1.57,
+      1.5,
       -45.11
      ],
      "to": "emb-bakery-int",
@@ -2111,8 +2111,8 @@
      "prompt": "E",
      "label": "Enter Poppy's bakery",
      "aim": [
-      -0.967,
-      -0.255
+      -0.997,
+      -0.083
      ],
      "seam": null,
      "r": 1.8,
@@ -2120,20 +2120,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.492,
-       0.045
+       0.491,
+       0.041
       ],
       "px": [
        1002,
-       367
+       368
       ],
       "onScreen": true,
-      "edgeMargin": 0.508,
-      "depth": 44.848,
+      "edgeMargin": 0.509,
+      "depth": 44.918,
       "charPx": 46,
       "headNdc": [
        0.504,
-       0.138
+       0.133
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2173,16 +2173,16 @@
        0.517
       ],
       "px": [
-       722,
-       185
+       723,
+       186
       ],
       "onScreen": true,
       "edgeMargin": 0.483,
-      "depth": 55.038,
+      "depth": 55.061,
       "charPx": 38,
       "headNdc": [
        0.077,
-       0.603
+       0.602
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2218,20 +2218,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.699,
-       -0.304
+       -0.698,
+       -0.305
       ],
       "px": [
-       202,
+       203,
        501
       ],
       "onScreen": true,
-      "edgeMargin": 0.301,
-      "depth": 40.485,
+      "edgeMargin": 0.302,
+      "depth": 40.507,
       "charPx": 51,
       "headNdc": [
-       -0.719,
-       -0.211
+       -0.718,
+       -0.212
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2267,7 +2267,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.739,
+       0.74,
        -0.407
       ],
       "px": [
@@ -2275,12 +2275,12 @@
        540
       ],
       "onScreen": true,
-      "edgeMargin": 0.261,
-      "depth": 38.149,
+      "edgeMargin": 0.26,
+      "depth": 38.172,
       "charPx": 54,
       "headNdc": [
        0.762,
-       -0.311
+       -0.312
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2316,7 +2316,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.105,
+       0.106,
        -0.842
       ],
       "px": [
@@ -2325,7 +2325,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.158,
-      "depth": 33.614,
+      "depth": 33.637,
       "charPx": 62,
       "headNdc": [
        0.109,
@@ -2365,20 +2365,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.39,
+       -0.389,
        -0.451
       ],
       "px": [
-       410,
+       411,
        557
       ],
       "onScreen": true,
       "edgeMargin": 0.549,
-      "depth": 38.389,
+      "depth": 38.412,
       "charPx": 54,
       "headNdc": [
-       -0.402,
-       -0.357
+       -0.401,
+       -0.358
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3019,7 +3019,7 @@
      "seam:square-plaza__barn"
     ],
     "minCharPx": 38,
-    "visibleFrac": 0.7969
+    "visibleFrac": 0.7812
    }
   },
   "pondlane": {
@@ -3050,7 +3050,7 @@
       "behind": false,
       "ndc": [
        0.266,
-       -0.147
+       -0.146
       ],
       "px": [
        851,
@@ -3062,7 +3062,7 @@
       "charPx": 80,
       "headNdc": [
        0.272,
-       0.053
+       0.054
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3074,7 +3074,7 @@
      "kind": "seam",
      "at": [
       75.84,
-      1.33,
+      1.25,
       -51.89
      ],
      "from": "square",
@@ -3095,19 +3095,19 @@
       "behind": false,
       "ndc": [
        -0.203,
-       -0.467
+       -0.477
       ],
       "px": [
        535,
-       563
+       567
       ],
       "onScreen": true,
-      "edgeMargin": 0.533,
-      "depth": 19.693,
+      "edgeMargin": 0.523,
+      "depth": 19.716,
       "charPx": 105,
       "headNdc": [
        -0.209,
-       -0.212
+       -0.223
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3146,7 +3146,7 @@
       "behind": false,
       "ndc": [
        0.308,
-       -0.281
+       -0.28
       ],
       "px": [
        879,
@@ -3195,19 +3195,19 @@
       "behind": false,
       "ndc": [
        -0.112,
-       -0.678
+       -0.677
       ],
       "px": [
        597,
        644
       ],
       "onScreen": true,
-      "edgeMargin": 0.322,
+      "edgeMargin": 0.323,
       "depth": 17.204,
       "charPx": 120,
       "headNdc": [
-       -0.115,
-       -0.392
+       -0.116,
+       -0.391
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3452,7 +3452,7 @@
      "kind": "seam",
      "at": [
       47.99,
-      1.93,
+      1.99,
       -56.09
      ],
      "from": "square",
@@ -3473,19 +3473,19 @@
       "behind": false,
       "ndc": [
        0.471,
-       -0.394
+       -0.387
       ],
       "px": [
        989,
-       535
+       533
       ],
       "onScreen": true,
       "edgeMargin": 0.529,
-      "depth": 45.614,
+      "depth": 45.612,
       "charPx": 81,
       "headNdc": [
        0.483,
-       -0.24
+       -0.234
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3511,19 +3511,19 @@
       "behind": false,
       "ndc": [
        -0.22,
-       -0.588
+       -0.587
       ],
       "px": [
        524,
-       610
+       609
       ],
       "onScreen": true,
-      "edgeMargin": 0.412,
-      "depth": 43.913,
+      "edgeMargin": 0.413,
+      "depth": 43.952,
       "charPx": 84,
       "headNdc": [
        -0.226,
-       -0.434
+       -0.432
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3537,7 +3537,7 @@
      "kind": "door",
      "at": [
       37.09,
-      2.07,
+      2,
       -49.48
      ],
      "to": "emb-lake-int",
@@ -3554,20 +3554,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.436,
-       -0.61
+       -0.435,
+       -0.614
       ],
       "px": [
        379,
-       618
+       620
       ],
       "onScreen": true,
-      "edgeMargin": 0.39,
-      "depth": 43.649,
+      "edgeMargin": 0.386,
+      "depth": 43.734,
       "charPx": 85,
       "headNdc": [
-       -0.448,
-       -0.455
+       -0.447,
+       -0.46
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3604,19 +3604,19 @@
       "behind": false,
       "ndc": [
        0.582,
-       -0.614
+       -0.613
       ],
       "px": [
        1063,
-       620
+       619
       ],
       "onScreen": true,
-      "edgeMargin": 0.386,
-      "depth": 43.79,
-      "charPx": 85,
+      "edgeMargin": 0.387,
+      "depth": 43.83,
+      "charPx": 84,
       "headNdc": [
        0.597,
-       -0.46
+       -0.458
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3990,7 +3990,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.267,
-      "depth": 54.924,
+      "depth": 54.923,
       "charPx": 67,
       "headNdc": [
        0.75,
@@ -4086,7 +4086,7 @@
       ],
       "px": [
        1257,
-       326
+       325
       ],
       "onScreen": true,
       "edgeMargin": 0.13,
@@ -4094,7 +4094,7 @@
       "charPx": 66,
       "headNdc": [
        0.89,
-       0.276
+       0.277
       ],
       "headOnScreen": true,
       "figureVisible": true,
