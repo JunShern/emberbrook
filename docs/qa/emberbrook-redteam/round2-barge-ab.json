@@ -1,0 +1,43 @@
+{
+ "a": "/private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/draftBsub",
+ "b": "/private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/draftC",
+ "floor": 0.01,
+ "rebake": [
+  "northlane",
+  "therise"
+ ],
+ "rows": [
+  {
+   "shot": "northlane",
+   "p4": 0.11642967372134039,
+   "p12": 0.047708608906525576,
+   "dmed": 9.314899444580078,
+   "la": 5.846399784088135,
+   "lb": 5.846399784088135
+  },
+  {
+   "shot": "therise",
+   "p4": 0.08835565476190477,
+   "p12": 0.04908647486772487,
+   "dmed": -6.348991394042969,
+   "la": 11.766200065612793,
+   "lb": 11.764999389648438
+  },
+  {
+   "shot": "arch",
+   "p4": 0.0001722332451499118,
+   "p12": 0.0,
+   "dmed": 4.6337995529174805,
+   "la": 9.78339958190918,
+   "lb": 9.78339958190918
+  },
+  {
+   "shot": "gateroad",
+   "p4": 0.0001722332451499118,
+   "p12": 0.0,
+   "dmed": 4.774200439453125,
+   "la": 0.9277999997138977,
+   "lb": 0.9277999997138977
+  }
+ ]
+}
