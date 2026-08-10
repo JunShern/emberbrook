@@ -1,0 +1,1163 @@
+{
+ "bundle": "public/assets/scenes/emb-cine",
+ "cell": 0.05,
+ "nodes": 222,
+ "faces": 24873,
+ "pavedM2": 1537.3125000000002,
+ "doubleM2": 106.00750000000002,
+ "dz": {
+  "p05": 0.0021869387154268005,
+  "p50": 0.023138427061743183,
+  "p90": 0.30014672186135627,
+  "max": 0.5041894894750296
+ },
+ "bands": [
+  {
+   "band": "<=2mm  (z-fight)",
+   "cells": 2019,
+   "m2": 5.047500000000001
+  },
+  {
+   "band": "2-20mm (near-coincident)",
+   "cells": 17237,
+   "m2": 43.09250000000001
+  },
+  {
+   "band": "20-60mm",
+   "cells": 11739,
+   "m2": 29.347500000000007
+  },
+  {
+   "band": "60-120mm",
+   "cells": 1229,
+   "m2": 3.0725000000000007
+  },
+  {
+   "band": "120-250mm",
+   "cells": 4500,
+   "m2": 11.250000000000002
+  },
+  {
+   "band": ">250mm (terrace?)",
+   "cells": 5679,
+   "m2": 14.197500000000003
+  }
+ ],
+ "stacks": [
+  {
+   "pair": "walk_pad_bakery over walk_lm_square-plaza.002",
+   "m2": 5.220000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_lm_gate-court over walk_e_barn__gate-court_l17",
+   "m2": 3.4875000000000007,
+   "dz50": 0.029999968482140815
+  },
+  {
+   "pair": "walk_lm_gate-court over walk_e_barn__gate-court_l16",
+   "m2": 2.7450000000000006,
+   "dz50": 0.03523515538419186
+  },
+  {
+   "pair": "walk_lm_square-plaza.054 over walk_e_square-plaza__pond-jetty_l6",
+   "m2": 2.6000000000000005,
+   "dz50": 0.2564828441640583
+  },
+  {
+   "pair": "walk_pad_grandmothers-bench over walk_pad_lake-home",
+   "m2": 2.4975000000000005,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_lm_square-plaza.012 over walk_e_road-gate__square-plaza_l8",
+   "m2": 2.4225000000000003,
+   "dz50": 0.4499608174742411
+  },
+  {
+   "pair": "walk_pad_waystone over walk_e_waystone__road-gate_l0",
+   "m2": 2.3250000000000006,
+   "dz50": 0.012023126698584574
+  },
+  {
+   "pair": "walk_pad_barn over walk_e_square-plaza__barn_l13",
+   "m2": 2.2300000000000004,
+   "dz50": 0.02855132600400445
+  },
+  {
+   "pair": "walk_pad_road-gate over walk_e_waystone__road-gate_l6",
+   "m2": 2.2075000000000005,
+   "dz50": 0.05335449897298106
+  },
+  {
+   "pair": "walk_pad_road-gate over walk_e_road-gate__square-plaza_l0",
+   "m2": 2.1275000000000004,
+   "dz50": 0.021421168392353248
+  },
+  {
+   "pair": "walk_lm_square-plaza.020 over walk_e_road-gate__square-plaza_l8",
+   "m2": 2.0725000000000002,
+   "dz50": 0.43072613725884823
+  },
+  {
+   "pair": "walk_pad_waystone over walk_e_arrival-clearing__waystone_l6",
+   "m2": 2.0225000000000004,
+   "dz50": 0.022099041648393658
+  },
+  {
+   "pair": "walk_lm_square-plaza.054 over walk_e_square-plaza__pond-jetty_l7",
+   "m2": 1.9350000000000003,
+   "dz50": 0.27706637348211105
+  },
+  {
+   "pair": "walk_lm_orchard over walk_e_road-gate__orchard_l6",
+   "m2": 1.9100000000000004,
+   "dz50": 0.16406080461646155
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_square-plaza__hillside-cottage_l9",
+   "m2": 1.8900000000000003,
+   "dz50": 0.021344240623226707
+  },
+  {
+   "pair": "walk_pad_poppy-stall over walk_lm_square-plaza.001",
+   "m2": 1.8800000000000003,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_pips-den over walk_e_square-plaza__pond-jetty_l8",
+   "m2": 1.8100000000000003,
+   "dz50": 0.02670697673237621
+  },
+  {
+   "pair": "walk_lm_gate-court over walk_e_barn__gate-court_l18",
+   "m2": 1.7425000000000004,
+   "dz50": 0.022529206586704653
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l1 over walk_pad_elder-house",
+   "m2": 1.6525000000000003,
+   "dz50": 0.01951861448050929
+  },
+  {
+   "pair": "walk_lm_square-plaza.054 over walk_e_square-plaza__pond-jetty_l5",
+   "m2": 1.6475000000000004,
+   "dz50": 0.2251214581339731
+  },
+  {
+   "pair": "walk_e_hillside-cottage__elder-house_l1 over walk_pad_hillside-cottage",
+   "m2": 1.6350000000000002,
+   "dz50": 0.020722382343205226
+  },
+  {
+   "pair": "walk_pad_elder-house over walk_e_hillside-cottage__elder-house_l5",
+   "m2": 1.5500000000000003,
+   "dz50": 0.025315922695381854
+  },
+  {
+   "pair": "walk_lm_square-plaza.021 over walk_e_road-gate__square-plaza_l10",
+   "m2": 1.4875000000000003,
+   "dz50": 0.31522123033183447
+  },
+  {
+   "pair": "walk_lm_square-plaza.021 over walk_e_road-gate__square-plaza_l9",
+   "m2": 1.4650000000000003,
+   "dz50": 0.34830655776873387
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l2 over walk_pad_pond-weir",
+   "m2": 1.4500000000000002,
+   "dz50": 0.1497197931659201
+  },
+  {
+   "pair": "walk_lm_orchard over walk_e_road-gate__orchard_l5",
+   "m2": 1.4125000000000003,
+   "dz50": 0.18777657273660492
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l1 over walk_pad_barn",
+   "m2": 1.4100000000000004,
+   "dz50": 0.004390125632688147
+  },
+  {
+   "pair": "walk_pad_home-lane-end over walk_pad_brook-spring",
+   "m2": 1.3725000000000003,
+   "dz50": 0.01548415132261205
+  },
+  {
+   "pair": "walk_pad_pips-den over walk_e_square-plaza__pond-jetty_l9",
+   "m2": 1.2725000000000002,
+   "dz50": 0.05449992354935285
+  },
+  {
+   "pair": "walk_lm_square-plaza.012 over walk_e_road-gate__square-plaza_l7",
+   "m2": 1.2700000000000002,
+   "dz50": 0.4734887325259777
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__lake-home_l1",
+   "m2": 1.2325000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_watermill over walk_e_hillside-cottage__watermill_l4",
+   "m2": 1.1975000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l0 over walk_lm_square-plaza.034",
+   "m2": 1.1925000000000003,
+   "dz50": 0.047589038892471125
+  },
+  {
+   "pair": "walk_pad_barn over walk_e_square-plaza__barn_l14",
+   "m2": 1.1575000000000002,
+   "dz50": 0.01708906229493401
+  },
+  {
+   "pair": "walk_pad_barn over walk_e_barn__gate-court_l0",
+   "m2": 1.1325000000000003,
+   "dz50": 0.0071416864521696155
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l3 over walk_pad_pond-weir",
+   "m2": 1.1225000000000003,
+   "dz50": 0.18247848013622558
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_square-plaza__pond-jetty_l12",
+   "m2": 1.0375000000000003,
+   "dz50": 0.02092204058320135
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_pond-jetty__brook-bridge_l1",
+   "m2": 1.0300000000000002,
+   "dz50": 0.02296546912950248
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l1 over walk_e_road-gate__orchard_l1",
+   "m2": 0.9925000000000002,
+   "dz50": 0.023951292455495196
+  },
+  {
+   "pair": "walk_e_arrival-clearing__waystone_l0 over walk_lm_arrival-clearing",
+   "m2": 0.9775000000000001,
+   "dz50": 0.04548885270619363
+  },
+  {
+   "pair": "walk_pad_brook-bridge over walk_e_pond-jetty__brook-bridge_l6",
+   "m2": 0.9675000000000001,
+   "dz50": 0.010573237597139462
+  },
+  {
+   "pair": "walk_lm_square-plaza.020 over walk_e_road-gate__square-plaza_l9",
+   "m2": 0.9375000000000002,
+   "dz50": 0.378944774741812
+  },
+  {
+   "pair": "walk_pad_barn over walk_e_barn__gate-court_l1",
+   "m2": 0.8725000000000002,
+   "dz50": 0.0024458245262204414
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__watermill_l2",
+   "m2": 0.8575000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_watermill over walk_e_hillside-cottage__watermill_l5",
+   "m2": 0.8500000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_lake-home over walk_e_hillside-cottage__lake-home_l7",
+   "m2": 0.8025000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_road-gate over walk_e_road-gate__orchard_l0",
+   "m2": 0.8000000000000002,
+   "dz50": 0.0352507769257845
+  },
+  {
+   "pair": "walk_pad_brook-spring over walk_e_elder-house__home-lane-end_l8",
+   "m2": 0.7375000000000002,
+   "dz50": 0.026542615319564256
+  },
+  {
+   "pair": "walk_pad_bakery over walk_lm_square-plaza.001",
+   "m2": 0.7200000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_item-shop over walk_lm_square-plaza.038",
+   "m2": 0.7150000000000002,
+   "dz50": 0.015912857065707664
+  },
+  {
+   "pair": "walk_pad_inn over walk_lm_square-plaza.006",
+   "m2": 0.7025000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_pond-jetty__brook-bridge_l0",
+   "m2": 0.6800000000000002,
+   "dz50": 0.040206829302192215
+  },
+  {
+   "pair": "walk_lm_square-plaza.048 over walk_e_square-plaza__pond-jetty_l4",
+   "m2": 0.6800000000000002,
+   "dz50": 0.20538897761405828
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l1 over walk_lm_square-plaza.035",
+   "m2": 0.6550000000000001,
+   "dz50": 0.15378289475503681
+  },
+  {
+   "pair": "walk_pad_elder-house over walk_e_hillside-cottage__elder-house_l6",
+   "m2": 0.6425000000000001,
+   "dz50": 0.011393723056768224
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l3 over walk_pad_pond-weir",
+   "m2": 0.6350000000000001,
+   "dz50": 0.07999998331069935
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l0 over walk_pad_elder-house",
+   "m2": 0.6200000000000001,
+   "dz50": 0.004247656982755199
+  },
+  {
+   "pair": "walk_pad_home-lane-end over walk_e_elder-house__home-lane-end_l9",
+   "m2": 0.6100000000000001,
+   "dz50": 0.011505919454700475
+  },
+  {
+   "pair": "walk_pad_lake-home over walk_e_hillside-cottage__lake-home_l6",
+   "m2": 0.5975000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_square-plaza__pond-jetty_l13",
+   "m2": 0.5950000000000001,
+   "dz50": 0.03656072213170103
+  },
+  {
+   "pair": "walk_lm_square-plaza.013 over walk_e_road-gate__square-plaza_l9",
+   "m2": 0.5925000000000001,
+   "dz50": 0.3705756426424629
+  },
+  {
+   "pair": "walk_pad_bakery over walk_pad_poppy-stall",
+   "m2": 0.5875000000000001,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_pad_brook-bridge over walk_e_pond-jetty__brook-bridge_l5",
+   "m2": 0.5850000000000001,
+   "dz50": 0.01785500165135523
+  },
+  {
+   "pair": "walk_e_hillside-cottage__elder-house_l0 over walk_pad_hillside-cottage",
+   "m2": 0.5700000000000001,
+   "dz50": 0.004245647259466523
+  },
+  {
+   "pair": "walk_lm_square-plaza.055 over walk_e_square-plaza__pond-jetty_l6",
+   "m2": 0.56,
+   "dz50": 0.25518636794275773
+  },
+  {
+   "pair": "walk_pad_lake-home over walk_e_hillside-cottage__lake-home_l8",
+   "m2": 0.5400000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_square-plaza__pond-jetty_l11",
+   "m2": 0.4950000000000001,
+   "dz50": 0.010073054791642111
+  },
+  {
+   "pair": "walk_pad_watermill over walk_e_hillside-cottage__watermill_l6",
+   "m2": 0.4950000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__lake-home_l0",
+   "m2": 0.4700000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_lm_square-plaza.055 over walk_e_square-plaza__pond-jetty_l5",
+   "m2": 0.4650000000000001,
+   "dz50": 0.22447322075847742
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l10 over walk_lm_washline-green",
+   "m2": 0.44250000000000006,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_hillside-cottage__elder-house_l2 over walk_pad_hillside-cottage",
+   "m2": 0.38750000000000007,
+   "dz50": 0.03793805036483633
+  },
+  {
+   "pair": "walk_pad_inn over walk_lm_square-plaza.014",
+   "m2": 0.37500000000000006,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l10 over walk_pad_home-lane-end",
+   "m2": 0.3575000000000001,
+   "dz50": 0.005645912754388416
+  },
+  {
+   "pair": "walk_pad_road-gate over walk_e_waystone__road-gate_l5",
+   "m2": 0.3500000000000001,
+   "dz50": 0.016149144931623942
+  },
+  {
+   "pair": "walk_pad_item-shop over walk_lm_square-plaza.046",
+   "m2": 0.3450000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_elder-house over walk_e_hillside-cottage__elder-house_l4",
+   "m2": 0.31750000000000006,
+   "dz50": 0.02040703832777835
+  },
+  {
+   "pair": "walk_pad_elder-house over walk_e_elder-house__home-lane-end_l0",
+   "m2": 0.30250000000000005,
+   "dz50": 0.0019438979250736566
+  },
+  {
+   "pair": "walk_pad_lake-home over walk_pad_grandmothers-bench",
+   "m2": 0.29250000000000004,
+   "dz50": 0.014284005230301489
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_square-plaza__hillside-cottage_l10",
+   "m2": 0.29000000000000004,
+   "dz50": 0.013523789959851484
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_pond-jetty__washline-green_l0",
+   "m2": 0.28750000000000003,
+   "dz50": 0.050874948501586914
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_square-plaza__pond-jetty_l14",
+   "m2": 0.28,
+   "dz50": 0.04635746510132077
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__watermill_l1",
+   "m2": 0.2775000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_e_square-plaza__pond-jetty_l12",
+   "m2": 0.2775000000000001,
+   "dz50": 0.013324069452344434
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__elder-house_l0",
+   "m2": 0.26750000000000007,
+   "dz50": 0.0020124843191777764
+  },
+  {
+   "pair": "walk_pad_brook-spring over walk_e_elder-house__home-lane-end_l7",
+   "m2": 0.25750000000000006,
+   "dz50": 0.03640684903474556
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l1 over walk_lm_square-plaza.034",
+   "m2": 0.25500000000000006,
+   "dz50": 0.07909063320699872
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l0 over walk_lm_square-plaza.026",
+   "m2": 0.25250000000000006,
+   "dz50": 0.04073468089096566
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__watermill_l0",
+   "m2": 0.25000000000000006,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_lm_square-plaza.020 over walk_e_road-gate__square-plaza_l7",
+   "m2": 0.23750000000000004,
+   "dz50": 0.4914154300627036
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_e_square-plaza__pond-jetty_l13",
+   "m2": 0.23000000000000004,
+   "dz50": 0.014504548313268861
+  },
+  {
+   "pair": "walk_pad_waystone over walk_e_arrival-clearing__waystone_l5",
+   "m2": 0.22750000000000004,
+   "dz50": 0.004951360510040054
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l2 over walk_pad_pond-weir",
+   "m2": 0.22000000000000003,
+   "dz50": 0.07999998331069946
+  },
+  {
+   "pair": "walk_pad_lake-home over walk_e_hillside-cottage__lake-home_l9",
+   "m2": 0.21500000000000005,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l2 over walk_e_square-plaza__pond-jetty_l11",
+   "m2": 0.21500000000000005,
+   "dz50": 0.012917121699236755
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l1 over walk_pad_road-gate",
+   "m2": 0.20000000000000004,
+   "dz50": 0.002858103205197235
+  },
+  {
+   "pair": "walk_pad_poppy-stall over walk_pad_bakery",
+   "m2": 0.20000000000000004,
+   "dz50": 0.0026146188278897142
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_e_pond-jetty__washline-green_l2",
+   "m2": 0.19750000000000004,
+   "dz50": 0.02900538469948044
+  },
+  {
+   "pair": "walk_pad_road-gate over walk_e_road-gate__square-plaza_l1",
+   "m2": 0.18500000000000003,
+   "dz50": 0.0021869387154268213
+  },
+  {
+   "pair": "walk_pad_pips-den over walk_e_square-plaza__pond-jetty_l7",
+   "m2": 0.18250000000000002,
+   "dz50": 0.0021766580375162103
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l7 over walk_e_road-gate__square-plaza_l6",
+   "m2": 0.18000000000000005,
+   "dz50": 0.009679913992309053
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l9 over walk_e_pond-jetty__washline-green_l10",
+   "m2": 0.18000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_pad_lake-home over walk_e_hillside-cottage__lake-home_l10",
+   "m2": 0.17750000000000005,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l1 over walk_lm_square-plaza.027",
+   "m2": 0.17500000000000004,
+   "dz50": 0.16553193006356937
+  },
+  {
+   "pair": "walk_lm_square-plaza.049 over walk_e_square-plaza__pond-jetty_l4",
+   "m2": 0.16500000000000004,
+   "dz50": 0.20388989288436732
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l2 over walk_pad_barn",
+   "m2": 0.15250000000000002,
+   "dz50": 0.00914562421141829
+  },
+  {
+   "pair": "walk_e_square-plaza__pond-jetty_l7 over walk_pad_pips-den",
+   "m2": 0.15000000000000002,
+   "dz50": 0.0019158091708797453
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l9 over walk_lm_washline-green",
+   "m2": 0.15000000000000002,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_pad_home-lane-end over walk_e_elder-house__home-lane-end_l10",
+   "m2": 0.14750000000000002,
+   "dz50": 0.0022702408931021267
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l6 over walk_e_road-gate__square-plaza_l5",
+   "m2": 0.13000000000000003,
+   "dz50": 0.006818073759166987
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_e_pond-jetty__washline-green_l1",
+   "m2": 0.13000000000000003,
+   "dz50": 0.025957345162439527
+  },
+  {
+   "pair": "walk_lm_square-plaza.055 over walk_e_square-plaza__pond-jetty_l7",
+   "m2": 0.12250000000000003,
+   "dz50": 0.28119944785819806
+  },
+  {
+   "pair": "walk_lm_square-plaza.054 over walk_e_square-plaza__pond-jetty_l4",
+   "m2": 0.11750000000000002,
+   "dz50": 0.2113046680365318
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l10 over walk_e_barn__gate-court_l9",
+   "m2": 0.11750000000000002,
+   "dz50": 0.000840441721544849
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l9 over walk_e_barn__gate-court_l8",
+   "m2": 0.11500000000000002,
+   "dz50": 0.0009855646519318917
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l8 over walk_e_barn__gate-court_l7",
+   "m2": 0.11000000000000001,
+   "dz50": 0.0009278775730843236
+  },
+  {
+   "pair": "walk_e_square-plaza__hillside-cottage_l9 over walk_pad_hillside-cottage",
+   "m2": 0.10750000000000003,
+   "dz50": 0.002898106544138468
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l1 over walk_lm_square-plaza.026",
+   "m2": 0.10750000000000003,
+   "dz50": 0.08039833638570326
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_pond-jetty__washline-green_l1",
+   "m2": 0.10500000000000002,
+   "dz50": 0.014413530323784451
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l11 over walk_e_barn__gate-court_l10",
+   "m2": 0.10250000000000002,
+   "dz50": 0.0008697569454603205
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l8 over walk_e_square-plaza__barn_l7",
+   "m2": 0.09500000000000001,
+   "dz50": 0.0030068747284728303
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l4 over walk_e_barn__gate-court_l3",
+   "m2": 0.09500000000000001,
+   "dz50": 0.0014172887535019996
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l13 over walk_pad_barn",
+   "m2": 0.09250000000000001,
+   "dz50": 0.004469741776682135
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l7 over walk_e_elder-house__home-lane-end_l6",
+   "m2": 0.09250000000000001,
+   "dz50": 0.0071867842054404996
+  },
+  {
+   "pair": "walk_e_arrival-clearing__waystone_l5 over walk_pad_waystone",
+   "m2": 0.09000000000000002,
+   "dz50": 0.0022720212686180297
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l5 over walk_e_road-gate__square-plaza_l4",
+   "m2": 0.09000000000000002,
+   "dz50": 0.00465235353399851
+  },
+  {
+   "pair": "walk_lm_square-plaza.055 over walk_e_square-plaza__pond-jetty_l4",
+   "m2": 0.09000000000000002,
+   "dz50": 0.21017023594824735
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_e_square-plaza__pond-jetty_l14",
+   "m2": 0.09000000000000002,
+   "dz50": 0.01462277374115506
+  },
+  {
+   "pair": "walk_pad_barn over walk_e_square-plaza__barn_l12",
+   "m2": 0.08750000000000002,
+   "dz50": 0.006458714792648479
+  },
+  {
+   "pair": "walk_e_hillside-cottage__elder-house_l5 over walk_pad_elder-house",
+   "m2": 0.08250000000000002,
+   "dz50": 0.006277249233177518
+  },
+  {
+   "pair": "walk_e_square-plaza__pond-jetty_l10 over walk_e_square-plaza__pond-jetty_l11",
+   "m2": 0.08000000000000002,
+   "dz50": 0.002092975488471316
+  },
+  {
+   "pair": "walk_e_square-plaza__pond-jetty_l9 over walk_e_square-plaza__pond-jetty_l10",
+   "m2": 0.07750000000000001,
+   "dz50": 0.0020298360672812432
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l2 over walk_lm_square-plaza.027",
+   "m2": 0.07750000000000001,
+   "dz50": 0.2118586920225134
+  },
+  {
+   "pair": "walk_pad_road-gate over walk_e_road-gate__orchard_l1",
+   "m2": 0.07250000000000001,
+   "dz50": 0.017293135461676136
+  },
+  {
+   "pair": "walk_e_waystone__road-gate_l0 over walk_pad_waystone",
+   "m2": 0.07,
+   "dz50": 0.01194339902138411
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_square-plaza__hillside-cottage_l8",
+   "m2": 0.07,
+   "dz50": 0.011962977136710684
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l4 over walk_e_road-gate__square-plaza_l3",
+   "m2": 0.07,
+   "dz50": 0.0033261981686206754
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l2 over walk_e_square-plaza__pond-jetty_l12",
+   "m2": 0.06750000000000002,
+   "dz50": 0.013927125383776051
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l5 over walk_e_barn__gate-court_l4",
+   "m2": 0.06500000000000002,
+   "dz50": 0.0008322891844247948
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l2 over walk_lm_square-plaza.035",
+   "m2": 0.06500000000000002,
+   "dz50": 0.22131264311605614
+  },
+  {
+   "pair": "walk_e_hillside-cottage__lake-home_l1 over walk_pad_hillside-cottage",
+   "m2": 0.06250000000000001,
+   "dz50": 0.004884719666684134
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l9 over walk_e_square-plaza__barn_l8",
+   "m2": 0.06250000000000001,
+   "dz50": 0.0028739408624436358
+  },
+  {
+   "pair": "walk_e_hillside-cottage__lake-home_l7 over walk_pad_lake-home",
+   "m2": 0.06000000000000001,
+   "dz50": 0.004315028987272207
+  },
+  {
+   "pair": "walk_e_hillside-cottage__elder-house_l4 over walk_pad_elder-house",
+   "m2": 0.06000000000000001,
+   "dz50": 0.004666422671345316
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l10 over walk_e_square-plaza__barn_l9",
+   "m2": 0.06000000000000001,
+   "dz50": 0.002153222908385377
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l6 over walk_e_elder-house__home-lane-end_l5",
+   "m2": 0.05750000000000001,
+   "dz50": 0.004057339936040627
+  },
+  {
+   "pair": "walk_lm_square-plaza.013 over walk_e_road-gate__square-plaza_l8",
+   "m2": 0.05500000000000001,
+   "dz50": 0.39720054633990665
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l11 over walk_e_square-plaza__barn_l10",
+   "m2": 0.05500000000000001,
+   "dz50": 0.001542917595247939
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l6 over walk_e_barn__gate-court_l5",
+   "m2": 0.04750000000000001,
+   "dz50": 0.0005257584552778027
+  },
+  {
+   "pair": "walk_e_hillside-cottage__watermill_l4 over walk_pad_watermill",
+   "m2": 0.04500000000000001,
+   "dz50": 0.010829255954086126
+  },
+  {
+   "pair": "walk_pad_watermill over walk_e_hillside-cottage__watermill_l3",
+   "m2": 0.04250000000000001,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_arrival-clearing__waystone_l6 over walk_pad_waystone",
+   "m2": 0.04000000000000001,
+   "dz50": 0.011908852673238407
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l0 over walk_e_pond-jetty__washline-green_l1",
+   "m2": 0.04000000000000001,
+   "dz50": 0.012176725870580496
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l5 over walk_e_elder-house__home-lane-end_l4",
+   "m2": 0.04000000000000001,
+   "dz50": 0.0021148580993388677
+  },
+  {
+   "pair": "walk_pad_pond-jetty over walk_e_pond-jetty__brook-bridge_l2",
+   "m2": 0.037500000000000006,
+   "dz50": 0.0022758192628147267
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l7 over walk_e_barn__gate-court_l6",
+   "m2": 0.037500000000000006,
+   "dz50": 0.00031165773920216466
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l14 over walk_e_barn__gate-court_l13",
+   "m2": 0.037500000000000006,
+   "dz50": 0.0003179040100995678
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l15 over walk_e_barn__gate-court_l14",
+   "m2": 0.037500000000000006,
+   "dz50": 0.0003381211355959479
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__watermill_l3",
+   "m2": 0.035,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_home-lane-end over walk_e_elder-house__home-lane-end_l8",
+   "m2": 0.03250000000000001,
+   "dz50": 0.003474010002730399
+  },
+  {
+   "pair": "walk_lm_square-plaza.013 over walk_e_road-gate__square-plaza_l10",
+   "m2": 0.03250000000000001,
+   "dz50": 0.3264780562974443
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l13 over walk_e_barn__gate-court_l12",
+   "m2": 0.03250000000000001,
+   "dz50": 0.00028595239955109264
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l6 over walk_e_pond-jetty__washline-green_l7",
+   "m2": 0.030000000000000006,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l12 over walk_e_barn__gate-court_l11",
+   "m2": 0.030000000000000006,
+   "dz50": 0.00025053007621256285
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l0 over walk_pad_road-gate",
+   "m2": 0.027500000000000004,
+   "dz50": 0.0065153322933531824
+  },
+  {
+   "pair": "walk_lm_square-plaza.012 over walk_e_road-gate__square-plaza_l9",
+   "m2": 0.027500000000000004,
+   "dz50": 0.39152313571850006
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_pad_pond-weir",
+   "m2": 0.025000000000000005,
+   "dz50": 0.12579738501433746
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l4 over walk_e_elder-house__home-lane-end_l3",
+   "m2": 0.025000000000000005,
+   "dz50": 0.0011028406851556483
+  },
+  {
+   "pair": "walk_lm_square-plaza.055 over walk_pad_brook-bridge",
+   "m2": 0.022500000000000006,
+   "dz50": 0.23367381097046813
+  },
+  {
+   "pair": "walk_pad_brook-spring over walk_pad_home-lane-end",
+   "m2": 0.020000000000000004,
+   "dz50": 0.004101111871799734
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l16 over walk_lm_gate-court",
+   "m2": 0.020000000000000004,
+   "dz50": 0.012494567377168142
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l5 over walk_pad_brook-bridge",
+   "m2": 0.0175,
+   "dz50": 0.002662127451147356
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l0 over walk_e_square-plaza__pond-jetty_l14",
+   "m2": 0.0175,
+   "dz50": 0.013180144452526577
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l5 over walk_e_pond-jetty__washline-green_l6",
+   "m2": 0.0175,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_lm_arrival-clearing over walk_e_arrival-clearing__waystone_l0",
+   "m2": 0.0175,
+   "dz50": 0.010671918781469447
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l6 over walk_pad_brook-bridge",
+   "m2": 0.015000000000000003,
+   "dz50": 0.017601375029757005
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l14 over walk_pad_barn",
+   "m2": 0.015000000000000003,
+   "dz50": 0.004938219881289729
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l0 over walk_pad_barn",
+   "m2": 0.015000000000000003,
+   "dz50": 0.0034947172619914646
+  },
+  {
+   "pair": "walk_pad_item-shop over walk_lm_square-plaza.039",
+   "m2": 0.012500000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_pad_hillside-cottage over walk_e_hillside-cottage__lake-home_l2",
+   "m2": 0.012500000000000002,
+   "dz50": 0.003999948501586914
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l12 over walk_pad_barn",
+   "m2": 0.012500000000000002,
+   "dz50": 0.010138525043061453
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l2 over walk_pad_pond-jetty",
+   "m2": 0.010000000000000002,
+   "dz50": 0.0013879675691508275
+  },
+  {
+   "pair": "walk_pad_pips-den over walk_e_pond-jetty__brook-bridge_l3",
+   "m2": 0.010000000000000002,
+   "dz50": 0.02013613193357866
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l1 over walk_e_road-gate__orchard_l0",
+   "m2": 0.010000000000000002,
+   "dz50": 0.02515979227824733
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l0 over walk_e_road-gate__orchard_l1",
+   "m2": 0.010000000000000002,
+   "dz50": 0.002321100006352987
+  },
+  {
+   "pair": "walk_e_road-gate__square-plaza_l2 over walk_e_road-gate__square-plaza_l3",
+   "m2": 0.010000000000000002,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l4 over walk_e_pond-jetty__washline-green_l5",
+   "m2": 0.010000000000000002,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l3 over walk_lm_square-plaza.035",
+   "m2": 0.010000000000000002,
+   "dz50": 0.2735834234388219
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l9 over walk_pad_home-lane-end",
+   "m2": 0.0075000000000000015,
+   "dz50": 0.00026982277295894974
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l8 over walk_pad_home-lane-end",
+   "m2": 0.0075000000000000015,
+   "dz50": 0.0010022540000904634
+  },
+  {
+   "pair": "walk_lm_washline-green over walk_e_pond-jetty__washline-green_l10",
+   "m2": 0.0075000000000000015,
+   "dz50": 1.1102230246251565e-16
+  },
+  {
+   "pair": "walk_e_hillside-cottage__lake-home_l4 over walk_e_hillside-cottage__lake-home_l5",
+   "m2": 0.0075000000000000015,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_hillside-cottage__lake-home_l5 over walk_e_hillside-cottage__lake-home_l6",
+   "m2": 0.0075000000000000015,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l6 over walk_e_elder-house__home-lane-end_l7",
+   "m2": 0.0075000000000000015,
+   "dz50": 0.009672522946955198
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l3 over walk_e_barn__gate-court_l4",
+   "m2": 0.0075000000000000015,
+   "dz50": 0.002722004943091605
+  },
+  {
+   "pair": "walk_e_waystone__road-gate_l0 over walk_e_arrival-clearing__waystone_l6",
+   "m2": 0.005000000000000001,
+   "dz50": 0.0006345659901178524
+  },
+  {
+   "pair": "walk_pad_barn over walk_e_barn__gate-court_l2",
+   "m2": 0.005000000000000001,
+   "dz50": 0.014652081328113908
+  },
+  {
+   "pair": "walk_e_road-gate__orchard_l1 over walk_e_road-gate__square-plaza_l0",
+   "m2": 0.005000000000000001,
+   "dz50": 0.0017887841997637419
+  },
+  {
+   "pair": "walk_e_square-plaza__pond-jetty_l14 over walk_e_pond-jetty__washline-green_l1",
+   "m2": 0.005000000000000001,
+   "dz50": 0.0005624294194608304
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l3 over walk_e_pond-jetty__washline-green_l4",
+   "m2": 0.005000000000000001,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l7 over walk_e_pond-jetty__washline-green_l6",
+   "m2": 0.005000000000000001,
+   "dz50": 0.0173490035485937
+  },
+  {
+   "pair": "walk_e_hillside-cottage__lake-home_l3 over walk_e_hillside-cottage__lake-home_l4",
+   "m2": 0.005000000000000001,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l4 over walk_e_barn__gate-court_l5",
+   "m2": 0.005000000000000001,
+   "dz50": 0.007159797737089857
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l4 over walk_e_pond-jetty__brook-bridge_l5",
+   "m2": 0.005000000000000001,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_lm_square-plaza.004 over walk_lm_square-plaza.005",
+   "m2": 0.005000000000000001,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_lm_square-plaza.055 over walk_lm_square-plaza.056",
+   "m2": 0.005000000000000001,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l1 over walk_pad_pond-jetty",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.00012131592627739884
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l1 over walk_e_pond-jetty__brook-bridge_l2",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l2 over walk_e_pond-jetty__washline-green_l2",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.0470905176231482
+  },
+  {
+   "pair": "walk_e_square-plaza__pond-jetty_l7 over walk_e_square-plaza__pond-jetty_l8",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_square-plaza__pond-jetty_l11 over walk_e_square-plaza__pond-jetty_l10",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.004321063320950946
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l0 over walk_e_pond-jetty__brook-bridge_l1",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l2 over walk_e_pond-jetty__washline-green_l3",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_pond-jetty__washline-green_l6 over walk_e_pond-jetty__washline-green_l5",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.00018685354817793431
+  },
+  {
+   "pair": "walk_lm_washline-green over walk_e_pond-jetty__washline-green_l9",
+   "m2": 0.0025000000000000005,
+   "dz50": 1.1102230246251565e-16
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l4 over walk_e_elder-house__home-lane-end_l5",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.002393591178540433
+  },
+  {
+   "pair": "walk_e_elder-house__home-lane-end_l5 over walk_e_elder-house__home-lane-end_l6",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.004529283829228348
+  },
+  {
+   "pair": "walk_e_square-plaza__barn_l6 over walk_e_square-plaza__barn_l7",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_e_barn__gate-court_l5 over walk_e_barn__gate-court_l6",
+   "m2": 0.0025000000000000005,
+   "dz50": 0.0011814703148846917
+  },
+  {
+   "pair": "walk_e_pond-jetty__brook-bridge_l5 over walk_e_pond-jetty__brook-bridge_l6",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_lm_square-plaza.005 over walk_lm_square-plaza.004",
+   "m2": 0.0025000000000000005,
+   "dz50": 2.220446049250313e-16
+  },
+  {
+   "pair": "walk_lm_square-plaza.005 over walk_lm_square-plaza.013",
+   "m2": 0.0025000000000000005,
+   "dz50": 0
+  },
+  {
+   "pair": "walk_lm_square-plaza.056 over walk_lm_square-plaza.055",
+   "m2": 0.0025000000000000005,
+   "dz50": 2.220446049250313e-16
+  }
+ ]
+}
