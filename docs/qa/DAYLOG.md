@@ -24280,3 +24280,209 @@ short cape sleeve, brass whistle on its cord. Cast **120/122 → 118/120** — t
 plates were PASSING plates, so the pass count falls by exactly two and **the failure count is
 unchanged at 2** (mochi/cutin, tally/cutin, both already banked as drawings and not pipeline).
 `dialogue_test` green; `cutin_edge --selftest` and `gen-cutin --selftest` both PASS.
+
+## 2026-08-10 — EMBERBROOK ROUND 2: the paving is TWO PAVINGS STACKED, and the tan panel is a ten-metre flat box
+
+Board: `docs/qa/emberbrook-redteam/index.html` §9. Round 2 took round 1's owed list. Two of
+its five items turned out to be **one defect measured two different ways**; the #1 item is
+named to an object AND a material; and the class the judge writes about most is now measured
+in square metres instead of counted in sentences.
+
+### 1. THE HEADLINE — 106.0 m2 (7.0%) OF EMBERBROOK'S PAVING IS TWO WALK SURFACES STACKED
+
+`tools/emb_padstack.mjs` (no Blender, ~6 s) over the shipped `emb-cine/scene.glb`. Every
+up-facing `walk_*` triangle is rasterised onto a 5 cm plan grid; a cell carrying floor faces
+from two nodes is DOUBLE-COVERED, and its step is the gap between the two.
+
+    band          cells    m2     what it is
+    <= 2 mm        1927    4.82   z-fighting — ROUND 1 FIXED ONLY THIS (emb_padcoplanar)
+    2-20 mm        1240    3.10   near-coincident
+    20-60 mm       9192   22.98   a plate floating on a plate: a lit riser and a shadow line
+    60-120 mm     19423   48.56   ditto — and this is the modal band
+    120-250 mm     4941   12.35   deep step
+    > 250 mm       5679   14.20   real terraces (plaza 0.45 m over the pond road)
+    TOTAL         42402  106.0    7.0% of the town's 1,510 m2 of paved plan
+
+**`emb_padcoplanar` ASKED THE Z-FIGHT QUESTION AND THAT IS THE WRONG QUESTION FOR 101 OF THE
+106 m2.** Its test is "are two walk meshes' bounding-box TOPS equal within 2 mm and do their
+boxes overlap" — 55 pairs, of which exactly one (dz 0.0000) rendered as round 1's black hole.
+A bounding box is not a surface, and **two surfaces 70 mm apart do not z-fight; they
+photograph as one paved plate floating above another.**
+
+WHY IT IS THERE: `walk_pad_*` takes its height from the terrain at its own doorstep,
+`walk_e_*` from a smoothed chain of lane waypoints, `walk_lm_*` from the area's own floor.
+Three independent height sources, each right on its own, and nothing in `emb_blockout` has
+ever compared them where the footprints overlap.
+
+### 2. TARGETS 2 AND 3 WERE ONE DEFECT — THE PIN RULE WAS RIGHT FOR A SEAM AND WRONG FOR A STEP
+
+Round 1's `emb_pavechop` pinned any rim vertex with another walk mesh's top under its outward
+foot (within 0.30 m in z). That refusal was derived from the case where it is right — two
+coplanar plaza blocks, where a chamfer would cut a 0.12 m trench along an internal seam — and
+it is wrong for a STEP. The neighbour's HEIGHT now decides, three ways, each counted:
+
+    level within --joinlevel 0.02 m (or above)   PIN, round 1's case unchanged      2089 verts
+    below by <= --joinstep 0.20 m                SEAT THE RIM ONTO THE PAVING BELOW  108 verts
+    below by more                                a real terrace — PIN and COUNT         4 verts
+    no neighbour                                 seat onto the ground (round 1)      1191 verts
+
+**Seating a stacked rim onto the GROUND would have been worse than pinning it**: the ground
+under a stacked pad is 0.12 m below the road, which is itself below the pad, so a
+ground-seated chamfer dives straight through the road. The 108 are the right 108 — fifteen
+doorstep pads plus `walk_lm_gate-court`, and most pads have exactly 8 boundary vertices and
+went `drop 0 / pin 8` to `drop 8 / step 8`: the WHOLE rim, not part of it. Three of them are
+objects the judge named by bbox: `walk_pad_waystone` is 43.5% of waystone F14 ("the path slab
+terminates awkwardly, floating above the ground"), `walk_pad_road-gate` 71.6% of arch F6,
+`walk_pad_pips-den` 36.2% of pondlane F88.
+
+THE ROOT IS IN `emb_blockout` AND IT NOW SPEAKS. Reconciling the three height sources is a
+walk-network change that pass cannot validate on its own (`DOOR[i][2]` is read downstream by
+the ribbon ends and by `scenegraph_derive`), so what shipped there is the CENSUS: after every
+walk surface is emitted it prints the stacks and the area. A rebuild can no longer ship this
+in silence — round 9's floating stair treads were a `continue` with no log line.
+
+### 3. TARGET 1 — `emb_dress_mill_gable+1`, AND IT IS NOT UNTEXTURED
+
+New instrument `tools/emb_ray_census.py`: 870 rays from the shipped solved camera into
+`emberbrook-dressed.blend`, per-object BVHs over a 185-of-5,183-mesh shortlist rather than a
+depsgraph BVH over 6.36 M scattered instances (that is the "146x trap" in reverse — the trap
+says do not EXPORT them; this says do not RAY-CAST them either).
+
+    emb_dress_mill_gable+1 | emb_dress_boarding    642 (73.8%)   39.96..42.95 m
+    emb_dress_mill_infill  | emb_dress_daub         83 ( 9.5%)
+    eleven _sh-1_* shingles | mat_shingle_cedar    ~100 (~11%)
+
+The generator line is ONE BOX, measured in the blend at **0.18 x 10.20 x 2.92 m**, one flat
+face, with a dead-level top edge 0.30 m under the ridge while the roof it closes slopes away
+on both sides. And `emb_dress_boarding` is NOT untextured — it carries a stretched noise grain
+and a bump. **Its only spatial frequency is 1/26 m = 38 mm, and homerow is fov 20 over 768
+rows at 42 m = 18.4 mm per plate pixel. The grain is a TWO-PIXEL feature and the denoiser
+takes it.**
+
+Measured on the shipped plate (`plate_probe.local_sd`): the gable box reads **local sd 3.45,
+L50 142.3** against a ring of **sd 9.11, L50 87.6** — 2.6x flatter and 1.6x brighter than
+everything around it. The daub panels beside it, same mill, same appended-material pipeline,
+read sd 10.70 against a ring of 8.96 (0.84x). **The material family is not the defect, this
+box is.**
+
+**A MATERIAL CANNOT RESCUE A SURFACE WHOSE ONLY FREQUENCY IS AT THE SENSOR'S NYQUIST LIMIT.**
+Everything around it that reads — the studs, the daub, the cedar shingles, the sawn log —
+carries GEOMETRY at 0.1-0.5 m. Fixed as geometry in `emb_dress.py` (the generator) and
+`tools/emb_millgable.py` (the carrier for the blends already built): 42 vertical boards a side
+at a 0.24 m pitch — 13 plate pixels against the noise's 2 — +-0.018 m relief, each cut to the
+roof plane above it, plus a barge-board per slope. 88 members, 0 refused.
+
+AND THE CARRIER'S FIRST ASSERTION WAS ITSELF A FINDING: it derives each board's top by casting
+UP against the mill's own `roofdeck` meshes rather than repeating a pitch constant, and it
+asserted on all 42 boards — the gable box sits at local x +-(hw/2 + 1.0) and the deck spans
+only +-(hw + 1.5)/2. **The panel stands 0.25 m PROUD of the roof it is supposed to close.**
+
+### 4. THE OTHER HALF OF THE SAME FAMILY: 37.3 m2 OF EMPTY HOLE IN THE PAVING
+
+`emb_padstack --holes`. An area apron is cut on a 0.45 m lattice around every landmark
+footprint, and where the cut is wider than the thing standing in it the player sees terrain
+0.12 m below the paving through a square hole.
+
+    walk_lm_square-plaza  paved 434.2 m2  6 holes: 3 occupied (41.74 m2), 3 EMPTY (20.65 m2)
+    walk_lm_gate-court    paved 200.5 m2  2 holes: 0 occupied,             2 EMPTY (16.63 m2 = 8.3%)
+    walk_lm_orchard       paved 258.5 m2  1 hole:  0 occupied,             1 EMPTY ( 0.63 m2)
+
+That is square F40/F49/F50 ("severe geometry tearing and black void seams"), pondlane
+F76/F88/F90 ("black hole voids", "sharp triangular holes") and gatefield F114/F121
+("rectangular cutouts around the pillar bases"). NOT fixed — it is a generation-side cut and
+the fix is to size the cut to the thing standing in it. The occupancy column reads the
+COLLISION bundle, so a hole covered only by dressing reads as empty: a screen, never a verdict.
+
+### 5. REFUTATIONS — AND A GENERAL ONE
+
+`--aim-census` only arms on `[QUALITY]` families. **Run `emb_plate_object` over EVERY finding
+and it is an aim census for all of them.** Of the 27 geometry survivors checked this way,
+THREE name a subject their own bbox demonstrably does not hold:
+
+  * `gateroad F115` "the ground path ends abruptly with a sharp, unblended edge against the
+    grass terrain", 12.0% of frame — **94.1% `emb_ground_valley`**, every `walk_*` mesh in the
+    box adds to 4.0%. There is no path in it.
+  * `square F54` "the building is sunken directly into the terrain" — **94.8%
+    `emb_ground_valley`**, 5.2% `walk_pad_smokehouse`. There is no building in it.
+  * `therise F31/F36` "the path terrain slabs clip awkwardly through the angled ground mesh" —
+    **96.0% / 96.4% `lm_infill_03_body`**, a HOUSE. There is no path in it.
+
+Plus, from the quality census: `gatefield quality:water-read` is WEAK at **0.0% on-subject**.
+Of three water-read findings one is misaimed, one is an absence-claim (abstains) and one is
+ABSENT — **`emb_brookchop` is NOT regressed**, which is exactly the false regression the round-1
+handover warned this would look like.
+
+### 6. THE PIPELINE FACT ROUND 1 PAID FOR IS NOW ENFORCED
+
+`tools/emb_bake_shipped.mjs` reads each plate's own `appliedGrade` out of `cine.json` and emits
+the exact `cine_bake` invocations (eleven plates, SEVEN grade groups). `cine.json` RECORDED the
+grade and nothing ENFORCED it. It refuses BY NAME rather than baking at a default, and it
+refuses a plate whose recorded view transform/look the bake has no flag for — an unstated grade
+is the whole defect, so guessing one there would rebuild it.
+
+### 7. RESIDUALS FOR ROUND 3, EACH WITH ITS NUMBER
+
+  1. **37.3 m2 of empty enclosed holes in the paving** (§4). Generation-side: size the
+     footprint cut to the footprint.
+  2. **`emb_dress_mill_lucam` is the gable's twin** — the other `PLANK` box on the same mill,
+     2.6 x 1.9 x 2.6 m, and homerow-after's F3/F7 ("an untextured box-like extension sits atop
+     the roof beam"). Shipped plate: **local sd 4.72 against a ring of 10.59 (2.2x flatter)**.
+     Same mechanism, same material, same fix shape.
+  3. **`lm_infill_30_track0..3`** — northlane F87/F96, 43.4% of the box across four cart-track
+     meshes: a pale quad with a razor edge and a squared-off end, stopping dead in a field.
+     LOOKED AT; it is an EDGE problem, not a shape one.
+  4. **The water wheel reads as a sawn log** — homerow F85, the highest-support geometry
+     finding in the run (2/3). Attribution is watermill massing at residual 0.85-1.06 m, i.e.
+     dressing; not ray-censused this round.
+  5. **The Heartlight cap** — unchanged; the emission lever is REFUTED at x12 (round 1).
+  6. **The >250 mm stack band (14.20 m2)** — refused by the taper on purpose.
+  7. **A DEPLOY IS STILL OWED.**
+
+### 8. THE REBAKE LIST, DERIVED FROM RENDERED FRAMES — 9 OF 11, TWO REFUSED WITH THEIR NUMBERS
+
+New instrument `tools/plate_ab.py` (the doctrine's whole-town draft A/B had no home). Arm A is
+the round-1 geometry rebuilt from `emb_pavechop`'s own snapshot plus that file's round-1
+revision out of git — it reproduced round 1's manifest to the vertex (1192 seated / 2197
+pinned) — and arm B is round 2's. Both arms at the SAME draft grade, which is what makes it a
+ruler.
+
+    shot        chg>4/255  chg>12/255   verdict
+    square         3.379%      0.596%   REBAKE
+    homerow        1.936%      1.124%   REBAKE
+    northlane      1.469%      0.494%   REBAKE
+    pondlane       0.575%      0.098%   REBAKE
+    therise        0.470%      0.293%   REBAKE
+    arch           0.168%      0.089%   REBAKE
+    woodroad       0.166%      0.003%   REBAKE
+    gateroad       0.159%      0.026%   REBAKE
+    waystone       0.143%      0.008%   REBAKE
+    gatefield      0.005%      0.001%   REFUSED, under the 0.01% floor
+    orchard        0.000%      0.000%   REFUSED, under the 0.01% floor
+
+**gatefield's refusal is the honest confirmation that target 4 is NOT fixed.** Its
+`walk_lm_gate-court` took 8 stepped seats and the frame did not move: what that camera is
+looking at is the 16.63 m2 of empty hole, which this round measured and did not touch.
+
+**AND THE REGRADE TRAP BITES THE DRAFT TOO, IN THE OTHER DIRECTION.** Both arms are drafted at
+`defaults.exposure` 0.55 — right for a RULER, useless as a PICTURE: the woodroad and waystone
+A/B crops are near-black and nothing in them can be judged by eye. So the numbers come from the
+draft and **the eye check comes from the shipped bake**. (Looked at anyway, with a numeric
+exposure lift applied to BOTH arms for the eye only: the gable goes from one flat panel with a
+dead-level top edge to a panel cut to the roof rake with its 0.24 m board seams legible.
+`docs/qa/emberbrook-redteam/ev/r2-gable-ab.jpg`.)
+
+### 9. TWO PROCESS FACTS THIS ROUND PAID FOR
+
+  * **`(nohup … &)` IS THE DIFFERENCE BETWEEN A DETACHED BAKE AND A LOST ONE, AND THE SHAPE OF
+    THE MISTAKE IS SUBTLE.** Round 1 recorded "a foreground tool call with a timeout kills the
+    Blender it is waiting on". The trap is wider than that: a BACKGROUND task that runs
+    `bash <script>` directly still OWNS the Blender as a child, so when the harness stops that
+    task the render dies with it. It happened here — arm B's draft sweep lost `gatefield` at
+    frame 11 of 11 and had to be re-rendered alone. The bake that followed was launched
+    `(nohup … &)`, which survives its waiter being killed. **The waiter and the work must be
+    different processes.**
+  * **A SCRATCHPAD DIRECTORY IS SHARED BETWEEN LANES AND ITS CONTENTS ARE NOT YOURS.**
+    `scratchpad/draftA` already held ELEVEN `bg.png` files from a previous lane, timestamped
+    the day before. A comparison started before the sweep finished would have silently diffed
+    round 2 against somebody else's frames. Check the mtimes, or `rm -rf` the directory first —
+    arm B's script does, arm A's did not.
