@@ -2152,7 +2152,8 @@ HL = next((tuple(l["pos"]) for l in D["landmarks"]
 SQ = next((l for l in D["landmarks"] if l["id"] == "square-plaza"), None)
 SQR = (SQ.get("extent", 7) if SQ else 7)
 
-LAMPFEET = []
+LAMPFEET = []          # KEEP-OUT: 0.34 m, for trees, incidents and vegetation
+LAMPCUT = []           # FLOOR CUT: the post's own 0.10 m — see the stamp below
 hosts = []
 for l in D["landmarks"]:
     i = l["id"]
@@ -2289,7 +2290,19 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
     lo = bpy.data.objects.new(li.name, li)
     lo.location = (lx, ly, lz + 2.74)
     coll("EMB_LIGHTS").objects.link(lo)
+    # A LAMPPOST'S FOOT IS THE POST, AND THIS RECTANGLE IS READ BY TWO KINDS OF CONSUMER.
+    # (2026-08-10, round 3.)  `LAMPFEET` is a KEEP-OUT for the tree growth, the incident
+    # placer and the vegetation, where 0.34 m of half-extent is right and generous; it is
+    # ALSO the area-floor CUT, where it is a 0.68 x 0.68 m rectangle cut around a post the
+    # builder makes **0.13 m square** — with the cut's own 0.28 m pad and the 0.45 m
+    # lattice that is 1.26 m2 of paving deleted for 0.017 m2 of post, **74x its own plan
+    # area**, and the player sees terrain 0.12 m below through the square hole.  That is
+    # `gatefield` F114/F121 ("rectangular cutouts around the pillar bases") and square's
+    # own 1.26 m2 hole.  `foot_rects_cut`'s docstring already ruled on this shape of
+    # mistake — *"the direction of safety is not the same for the two consumers"* — so the
+    # cut gets its own list at the POST's size and the keep-out is unchanged.
     LAMPFEET.append((lx, ly, 0.34, 0.34, 0.0))
+    LAMPCUT.append((lx, ly, 0.10, 0.10, 0.0))
     nlamp += 1
 print("  emb_lamp_*             %d lampposts in round order (%d refused), 680 W each"
       % (nlamp, nrefused))
@@ -2537,7 +2550,18 @@ for l in D["landmarks"]:
         # is not conservative: it deletes walk floor, and deleted floor has no mesh to
         # ray-cast and nothing to see, so it reads to the player as an invisible wall.
         holes.extend(foot_rects_cut(o))
-    holes += [f for f in LAMPFEET
+    # THE CUT IS THE MAP'S AUTHORED `bodysize`, NOT THE THING THE BUILDER STANDS THERE, and
+    # the difference is 37.9 m2 of ENCLOSED EMPTY HOLE in the finished town (round 3,
+    # `emb_padstack --holes`): the well's cut is 2.5 m square for a ring built 2.0 m round,
+    # the notice board's is 2.2 x 1.6 for a board built 1.72 x 0.09, and the sigil plates —
+    # Chapter One's own set piece — stood in an 11.29 m2 hole with no walk record in it.
+    # THIS FILE CANNOT CLOSE IT ALONE: half those holes are held only by `emb_dress_*`,
+    # which does not exist when this runs, so a cut sized here would either keep the hole
+    # or pave under a market stall.  `tools/emb_padfill.py` gives back every enclosed cell
+    # no solid stands in, decided ONCE against the dressed town and replayed onto all three
+    # blends — measured 25.72 m2, empty enclosed holes 37.91 -> 0.79 m2.  What IS fixed
+    # here is the one over-cut this file owns end to end: `LAMPCUT`, above.
+    holes += [f for f in LAMPCUT
               if math.hypot(f[0] - x, f[1] - y) <= r + 1]
     # THE SEAL CUTS FLOOR LIKE ANY OTHER SOLID.  The gate court is an r10 disc centred
     # 8 m inside the gate, so its own floor LAPS 1.8 m past the gate on both flanks —
@@ -2668,6 +2692,94 @@ for l in D["landmarks"]:
              ", %d handed to a lane climbing off it" % nsteep if nsteep else "",
              ", %d given back to the river bank" % nbank if nbank else ""))
 print("  walk_lm_*              %d area floors" % narea)
+
+# ============ A DOORSTEP TAKES ITS HEIGHT FROM THE ROAD IT STANDS ON (round 3) ========
+# THE THIRD HEIGHT SOURCE IS THE ONE THAT IS NOT A WALK SURFACE.  `walk_e_*` is derived
+# from the lane's own waypoints and `walk_lm_*` from the area's own floor; both are
+# internally consistent.  `walk_pad_*` takes `DOOR[i][2]`, which is the LANDMARK's map z —
+# so a flat 3.0 m doorstep is centred on a point where the lane happens to pass and then
+# the lane CLIMBS away from it.  Measured on the shipped bundle (`emb_padstack`, round 3's
+# decomposition of round 2's 106.0 m2):
+#
+#     pad over ribbon   51.77 m2    area over pad   9.94 m2    pad over pad  5.02 m2
+#
+# — 66.7 m2 of the 106.0, at a median step of 70 mm, i.e. 1.5 m of pad x the local grade.
+# And the threshold-pad branch above says in its own comment that it emits *"coplanar with
+# it, so `eff_top` still has nothing to choose between"*; the bakery's threshold measures
+# **70 mm** over the plaza it is supposed to be coplanar with.
+#   SO THE PAD STOPS BEING A HEIGHT SOURCE.  Its top is read off the walk surface it stands
+# on — the MEDIAN, over its own plan cells, of the highest OTHER walk surface there — plus
+# 4 mm.  The 4 mm is round 1's `emb_padcoplanar` result and is not decoration: two walk
+# surfaces at exactly 0.000 m apart rendered as a pitch-black hole under `walk_pad_lake-
+# home`.  Flush, never coincident.
+#   `DOOR[i][2]` IS NOT TOUCHED.  It is the ribbon ends' and `scenegraph_derive`'s
+# authority and it stays exactly what the map said; what changes is the height of the SLAB,
+# which is a picture, not a contract.  A pad with nothing under it has nothing to reconcile
+# with and keeps its own z; a pad that would move more than PADLEVEL_MAX is a TERRACE and is
+# refused and counted, because lowering a doorstep 0.3 m is a design change.
+#   THE RULE IS IDEMPOTENT — the target is derived from the surfaces under the pad and not
+# from the pad — which is what lets `tools/emb_padlevel.py` carry the same rule onto the
+# blends already built without a rebuild double-applying it.
+PADLEVEL_NUDGE, PADLEVEL_MINFRAC, PADLEVEL_MAX = 0.004, 0.25, 0.25
+_PC = 0.05
+_pg = {}
+
+
+def _plan_cells(o):
+    out = set()
+    vs = o.data.vertices
+    zt = max(v.co.z for v in vs)
+    for c in range(0, len(vs), 8):
+        q = [vs[c + k] for k in range(8)]
+        x0 = min(v.co.x for v in q); x1 = max(v.co.x for v in q)
+        y0 = min(v.co.y for v in q); y1 = max(v.co.y for v in q)
+        z = max(v.co.z for v in q)
+        for i in range(int(math.floor(x0 / _PC)), int(math.floor(x1 / _PC)) + 1):
+            for j in range(int(math.floor(y0 / _PC)), int(math.floor(y1 / _PC)) + 1):
+                cx, cy = (i + 0.5) * _PC, (j + 0.5) * _PC
+                if x0 - 1e-9 <= cx <= x1 + 1e-9 and y0 - 1e-9 <= cy <= y1 + 1e-9:
+                    out.add((i, j, z))
+    return out, zt
+
+
+_walkobs_all = [o for o in MESHES if o.name.startswith("walk_")]
+for _o in _walkobs_all:
+    for (_i, _j, _z) in _plan_cells(_o)[0]:
+        _d = _pg.setdefault((_i, _j), {})
+        if _z > _d.get(_o.name, -1e9):
+            _d[_o.name] = _z
+_nlev = _nalone = _nterr = 0
+for _o in _walkobs_all:
+    if not _o.name.startswith("walk_pad_"):
+        continue
+    _own, _ztop = _plan_cells(_o)
+    _keys = set((i, j) for (i, j, _) in _own)
+    if not _keys:
+        continue
+    _u = []
+    for _k in _keys:
+        _oth = [z for nm, z in _pg.get(_k, {}).items() if nm != _o.name]
+        if _oth:
+            _u.append(max(_oth))
+    if len(_u) < PADLEVEL_MINFRAC * len(_keys):
+        _nalone += 1
+        continue
+    _u.sort()
+    _dz = _u[len(_u) // 2] + PADLEVEL_NUDGE - _ztop
+    if abs(_dz) > PADLEVEL_MAX:
+        _nterr += 1
+        print("    pad %-22s LEVEL REFUSED — would move %+.3f m; that is a terrace"
+              % (_o.name[9:], _dz))
+        continue
+    if abs(_dz) < 1e-6:
+        continue
+    for _v in _o.data.vertices:
+        _v.co.z += _dz
+    _nlev += 1
+print("  walk_pad_ LEVELLED     %d pad(s) seated on the walk surface under them "
+      "(+%.3f m flush, never coincident), %d ALONE (nothing under them), %d refused as "
+      "terraces — the pad is no longer an independent height source"
+      % (_nlev, PADLEVEL_NUDGE, _nalone, _nterr))
 
 # --------------------------------------------- A PAD WITH NO ROUTE IS NOT A DOORSTEP --
 # THE CAMERAS LANE'S FINDING, and it is the map describing a consequence it did not
