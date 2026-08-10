@@ -1,0 +1,51 @@
+{
+ "note": "round 12 attributed north-landing's judge complaint 'white stepping stones floating flat on the water' to lf_crest_bay_02 / lf_spill_bay_01 on mat_blackstone, 'with no immersion at the waterline'. BOTH HALVES ARE REFUTED.",
+ "instrument": "objmap ray census over the judge's own region + plate_probe world-XYZ reconstruction of the shipped north-landing plate",
+ "who_the_white_slabs_are": {
+  "region_census_pct": {
+   "water_pool-downstream|m_water": 71.3,
+   "lf_dam_boil|mat_boil": 28.3,
+   "lf_crest_bay_02|mat_blackstone": 0.5
+  },
+  "verdict": "the white slabs are mat_boil (lf_dam_boil, plus the spill bay's own foam faces). mat_blackstone is 0.5% of that region."
+ },
+ "the_bay_stone_is_not_white": {
+  "lf_crest_bay_02|mat_blackstone": {
+   "px": 126829,
+   "pct_of_frame": 3.072,
+   "L_p50": 66.3,
+   "RGB": [
+    75.8,
+    60.3,
+    44.5
+   ]
+  },
+  "verdict": "a dark warm brown wall, not a white slab"
+ },
+ "immersion_is_not_the_defect": {
+  "mat_boil": {
+   "px": 33094,
+   "pct_of_frame": 0.802,
+   "world_z_p50": -3.71,
+   "L_p50": 154.5,
+   "L_p95": 175.4,
+   "RGB": [
+    149.0,
+    145.6,
+    130.6
+   ]
+  },
+  "water_pool-downstream": {
+   "world_z_p50": -3.8,
+   "L_p50": 116.3,
+   "RGB": [
+    95.4,
+    116.7,
+    107.3
+   ]
+  },
+  "verdict": "the foam stands 0.09 m proud of the pool, which is EXACTLY what locksfoot_kit.spill_bay's own comment aimed for ('tops barely proud'). What makes it read as a stone is that it is OPAQUE, NEAR-NEUTRAL (RGB 149/146/131 in a teal frame), 33% BRIGHTER than the water it sits in, and has four hard straight-edged wedge silhouettes."
+ },
+ "scope": "mat_boil + mat_nappe are visible on ONE of the fifteen cameras (north-landing, 0.843% of frame) and nowhere else",
+ "handover": "round 14: this is a MATERIAL/OPACITY question on mat_boil, not a placement one. NOT BUILT in round 13."
+}

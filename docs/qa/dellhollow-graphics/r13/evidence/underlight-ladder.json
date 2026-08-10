@@ -1,0 +1,103 @@
+{
+ "instrument": "cine_bake --draft --res 1008x576 --samples 28, read inside qm_stair_underworks own objmap ray mask (light-independent, so the SAME pixels on every rung)",
+ "placement": "4 cards over the derived gap x 35.33..44.00 (the westmost card of the existing gorge-ward fill run) instead of 3 over the whole bbox x 35.33..60.01",
+ "deep-stairs": {
+  "baseline_3cards_13.33W_over_whole_bbox": {
+   "L_p05": 4.1,
+   "L_p50": 10.6,
+   "L_p95": 69.2,
+   "crushed_L<=8_pct": 38.2,
+   "frame_p95": 141.0,
+   "blown_pct": 0.07
+  },
+  "4cards_gap_13.33W": {
+   "L_p05": 4.6,
+   "L_p50": 11.3,
+   "L_p95": 69.9,
+   "crushed_L<=8_pct": 31.1,
+   "frame_p95": 141.0,
+   "blown_pct": 0.07
+  },
+  "4cards_gap_60W": {
+   "L_p05": 8.0,
+   "L_p50": 16.9,
+   "L_p95": 73.9,
+   "crushed_L<=8_pct": 4.5,
+   "frame_p95": 141.5,
+   "blown_pct": 0.07
+  },
+  "4cards_gap_150W": {
+   "L_p05": 13.5,
+   "L_p50": 27.5,
+   "L_p95": 82.6,
+   "crushed_L<=8_pct": 0.4,
+   "frame_p95": 142.5,
+   "blown_pct": 0.07
+  },
+  "4cards_gap_360W": {
+   "L_p05": 21.5,
+   "L_p50": 47.4,
+   "L_p95": 102.0,
+   "crushed_L<=8_pct": 0.1,
+   "frame_p95": 145.3,
+   "blown_pct": 0.07
+  }
+ },
+ "waterfront_same_material_reference": {
+  "baseline": {
+   "L_p50": 62.8,
+   "crushed_pct": 2.1
+  },
+  "gap_13.33W": {
+   "L_p50": 62.9,
+   "crushed_pct": 2.2
+  },
+  "gap_60W": {
+   "L_p50": 64.0,
+   "crushed_pct": 1.5
+  },
+  "gap_150W": {
+   "L_p50": 66.9,
+   "crushed_pct": 1.2
+  },
+  "gap_360W": {
+   "L_p50": 72.8,
+   "crushed_pct": 0.0
+  }
+ },
+ "chosen": "150 W",
+ "why": "the CRUSHED knee is at 60 W (38.2 -> 4.5) and the picture is why it is not the pick: at 60 the mass is lifted and still unreadable, at 150 the deck structure, the ladder and the platform read, and at 360 the whole left mass flattens to one even brown with the under-deck shadows gone. Cost of 150: frame p95 +1.5 of 255, blown pixels IDENTICAL to four decimals, and the same material 20 m away at waterfront moves +4.1 - i.e. the card is local, which is what use_shadow=False plus a 16 m cutoff is for.",
+ "world_x_of_the_darkness": {
+  "note": "plate_probe world XYZ reconstruction inside the objmap ray mask, 241891 px = 5.859% of deep-stairs",
+  "x35_37": {
+   "px": 59155,
+   "L_p50": 6.7,
+   "crushed_pct": 64.5
+  },
+  "x37_39": {
+   "px": 113543,
+   "L_p50": 10.9,
+   "crushed_pct": 35.0
+  },
+  "x39_41": {
+   "px": 42910,
+   "L_p50": 13.3,
+   "crushed_pct": 13.3
+  },
+  "x47_49": {
+   "px": 940,
+   "L_p50": 84.4,
+   "crushed_pct": 4.1
+  },
+  "x53_55": {
+   "px": 10919,
+   "L_p50": 29.6,
+   "crushed_pct": 1.9
+  },
+  "x55_57": {
+   "px": 7352,
+   "L_p50": 33.2,
+   "crushed_pct": 14.5
+  }
+ }
+}
