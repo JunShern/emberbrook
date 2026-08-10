@@ -25035,3 +25035,213 @@ and every blocker an authored barrier (identical to round 1).
 and that is not a walk finding: `emb_padstack` reads the two bundles as IDENTICAL — 222 walk
 nodes, 24,349 floor faces, 106.0 m2 double-covered, every band equal — so the `emb-cine` body
 gate covers both tiers. Fixing the tool's memory is round 3's, not this round's.
+
+## 2026-08-10 — EMBERBROOK ROUND 3: the doorstep stops being a height source, and 37.9 m2 of empty hole was a cut sized to the map instead of to the building
+
+Board: `docs/qa/emberbrook-redteam/index.html`. Round 3 took round 2's numbered residuals.
+Two of the three named targets were built; the third — the lucam — was re-derived first and
+TWO of the inherited words about it turned out to be wrong.
+
+### 1. TARGET 1 — THE 106.0 m2 DECOMPOSED BY MECHANISM, WHICH NOBODY HAD DONE
+
+`tools/emb_padstack.mjs`'s own JSON, classified by the FAMILY of each stacked pair:
+
+    pad over ribbon    51.77 m2   83 pairs      a flat doorstep on a graded lane
+    area over ribbon   34.69 m2   42 pairs      the 0.6 m rim overlap, by design
+    area over pad       9.94 m2    9 pairs      the "coplanar" threshold, off by 70 mm
+    pad over pad        5.02 m2    6 pairs
+    ribbon over ribbon  4.57 m2   67 pairs      segment joints at corners
+    area over area      0.02 m2    5 pairs
+
+**SIXTY-SIX OF THE 106 IS A PAD**, and the mechanism is arithmetic rather than mysterious:
+a ribbon starts at `DOOR` carrying `DOOR`'s own z and then CLIMBS toward the next waypoint,
+while `walk_pad_*` is a FLAT 3.0 m box centred on that same point — so at the pad's far edge
+the lane has gained 1.5 m x the local grade. That is the measured 70 mm. And `emb_blockout`'s
+threshold-pad branch says in its own comment that it emits the pad *"coplanar with it, so
+`eff_top` still has nothing to choose between"* — measured, the bakery's threshold stands
+**70 mm over the plaza it is supposed to be coplanar with.**
+
+THE FIX IS ONE RULE, NOT THREE (`tools/emb_padlevel.py`, and the same rule at source in
+`emb_blockout.py` after the area-floor loop): **the pad stops being a height source.** Its
+top is read off the walk surface it actually stands on — the median, over its own plan
+cells, of the highest OTHER walk surface there — plus 4 mm. The 4 mm is round 1's
+`emb_padcoplanar` result kept on purpose: two walk surfaces at exactly 0.000 m rendered as a
+pitch-black hole under `walk_pad_lake-home`. **Flush, never coincident.** `DOOR[i][2]` is not
+touched, so the ribbon ends and `scenegraph_derive`'s triggers keep their authority; what
+moves is the SLAB, which is a picture and not a contract.
+
+    band          before    predicted   measured
+    <= 2 mm         5.20       6.86       5.05
+    2-20 mm         8.38      42.17      43.09
+    20-60 mm       28.79      30.02      29.35
+    60-120 mm      38.05       3.66       3.07     <- THE MODAL BAND, -92%
+    120-250 mm     11.40       9.11      11.25
+    > 250 mm       14.20      14.20      14.20     <- real terraces, untouched
+    p50 step      0.0700 m              0.0231 m   -67%
+
+**PREDICTED BEFORE ANY BLENDER RAN.** The simulation is `emb_padstack`'s own rasteriser with
+each pad's z replaced by the rule's answer — five seconds, no Blender, no bake — and it
+called the modal band to within 0.6 m2. A build that can be simulated on the shipped bundle
+should be.
+
+**TWO THINGS THE SIMULATION DID NOT SEE, AND BOTH NEEDED A REFUSAL.**
+  * **A PAD CAN STAND ON ANOTHER PAD, AND A PAD IS EXACTLY WHAT THIS FILE MOVES.** Six do
+    (`grandmothers-bench` on `lake-home`, `brook-spring` on `home-lane-end`). Levelling
+    everything against the ORIGINAL heights in one pass seats `grandmothers-bench` 4 mm over
+    where `lake-home` USED to be and then drops `lake-home` 66 mm — **re-opening, between two
+    pads, the exact 70 mm step round 1 shipped `emb_padcoplanar` to close.** So it is two
+    passes: pass A levels every pad standing on a RIBBON or an AREA FLOOR (the two internally
+    consistent sources), pass B levels the rest onto pass A's ANSWERS. Measured:
+    `grandmothers-bench` −0.0620 following `lake-home`'s −0.0660, i.e. 4 mm apart.
+  * **LOWER ONLY.** The defect is a doorstep standing PROUD — a lit riser and a shadow line. A
+    pad standing UNDER the surface that crosses it is COVERED by it and shows nothing, so
+    raising it buys no picture and costs new step and new z-fight: `pond-weir` sits 0.178 m
+    below the lane that BRIDGES it, which is a lane bridging a weir. Two pads are printed as
+    NOT RAISED rather than moved. The measured ≤2 mm band went DOWN (5.20 → 5.05), so the
+    change introduced no new z-fighting anywhere.
+
+`emb_pavechop`'s own receipt is the independent confirmation: rims SEATED ONTO LOWER PAVING
+**108 → 56** and rims PINNED as level with their neighbour **2140 → 2192**. Half the stacked
+rims stopped being stacked.
+
+DOUBLE COVERAGE IS STILL 106.0 m2 AND THAT IS THE HONEST HEADLINE: this fixes HEIGHTS, not
+overlap. The overlap is deliberate (a rim laps its area by 0.6 m so they do not crack apart)
+and invisible once the two surfaces agree.
+
+### 2. TARGET 2 — 37.9 m2 OF EMPTY PAVING HOLE, AND THE CUT WAS SIZED TO THE MAP
+
+`tools/emb_padfill.py`. Every empty hole put on the geometry of the DRESSED blend:
+
+    hole                    area     what actually stands in it
+    gate-court sigil       11.29 m2  two sigil plates, rim 1.84 m round, 0.32 m proud
+    square well            10.64 m2  a 2.00 m well RING + two 0.17 m frames
+    square notice/bell      8.75 m2  a 1.72 x 0.09 m BOARD and three 0.13-0.16 m posts
+    gate-court trailhead    5.33 m2  a 0.50 x 1.90 step and two 1.50 x 0.22 m stiles
+    square lamp-ring0       1.26 m2  ONE 0.13 x 0.13 m LAMP POST
+    orchard lamp01          0.63 m2  ONE 0.13 x 0.13 m LAMP POST
+
+**A 0.13 m POST CUTS 1.26 m2 OF PAVING — 74x ITS OWN PLAN AREA.** The area-floor loop drops a
+0.45 m cell whose CENTRE lands within 0.28 m of a landmark's `foot_rects_cut` rectangle, and
+that rectangle is the MAP'S AUTHORED `bodysize`, not the thing the builder stands there: the
+well's cut is 2.5 m square for a ring built 2.0 m round; `LAMPFEET` stamps 0.68 x 0.68 m for a
+0.13 m post. `foot_rects_cut`'s own docstring had already ruled on this shape of mistake —
+*"the direction of safety is not the same for the two consumers"* — and the lamp is the third
+instance of it. **AND ONE OF THE HOLES IS A STORY SITE**: there is no `walk_pad_sigil-plate-*`,
+so Chapter One's twin sigil plates (`story.json` `ch1.sigils`) stood in an 11.29 m2 hole with
+no walk record anywhere in it.
+
+Fixed two ways. At source, `LAMPCUT` — the one over-cut `emb_blockout` owns end to end — is
+the post's own 0.10 m and the 0.34 m keep-out is unchanged. In the carrier, every ENCLOSED
+hole cell that no solid stands in is given back. Enclosed only, so every standoff at an area's
+own rim is untouched by construction; and it never removes floor, so it cannot break a route.
+
+**AN OBSTACLE IS A THING YOU CANNOT STEP OVER, NOT A THING THAT IS THERE — and one 0.20 m
+threshold decides five holes.** At 0.30 m the festival dais gave back **16.20 m2 of walk floor
+UNDER ITS OWN DECK** (its boards top out 0.259 m over the plaza). At 0.20 m the dais and the
+market stalls and the Heartlight plinth hold their holes, while the gate court's own dressing —
+1.34 m flagstones at ±0.05 m and the sigil plates' rims topping out at +0.16 — is PAVING and
+does not.
+
+**AND THE DECISION IS MADE ONCE AND REPLAYED, BECAUSE THE THREE BLENDS DO NOT SEE THE SAME
+TOWN.** The gray master's own census says **108 cells** where the dressed blend says **127** —
+it has no `emb_dress_notice_board`, no market crates, no bunting posts. Deriving per blend
+would have shipped THREE DIFFERENT WALK NETWORKS with every gate green, and `walk_engine_gate`
+compares a bundle against the engine, never a bundle against a bundle. So `--cells-out` writes
+the list from `-dressed` and `--cells-in` replays it onto master and realtime;
+`tools/blends/districts/emb_padfill.cells.json` is the committed decision.
+
+RECEIPT: **empty enclosed holes 37.91 m2 → 0.79 m2** (gate-court 16.63 → 0.00, square-plaza
+20.65 → 0.79, orchard 0.63 → 0.00), paved plan 1510.2 → 1537.3 m2, and **no new stack** — the
+double-coverage census is unchanged, which is what rule 3 (refuse a cell another walk surface
+already covers) exists to guarantee.
+
+### 3. TARGET 3 — THE LUCAM, AND TWO INHERITED WORDS WERE WRONG
+
+Round 2 handed it over as *"the gable's twin … same mechanism, same material, same fix shape"*.
+
+  * IT IS NOT MISSING A MATERIAL, and the thing that makes it look like it is, is worth
+    knowing: **every `emb_dress` box shares ONE template mesh**, so `o.data.materials` reads
+    `[None]` on all of them and the material lives on an OBJECT-linked slot. A probe that
+    reads the mesh's material list finds nothing on the whole town.
+  * IT IS NOT ONLY A TEXTURE PROBLEM. Cropped out of the shipped plate (world
+    x 45.28..48.31, y 59.65..62.80, z 8.36..10.96 → 509 x 450 px of `homerow`'s 2688 x 1536)
+    it is a pale-tan carton with three flat faces and one unbroken silhouette, hung on a roof
+    of textured shingles and dark rafters.
+
+**A LUCAM IS A HOIST HOUSING, AND WHAT MAKES ONE READ IS THE LOADING DOOR THE SACK COMES OUT
+OF.** `emb_dress_mill_hoistbeam`, `_pulley`, `_rope` and `_hoistsack` already hang off it and
+there was nothing for them to come out of. `tools/emb_millucam.py` boards it at the gable's own
+0.24 m pitch (13 plate pixels against the noise's 2), puts a two-leaf loading door with a
+lintel and a bressummer in the outward face, and adds four corner posts — 36 members. Outward
+is DERIVED from the roof deck's own centroid, never assumed. The core box is KEPT, so the
+0.012 m gaps between boards are shadow lines and `revert` is a plain delete.
+
+### 4. WHAT ONLY THE PIPELINE SAID
+
+  * **RE-SOLVING THE CAMERAS AFTER A WALK CHANGE MOVED EXACTLY ONE OF ELEVEN**, and it is the
+    one whose region grew: `square` by **0.028 m** in position / 0.016 in aim. `cine_test`'s
+    single red for most of this round was `square`: *the BAKED camera is the SOLVED camera* —
+    a self-clearing red that names its own rebake.
+  * **A `town_export` OF THE DRESSED REALTIME TIER IS A 15-MINUTE JOB WITH A GPU RENDER IN IT**,
+    and it writes `background.png`, `stylized.png` and a 94 MB `scene.glb` STRAIGHT INTO the
+    shipped bundle when `TOWNWALK_OUT` points there. Killing it mid-run corrupts the bundle;
+    the cron's own path stages and moves atomically for exactly that reason.
+
+### 5. THE REBAKE LIST — ELEVEN OF ELEVEN, AND THE FLOOR WAS RE-MEASURED TO EARN IT
+
+`tools/plate_ab.py`. Arm A is the pre-round-3 dressed master (the untouched blend, put BACK
+inside `tools/blends` so its `//../textures` paths resolve — a blend copied elsewhere renders
+MAGENTA, and round 12 lost a draft arm to exactly that); arm B is the shipping one. Both arms
+at the same draft grade and through the SAME re-solved cameras, so only the geometry differs.
+
+    shot        chg>4/255  chg>12/255  medshift   verdict
+    homerow        2.003%      0.657%     -6.06   REBAKE
+    square         1.471%      0.585%     -4.76   REBAKE
+    pondlane       0.543%      0.153%     +4.28   REBAKE
+    northlane      0.441%      0.038%     -4.48   REBAKE
+    gatefield      0.423%      0.011%     -7.50   REBAKE
+    therise        0.303%      0.143%     -7.43   REBAKE
+    arch           0.215%      0.051%     +5.57   REBAKE
+    gateroad       0.112%      0.017%     -4.57   REBAKE
+    orchard        0.075%      0.007%     +4.50   REBAKE
+    waystone       0.040%      0.002%     +4.53   REBAKE
+    woodroad       0.019%      0.000%     -4.14   REBAKE
+
+**ELEVEN OF ELEVEN LOOKS GLOBAL, SO THE FLOOR WAS RE-MEASURED.** Arm B was rendered a SECOND
+time from the same blend at the same grade, on the FOUR SMALLEST MOVERS, and every one came
+back at **0.000% / 0.000% / +0.00 median shift**. So woodroad's 0.019% is not noise and the
+zero-refusal list is real: this round moved the paving, and every camera in Emberbrook can see
+paving.
+
+**AND `gatefield` IS ROUND 2'S OWN PREDICTION COMING TRUE.** Round 2 refused it at 0.005% and
+said exactly why: *"what that camera is looking at is the 16.63 m2 of empty hole, which this
+round measured and did not touch."* Fill the hole and it moves 0.423%. A refusal that names
+its own cause is worth more than one that just prints a number.
+
+### 6. THE GATES, AND THE ONE COST, WITH A CONTROL
+
+`walk_engine_gate` **GREEN on BOTH bundles** — 7595 cells / 1538.0 m2 in the FILE and the same
+in the ENGINE, 0 lost, 0 extra, height agreement median 0.000 m, `SIM.bvh().fail 0` (round 2:
+7467 / 1512.1). `slice_test` 776/0. `findability_test` 69/0 + 11 warnings.
+`routes_derive --check` clean. `cine_test` 479/1 + 2 soft — the 1 is `square`'s *baked camera
+is the solved camera*, a self-clearing red.
+
+**`walk_bodygate` went 0.15% -> 0.23%, AND THE DELTA WAS RUN AGAINST A CONTROL** — the round-2
+bundle pulled out of git and fed through `--glb` — so it is attributed rather than argued:
+
+    +596  emb_lamp_01_orchard_post          0 -> 596
+    +488  emb_lamp_13_square-ring0_post     0 -> 488
+    +480  emb_lamp_09_bakery_post           0 -> 480
+    +248  bar_brook-bridge_railA           18 -> 266
+    +150  bar_brook-bridge_railB          120 -> 270
+     +20  bar_brook-bridge_post{A,B}0      42 -> 62
+
+**1,564 of the 1,982 new blocked steps are the three lamp posts whose holes were filled**, and
+the other 418 are the brook-bridge rails, relatively taller now that `walk_pad_brook-bridge`
+sits 0.076 m lower. No new blocker is unexplained. **THE ONE REAL COST IS NAMED AND IT IS AN
+ARITHMETIC ONE: `emb_padfill --clear` is 0.28 m and the walker's body RADIUS is 0.30 m**, so
+the paving now reaches a ring of cells a 0.6 m body cannot stand in — stuck samples 686 ->
+1006. Those cells cannot be ENTERED either, so they are dead rather than a trap, and
+`walk_bodygate` does not model the slide `walkStep` actually performs. Round 4 fixes it by
+re-running `emb_padfill --clear 0.32`; the cost is about three cells per post.
+
