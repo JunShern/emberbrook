@@ -1319,6 +1319,43 @@ git runs here, on branch `migration/3d-hybrid`.
   **AND THE HONEST JUDGE RESULT IS THAT SURVIVORS WENT UP, 94 → 97**: rim/staircase 8 → 0,
   occlusion 22 → 13, darkness 35 → 31 — but geometry 29 → **37**, because **a town too dark to
   read was hiding its own geometry.**
+- **EMBERBROOK ROUND 2 (2026-08-10) — survivors 97 → 87, geometry 37 → 28, square 19 → 9.**
+  **THREE HEIGHT SOURCES THAT NEVER TALK TO EACH OTHER PUT 7% OF THE TOWN'S PAVING ON TOP OF
+  ITSELF** (`tools/emb_padstack.mjs`): **106.0 m² of 1,510 m² is TWO walk surfaces stacked, p50
+  step 70 mm** — `walk_pad_*` takes its height from terrain at its doorstep, `walk_e_*` from
+  smoothed lane waypoints, `walk_lm_*` from its own floor. **Only 4.82 m² is coincident enough to
+  z-fight, which is ALL `emb_padcoplanar` could see** — round 1 fixed the visible 5% of a defect
+  and the other 95% was invisible to the instrument that found it. The rim taper is a RIM fix;
+  the interiors are still stacked, and `waystone` now says "step gaps" where it said "floating".
+  **THE WATERMILL PANEL IS ONE BOX AND IT WAS NEVER UNTEXTURED**: `emb_dress_mill_gable+1` at
+  73.8% of the box, **0.18 x 10.20 x 2.92 m with a DEAD-LEVEL top edge closing a PITCHED roof**,
+  standing 0.25 m proud of its own deck. Its material's only frequency is 1/26 m = **38 mm = 2
+  plate pixels at homerow's 18.4 mm/px, so THE DENOISER TAKES IT** — sd 3.45 against a ring of
+  9.11 while the daub panels beside it, same pipeline, read 10.70. **"Untextured" can mean
+  "textured below the plate's Nyquist".**
+  **AND THE PICTURE CAUGHT WHAT THREE RECEIPTS COULD NOT**: the first gable fix stepped 0.119 m
+  per board with nothing capping the rake, and from `square` the mill is 26-39 m away seen
+  EDGE-ON, so it baked a **lit sawtooth**. The carrier printed *88 members, 0 refused*; the
+  homerow A/B looked right; and the whole-town draft **ranked square FIRST at 3.379% without
+  saying why**. A ranking is not a diagnosis. Fixed by capping the rake (42 boards a side at
+  0.24 m = 13 px against the noise's 2) and re-derived with its own second A/B — `northlane`
+  0.116 and `therise` 0.088 rebake, `arch` and `gateroad` REFUSED at 0.000%.
+  **`tools/emb_bake_shipped.py` NOW ENFORCES THE REGRADE TRAP** (7 grade groups over 11 plates)
+  instead of leaving `appliedGrade` recorded-and-unenforced, and a crashed group no longer takes
+  the queue with it. **`tools/plate_ab.py`** gives the whole-town draft A/B doctrine a home; arm A
+  reproduced round 1's manifest to the vertex. **`emb_ray_census.py`** censuses per-object BVHs
+  over a shortlist — never a depsgraph BVH over 6.36 M scattered instances.
+  **AIM-CENSUSING EVERY FINDING, NOT JUST `[QUALITY]`, KILLED THREE OF 27 GEOMETRY SURVIVORS**:
+  gateroad's "the path ends abruptly" is **94.1% grass**, square's "the building is sunken" is
+  **94.8% ground with no building in the box**, therise's "path terrain slabs" is **96% a house**.
+  Plus a `gatefield` water verdict at 0.0% on-subject — **`emb_brookchop` is NOT regressed.**
+  **AND A REFUSAL THAT IS RIGHT LOOKS EXACTLY LIKE A FAILURE**: `gatefield` was refused at 0.005%
+  so its plate is byte-identical to round 1 — and it keeps all three of its pillar-cutout
+  findings. Do not read that as the round missing them.
+  RESIDUALS: 37.3 m² of empty enclosed paving holes (nine findings, generation-side); reconcile
+  the three height sources AT SOURCE; `emb_dress_mill_lucam` is the gable's twin (sd 4.72 vs ring
+  10.59, same shape of fix); the water wheel reads as a sawn log; the Heartlight cap.
+  `walk_bodygate` **OOMs on the 94 MB emb-townwalk** — not a walk finding.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
