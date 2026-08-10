@@ -1,0 +1,57 @@
+{
+ "note": "the awning was measured on the SHIPPED plate after the first bake and the fix had traded one defect for the one round 11 existed to fix. Caught before the round closed.",
+ "instrument": "objmap ray mask eroded 1 cell, read on the full 2688x1536 plate; in-frame references read through the same mask in the same arm",
+ "multiscale_SD_p50_crossing": {
+  "qm_awning_0 BEFORE (W=128 weave in the height field, flat shaded)": {
+   "SD3": 7.71,
+   "SD5": 8.29,
+   "SD9": 8.92,
+   "SD17": 10.42,
+   "L_p50": 93.8
+  },
+  "qm_awning_0 weave DELETED from the height field + smooth": {
+   "SD3": 1.16,
+   "SD5": 1.53,
+   "SD9": 2.17,
+   "SD17": 3.13,
+   "L_p50": 117.0
+  },
+  "qm_awning_0 W=32 weight 0.65 + smooth": {
+   "SD5": 32.28,
+   "L_p50": 112.7
+  },
+  "qm_awning_0 SHIPPED: W=32 weight 0.10 + smooth": {
+   "SD5": 6.51,
+   "SD5_p90": 8.95,
+   "L_p50": 117.0
+  },
+  "mat_qm_paving (in-frame reference, unmoved)": {
+   "SD3": 3.73,
+   "SD5": 5.16,
+   "SD9": 6.71,
+   "SD17": 8.25,
+   "L_p50": 117.8
+  },
+  "mat_qm_deck (in-frame reference, unmoved)": {
+   "SD3": 2.24,
+   "SD5": 3.67,
+   "SD9": 5.57,
+   "SD17": 7.21,
+   "L_p50": 104.9
+  },
+  "mat_timber_dark (in-frame reference, unmoved)": {
+   "SD3": 2.77,
+   "SD5": 5.77,
+   "SD9": 11.66,
+   "SD17": 14.09,
+   "L_p50": 69.9
+  }
+ },
+ "findings": [
+  "ROUND 11's OWN RECEIPT WAS MEASURING THE CREASES. Its 'SD3 1.12 -> 7.56' was taken on a surface whose every quad carried a hard triangulation crease; smooth-shade it and the same canvas reads 1.16. The texture it shipped was worth far less than its number said.",
+  "DELETING THE WEAVE FROM THE HEIGHT FIELD IS WORSE THAN THE ALIAS: 5x5 SD 1.53 with 72.9% of the surface locally flat makes the awning the FLATTEST surface in the frame at every scale. A height field contributes its SLOPE, and `wear`'s finest octave is 42.7 texels, so its per-texel gradient is ~30x the weave's smaller - a smooth field is nearly inert in a normal map at any sane strength.",
+  "A PERIOD THE PLATE RESOLVES SHOWS ITS FULL CONTRAST WHERE A PERIOD AT NYQUIST SHOWED A DENOISED GHOST. Moving W 128 -> 32 at the inherited weight 0.65 gave SD 32.28 - a basketweave doormat, looked at and refused. The weight had been tuned against a texture the sampler was throwing away.",
+  "THE THREE IN-FRAME REFERENCES ARE UNMOVED TO TWO DECIMALS ACROSS EVERY ARM, which is what says the measurement is clean and only the awning moved."
+ ],
+ "residual_named": "L p50 93.8 -> 117.0, exactly mat_qm_paving's 117.8. The rise is NOT a value change: it is the removal of the dark crease facets that used to be half the surface. So round 9's value tuning (albedo 0.320 -> 0.144, spec 0.50 -> 0.15) was ALSO done against the crease defect, and whether this canvas now wants a further pull is an open question for round 14 with a measured starting point."
+}

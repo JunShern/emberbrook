@@ -92,9 +92,34 @@ def make_maps():
     u = (np.arange(N, dtype=np.float32) + 0.5) / N
     U, V = np.meshgrid(u, u)
 
-    # PLAIN WEAVE.  128 warps and 128 wefts over one tile; at the shipped mapping
-    # scale that is a ~4 mm thread, i.e. two plate pixels at the awning's distance.
-    W = 128
+    # PLAIN WEAVE.  `W` warps and `W` wefts over one tile.  At the shipped mapping
+    # scale a tile is 1/1.9 = 0.526 m over 1024 texels, so a texel is 0.514 mm and a
+    # thread is 1024/W texels.
+    #
+    # **W WAS 128 — A 4.11 mm THREAD, AND THE PLATE SAMPLES THIS SURFACE AT 2.18 mm PER
+    # PIXEL, SO THE THREAD WAS 1.9 PIXELS: THE NYQUIST LIMIT.**  Round 11 reasoned that
+    # the denoiser would take it.  It did not: an FFT of a 128 px patch of the awning
+    # inside its own ray mask on the SHIPPED plate puts a peak at k = 62 of a possible
+    # 64 — period 2.06 plate px, reproducing the 4.11 mm thread to 10% — carrying 8.4e5
+    # of power against 1-5e4 in every neighbouring high-band bin, i.e. FORTY TIMES its
+    # own band.  A regular lattice at Nyquist does not average out, it aliases, and it
+    # aliased into a diamond gauze that photographs as wire screen.
+    #
+    # **THE DEFECT WAS THE PERIOD, NOT THE WEAVE.**  A weave is the right texture for a
+    # canvas.  W = 32 is a 16.4 mm thread = 7.5 plate px, four times the sampling limit,
+    # in the same 20-180 mm band the wear field and every other surface in the frame
+    # carry their texture in.  Coarse for a real awning and correct for this plate: the
+    # alternative measured out at 5x5 SD 1.53 against `mat_qm_paving`'s 5.16, i.e. the
+    # FLATTEST surface in the frame, which is round 11's original defect back again.
+    W = 32
+    # And the WEIGHT is a second, independent number, because a period the plate can
+    # RESOLVE shows its full contrast where a period at Nyquist showed a denoised ghost.
+    # Measured on full-res crossing bakes inside the awning's own ray mask, 5x5 SD p50
+    # against `mat_qm_paving`'s 5.16 in the same frame:
+    #     weave weight 0.65 -> 32.28   a heavy basketweave doormat, looked at and refused
+    #     weave weight 0.10 -> see WEAVE_H below
+    # The old 0.65 was tuned against a texture that was being thrown away by the sampler.
+    WEAVE_H = 0.10
     warp = 0.5 + 0.5 * np.sin(2 * math.pi * W * U)
     weft = 0.5 + 0.5 * np.sin(2 * math.pi * W * V)
     over = ((np.floor(W * U) + np.floor(W * V)) % 2).astype(np.float32)
@@ -131,12 +156,14 @@ def make_maps():
     # rounds of judges have been calling "an untextured grey polygon".
     #
     # A NORMAL MAP IS A SLOPE, AND A SLOPE AT NYQUIST IS THE LIGHTING AMPLIFYING THE
-    # ALIAS.  The weave stays in the DIFFUSE (0.085 amplitude) and the ROUGHNESS (0.14),
-    # where it is a sub-visible modulation of two quantities the eye integrates; it is
-    # removed only from the quantity that turns it into a lit pattern.  The wear field
-    # at 22-180 mm — 10 to 80 plate px — is the band this surface can actually carry
-    # relief in, and it is now the whole of the height field.
-    h = wear
+    # ALIAS — which is why `W` moved to 32 above rather than the weave being deleted.
+    # DELETING IT WAS TRIED AND MEASURED AND IT IS WORSE: `h = wear` alone renders at
+    # 5x5 SD 1.53 with 72.9% of the surface locally flat, against 8.29/0.8% before and
+    # `mat_qm_paving`'s 5.16 in the same frame, because `wear`'s finest octave is 42.7
+    # texels and its per-texel gradient is ~30x smaller than the weave's.  A height
+    # field's contribution is its SLOPE, not its amplitude, so a smooth field is nearly
+    # inert in a normal map at any sane strength.
+    h = WEAVE_H * weave + (1.0 - WEAVE_H) * wear
     STRENGTH = 6.0
     dx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * STRENGTH
     dy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * STRENGTH

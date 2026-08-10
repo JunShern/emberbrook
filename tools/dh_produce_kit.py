@@ -65,6 +65,13 @@ WORLD BOX and shaded smooth.  Three things follow from measurement rather than t
     produce), and a whole-mesh replacement would flatten them to one.  Only the island's
     own faces are rebuilt, on the island's own material index.
 
+ONE COSMETIC CONSEQUENCE, MEASURED IN THE ARTIFACT AND LEFT: the `DPK_SRC_` snapshot
+holds the ORIGINAL mesh datablock's name, so the rebuilt one takes a `.NNN` suffix and
+that suffix reaches the glTF `meshes[].name` field (`t2c_W7_keeper_boxes.002`).  It is
+invisible to every consumer, and that was checked rather than assumed: **the NODE names
+of both bundles are identical before and after, 1635 of 1635, empty set both ways.**
+Node names are what the runtime, the walk network and every gate look up.
+
 WHAT IT ASSERTS RATHER THAN ASSUMES:
   * the donor is exactly 20 verts / 12 faces with polygon sides {4, 10} and 100% smooth;
   * every island it touches is exactly 8 verts / 6 faces (a cuboid) before the swap;
