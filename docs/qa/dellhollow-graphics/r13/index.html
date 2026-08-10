@@ -142,3 +142,79 @@ that it is opaque, near-neutral (RGB 149/146/131 in a teal frame), <b>33% bright
 water it sits in</b>, and has four hard straight-edged wedge silhouettes. That is a material and
 opacity question, and it belongs to round 14.</p>
 <img src="evidence/north-landing-bay-and-boil.jpg" alt="north-landing, the bay boxed and the foam below it">
+
+<h2>The verdict is MISSING, and it is a credit blocker</h2>
+<p style="border:2px solid #e8846a;padding:10px 14px;background:#2a1a16">
+<b>THE GEMINI PREPAYMENT CREDITS ARE DEPLETED.</b> The BEFORE arm completed — 66 calls, 0
+errors, <code>docs/qa/redteam/run-20260810-185237-r13-before</code>, raw per-look total
+<b>14.20 &plusmn;2.74</b> with <code>floating/clipping</code> 6.20,
+<code>block/box/cube/primitive</code> 3.20, <code>untextured/flat/plain</code> 2.40,
+<code>dark/shadow</code> 1.90, <code>mesh/grid/screen/weave</code> 0.80. The AFTER arm returned
+<b>HTTP 429 <i>&ldquo;Your prepayment credits are depleted&rdquo;</i> on all 30 calls it made</b>
+and its run directory was deleted rather than left as a half-arm. <b>So round 13 has no
+after-arm judge verdict</b>; every claim on this page is an instrument claim and none is a
+judge claim. Closing it costs 66 calls:
+<code>node tools/scene_redteam.mjs --shots cottage,fishdock,lockhead,crossing,deep-stairs,gate
+--mode naive --n 10 --tag r13-after</code>, then
+<code>python3 evidence/rawrate.py &lt;before&gt; &lt;after&gt;</code>.</p>
+
+<h2>The awning fix traded one defect for the other, and the plate caught it</h2>
+<p>Three arms, all baked at FULL plate resolution, all read through the same eroded ray mask,
+with three in-frame references unmoved to two decimals in every arm — which is what says the
+measurement is clean and only the awning moved:</p>
+<table>
+<tr><th>arm</th><th>SD3</th><th>SD5</th><th>SD9</th><th>SD17</th><th>L p50</th></tr>
+<tr><td>W=128 weave in the height field, flat shaded</td><td>7.71</td><td>8.29</td><td>8.92</td><td>10.42</td><td>93.8</td></tr>
+<tr><td>weave DELETED from the height field, smooth</td><td>1.16</td><td class=r>1.53</td><td>2.17</td><td>3.13</td><td>117.0</td></tr>
+<tr><td>W=32 at the inherited weight 0.65, smooth</td><td>&mdash;</td><td class=r>32.28</td><td>&mdash;</td><td>&mdash;</td><td>112.7</td></tr>
+<tr><td><b>W=32 at weight 0.10, smooth &mdash; SHIPPED</b></td><td>&mdash;</td><td class=g>6.51</td><td>&mdash;</td><td>&mdash;</td><td>117.0</td></tr>
+<tr><td class=d>mat_qm_paving (reference, unmoved)</td><td>3.73</td><td>5.16</td><td>6.71</td><td>8.25</td><td>117.8</td></tr>
+<tr><td class=d>mat_qm_deck (reference, unmoved)</td><td>2.24</td><td>3.67</td><td>5.57</td><td>7.21</td><td>104.9</td></tr>
+<tr><td class=d>mat_timber_dark (reference, unmoved)</td><td>2.77</td><td>5.77</td><td>11.66</td><td>14.09</td><td>69.9</td></tr>
+</table>
+<ol>
+<li><b>Round 11's own receipt was measuring the creases.</b> Its &ldquo;SD3 1.12 &rarr; 7.56&rdquo;
+was taken on a surface whose every quad carried a triangulation crease. Smooth-shade the same
+canvas and it reads <b>1.16</b>.</li>
+<li><b>Deleting the weave is worse than the alias</b> — SD5 1.53 with 72.9% of the surface
+locally flat makes the awning the flattest surface in the frame at every scale. <b>A height
+field contributes its SLOPE, not its amplitude</b>, and <code>wear</code>'s finest octave is
+42.7 texels against the weave's 8, so a smooth field is nearly inert in a normal map at any
+sane strength.</li>
+<li><b>A period the plate resolves shows its full contrast where a period at Nyquist showed a
+denoised ghost.</b> W&nbsp;128&nbsp;&rarr;&nbsp;32 at the inherited weight 0.65 gave SD 32.28 —
+a basketweave doormat, looked at and refused. The weight had been tuned against a texture the
+sampler was throwing away.</li>
+</ol>
+<img src="evidence/SHIPPED-crossing-awning.jpg" alt="crossing awning, shipped before and after">
+<p class=d>Residual, named: <b>L p50 93.8 &rarr; 117.0</b>, exactly <code>mat_qm_paving</code>'s
+117.8. Not a value change — the dark crease facets that used to be half the surface are gone, so
+round 9's albedo pull was <em>also</em> tuned against the crease defect.</p>
+
+<h2>Rebake lists, both derived from rendered frames</h2>
+<p>Pass 1 (produce + cloth + underlight): <b>all fifteen cameras moved, 2.233% to 38.068% above
+4/255</b>, against a floor <b>re-measured</b> as two draft renders of the same post-fix master —
+shelf-east 0.003, gate 0.003, north-landing 0.002, cottage 0.001 — so the A/B is 740&times; to
+38,000&times; its own floor and <b>nothing was refused</b>.<br>
+Pass 2 (the canvas correction only): rebaked crossing 0.394, quay-west 0.041, weave 0.033, gate
+0.018, waterfront 0.010, deep-stairs 0.009, shelf-east 0.009; <b>refused with their numbers</b>
+lockhead 0.007, shelf-west 0.007, loop-stairs 0.006, boatyard 0.006, north-landing 0.001,
+fishdock 0.001, cottage 0.001, lockfive 0.000.</p>
+
+<h2>Gates</h2>
+<p><code>cine_test</code> <b>636 ok / 1 failed / 1 soft</b> (the pre-attributed
+deep-stairs&harr;waterfront seam, <code>{"fired":0,"expected":10}</code>) &middot;
+<code>slice_test</code> <b>776 / 0</b> &middot; <code>findability_test</code> <b>69 / 0 / 11
+warnings</b> &middot; <code>routes_derive --check</code> clean, 15 shots. Both bundles
+re-exported and <b>verified per mesh, not by histogram</b>: the 15 cloth objects keep their
+triangle count exactly and lose vertices (awnings 96&rarr;39, laundry 324&rarr;184, banners
+120&rarr;59) — the smooth-shading signature and the artifact's own proof that not one vertex
+moved — while the 5 produce objects gain triangles (144&rarr;288). Node names identical,
+1635 of 1635, empty set both ways. Bakes: fifteen then seven, 1-wide serial, rc 0,
+2869 s + 1418 s.</p>
+
+<h2>Shipped, by eye</h2>
+<img src="evidence/SHIPPED-lockhead-flowerbox.jpg" alt="lockhead flowerboxes before and after">
+<p class=d>lockhead, <code>t2c_LH3_rail_flowerbox</code> — shipped before (top) and after (bottom).</p>
+<img src="evidence/SHIPPED-fishdock-floats.jpg" alt="fishdock floats before and after">
+<p class=d>fishdock, <code>t2c_F5_fish_floats</code>.</p>
