@@ -23689,6 +23689,242 @@ OWED / NAMED FOR ROUND 9:
      The stair-tread family is the loudest thing in Dellhollow that nobody has measured.
 
 
+## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 13: A PREFIX IS NOT A SUBJECT, THE WORD THAT
+## MATTERED WAS "TRIANGULAR" AND NOT "CLIPPING", AND THE FIX FOR THE AWNING TRADED ONE
+## DEFECT FOR THE OTHER UNTIL THE PLATE SAID SO
+
+Carriers tools/dh_produce_kit.py and tools/dh_cloth_smooth.py (both new); edits to
+tools/qm_awning_canvas.py and tools/dh_qm_underlight.py. Board
+docs/qa/dellhollow-graphics/r13/index.html, evidence + every instrument in its
+`evidence/` beside it. Footprint off ONE `dh_objmap dump` (15 cameras x 240x135 =
+486,000 marched rays); world positions from `plate_probe`'s reconstruction of the
+SHIPPED plates; contact from a real `BVHTree.overlap`; everything else numpy on
+rendered frames.
+
+### **BLOCKER, AND IT IS THE HEADLINE: THE GEMINI PREPAYMENT CREDITS ARE DEPLETED.**
+The BEFORE arm completed (66 calls, 0 errors, run-20260810-185237-r13-before). The
+AFTER arm returned **HTTP 429 `"Your prepayment credits are depleted"` on all 30 calls
+it made** before I killed it, and its run directory was deleted rather than left as a
+half-arm somebody would read. **SO ROUND 13 HAS NO AFTER-ARM JUDGE VERDICT.** Everything
+else in this entry is measured; the judge half is owed and costs 66 calls to close.
+`node tools/scene_redteam.mjs --shots cottage,fishdock,lockhead,crossing,deep-stairs,gate
+--mode naive --n 10 --tag r13-after` is the exact command, and the before arm is already
+on disk to compare against with `rawrate.py`.
+
+### TARGET 1 — THE `t2c_` PREFIX IS A PASS, NOT A SUBJECT, AND SIZING BY IT WOULD HAVE
+### BEEN THIRTY TIMES TOO BIG
+Round 12 asked for a census of the whole prefix first. **38 objects, 3.69% of the town's
+fifteen frames**, up to 8.18% of waterfront (`t2c_F1_wf_awnings` alone is 5.39% there).
+The two members the judge named have one property nothing else in the family has:
+
+    mat_pumpkin      2 NODES — a Principled and an Output.  No texture, no noise,
+                     no bump, no vertex colour.
+    the other 15     10 of them carry the town's standard 21-node / 4-image recipe
+                     (`mat_shelf_paint_*`, `mat_qm_paint_*`), as do 62 of the town's 148
+
+`mat_pumpkin` is **0.125% of the town's rays**, not 3.69%. **AND THE MATERIAL IS NOT THE
+DEFECT, BECAUSE THE SAME MATERIAL READS FINE ELSEWHERE** — nine meshes wear it, in exactly
+two shapes, and the split is total:
+
+    shelf_clutter / qm_clutter_0,4 / gate_clutter / barge_*   68 units
+        polygon sides [4, 10], use_smooth 100%  = 20 v / 12 f, a 10-gon drum
+    t2c_W7_keeper_boxes / t2c_LH3_rail_flowerbox / t2c_F5_fish_floats /
+    t2c_G8_cliff_baskets / t2c_W5_flowerbox_rail                17 units
+        polygon sides [4],     use_smooth 0%    =  8 v /  6 f, A LITERAL obox()
+
+That is round 12's `dh_clump_kit` finding again in a different district: **the town already
+owns the kit and one pass invented its own.** So the fix is a CARRY and the material needs
+no edit at all — which is the control that says so. 30 cuboids carried (the produce class is
+stated as a RULE — every cuboid island NOT wearing the container material `mat_timber` — so a
+re-run of `t2_color_pops` that repaints a box cannot silently escape it; a crate stays a box).
+The judge's own before-arm words, for the record: *"A horizontal line of untextured orange
+cubes floats in mid-air"* (cottage) and *"Untextured bright orange primitive cubes sit on the
+dock deck, looking like forgotten developer placeholders"* (fishdock).
+
+### TARGET 2 — IT DOES NOT CLIP AND IT IS NOT UNTEXTURED. BOTH INHERITED WORDS REFUTED.
+  * **NO CLIPPING.** A real triangle-triangle `BVHTree.overlap` of all nine awnings against
+    every other mesh in town: **`qm_awning_0` has ZERO overlaps**, minimum per-vertex
+    down-ray gap **2.075 m** (max 3.412) over `qm_paving`/`qm_planking`/`qm_stall_1`. That is
+    `AWN_CLEAR` doing its job. Three OTHER awnings do overlap something and none is the one
+    complained about.
+  * **NOT UNTEXTURED.** On its own eroded ray mask the shipped plate read 5x5 SD p50 **8.29**
+    against `mat_qm_paving`'s 6.40.
+
+**WHAT IT IS, EXACTLY: 24 OF 24 QUADS NON-PLANAR, 0% SMOOTH, WORST DEVIATION 0.0705 m —
+WHICH IS `SAG_MID` (0.073).** The scallop lifts alternate columns, so every quad spans one
+lifted rib and one unlifted mid and cannot be planar; flat-shaded, the renderer's two
+triangles get different normals and there is a razor crease down every panel. Predictable
+from `qm_build.awning()` before anything was rendered. Town-wide 52 meshes carry non-planar
+quads and 35 are at 0% smooth — **the cliffs are 75-99% non-planar and 100% SMOOTH, so the
+town's own convention already knows this and the cloth pass never got it.**
+**AND THE JUDGE HAD NAMED THE MECHANISM IN ITS OWN WORDS ALL ALONG**: crossing, before arm,
+*"An untextured **TRIANGULAR** polygon mesh clips into view at the bottom-right edge"* and
+*"An unfinished grey **TRIANGULAR** mesh clips through the wooden walkway"*. Round 12 handed
+over the word *clipping*; the load-bearing word was *triangular*, and four rounds of value and
+texture work never read it.
+FIX: `use_smooth` on the 15-object cloth class (5 awnings, 5 laundry lines, 5 banners), 555
+polygons, **not one vertex moved and it is asserted per object over world coordinates** — the
+2.24 m `AWN_CLEAR` headroom `awning_lip` cleared has to be arithmetically untouched. The four
+`shelf_awning_*` are in the family and were SKIPPED because they measure 0 non-planar quads.
+
+### AND THE SECOND HALF OF THE AWNING COST TWO REFUSED ARMS, WHICH IS THE MOST USEFUL PART
+An FFT of a 128 px patch of the awning inside its own ray mask on the SHIPPED plate puts a
+peak at **k = 62 of a possible 64 — period 2.06 plate px = 4.5 mm on the cloth, reproducing
+`qm_awning_canvas`'s own 4.11 mm thread pitch to 10% — carrying 8.4e5 of power against 1-5e4
+in every neighbouring high-band bin, i.e. FORTY TIMES its own band.** Round 11 wrote that "a
+3-4 mm weave is two pixels and the denoiser will take most of it". It did not. **A REGULAR
+LATTICE AT NYQUIST DOES NOT AVERAGE OUT, IT ALIASES**, into a diamond gauze that photographs
+as wire screen. Three arms, all baked at FULL plate resolution and all read through the same
+eroded ray mask, with three in-frame references unmoved to two decimals in every arm:
+
+    arm                                          SD3    SD5    SD9   SD17   L p50
+    W=128 weave in the height field, flat        7.71   8.29   8.92  10.42   93.8
+    weave DELETED from the height field, smooth  1.16   1.53   2.17   3.13  117.0
+    W=32 at the inherited weight 0.65, smooth      -   32.28     -      -   112.7
+    W=32 at weight 0.10, smooth — SHIPPED          -    6.51     -      -   117.0
+    mat_qm_paving   (reference, unmoved)         3.73   5.16   6.71   8.25  117.8
+    mat_qm_deck     (reference, unmoved)         2.24   3.67   5.57   7.21  104.9
+    mat_timber_dark (reference, unmoved)         2.77   5.77  11.66  14.09   69.9
+
+  1. **ROUND 11's OWN RECEIPT WAS MEASURING THE CREASES.** Its "SD3 1.12 -> 7.56" was taken on
+     a surface whose every quad carried a triangulation crease. Smooth-shade the same canvas
+     and it reads **1.16**. The texture it shipped was worth a fraction of its own number.
+  2. **DELETING THE WEAVE IS WORSE THAN THE ALIAS** — 5x5 SD 1.53 with 72.9% of the surface
+     locally flat makes the awning the FLATTEST surface in the frame at every scale, i.e.
+     round 11's original defect back. **A HEIGHT FIELD CONTRIBUTES ITS SLOPE, NOT ITS
+     AMPLITUDE**, and `wear`'s finest octave is 42.7 texels against the weave's 8, so a smooth
+     field is nearly inert in a normal map at any sane strength.
+  3. **A PERIOD THE PLATE RESOLVES SHOWS ITS FULL CONTRAST WHERE A PERIOD AT NYQUIST SHOWED A
+     DENOISED GHOST.** W 128 -> 32 at the inherited weight 0.65 gave SD 32.28 — a basketweave
+     doormat, looked at and refused. **The weight had been tuned against a texture the sampler
+     was throwing away**, which is the same shape as (1). Shipped W=32 (16.4 mm = 7.5 plate px,
+     four times the sampling limit) at weight 0.10.
+  RESIDUAL, NAMED WITH ITS NUMBER: L p50 **93.8 -> 117.0**, exactly `mat_qm_paving`'s 117.8.
+  That rise is NOT a value change — it is the removal of the dark crease facets that used to
+  be half the surface. **So round 9's value pull (albedo 0.320 -> 0.144, spec 0.50 -> 0.15) was
+  ALSO tuned against the crease defect**, and whether this canvas now wants a further pull is
+  open, with a measured starting point.
+
+### TARGET 3 — THE HOLE LOCATED IN WORLD COORDINATES, AND THE PICTURE OVERRULING THE KNEE
+Round 12 refuted every global ambient lever and left this owing LOCAL sources; round 11's three
+cards reached 2% of the distance. Sized by reconstructing world XYZ from the plate's own solved
+camera and depth inside the subject's ray mask (241,891 px, 5.86% of deep-stairs):
+
+    x 35..37   59,155 px   L p50  6.7   64.5% at L<=8
+    x 37..39  113,543 px   L p50 10.9   35.0%
+    x 39..41   42,910 px   L p50 13.3   13.3%
+    x 47..49      940 px   L p50 84.4    4.1%
+    x 53..55   10,919 px   L p50 29.6    1.9%
+
+**215,608 px — 89.1% of the subject's visible pixels — are at x < 41, and everything past x 47
+is already lit.** The row is now clipped to the gap, and the gap's east edge is **DERIVED FROM
+THE LIGHTS IN THE MASTER** (the westmost card of the existing gorge-ward fill run, x = 44.00)
+rather than typed, so moving that run re-derives this one. Dose ladder, four draft rungs:
+
+    arm (deep-stairs)                        L p05  L p50  crushed  frame p95  blown
+    baseline 3 cards 13.33 W over the bbox     4.1   10.6    38.2%    141.0    0.070
+    4 cards in the gap, 13.33 W                4.6   11.3    31.1%    141.0    0.070
+    4 cards, 60 W                              8.0   16.9     4.5%    141.5    0.070
+    4 cards, 150 W  — SHIPPED                 13.5   27.5     0.4%    142.5    0.070
+    4 cards, 360 W                            21.5   47.4     0.1%    145.3    0.070
+
+The CRUSHED knee is at 60 W and **the picture is why that is not the pick**: at 60 the mass is
+lifted and still unreadable, at 150 the deck structure, the ladder and the platform read, and at
+360 the whole left mass flattens to one even brown with the under-deck shadows gone. Cost of
+150 W: frame p95 +1.5 of 255, **blown pixels identical to three decimals**, and the same
+material 20 m away at waterfront +4.1 — the card is local, which is what `use_shadow=False`
+plus a 16 m cutoff is for. **AND IT LANDED ON A SECOND CAMERA**: quay-west moved 31.4% of frame
+with nothing aimed there, and putting those pixels on the objmap says 21.1% of them are
+`yard_ground` and 14.6% `qm_stair_underworks` — the near-field shadow floor lifting, frame p05
+2.8 -> 4.3, p95 146.8 -> 148.1, blown identical. Not a leak; the target.
+
+### TARGET 4 — REFUTED AND NOT BUILT
+Round 12 attributed north-landing's *"white stepping stones floating flat on the water"* to
+`lf_crest_bay_02`/`lf_spill_bay_01` on `mat_blackstone` "with no immersion at the waterline".
+Both halves are refuted. A ray census of the judge's own region: **`lf_dam_boil | mat_boil`
+28.3% against `mat_blackstone`'s 0.5%.** The bay stone reads **L p50 66.3, RGB 75.8/60.3/44.5**
+— a dark warm brown wall. And the foam is **0.09 m PROUD of the pool** (world z p50 -3.71
+against the water's -3.80), which is exactly what `locksfoot_kit.spill_bay`'s own comment aimed
+for. What makes it read as a stone is that it is opaque, near-neutral (RGB 149/146/131 in a
+teal frame), **33% brighter than the water it sits in** (L p50 154.5 vs 116.3) and has four
+hard straight-edged wedge silhouettes. A MATERIAL/OPACITY question, not a placement one, on one
+camera (0.843% of north-landing) — round 14's.
+
+### THE REBAKE LISTS, BOTH DERIVED FROM RENDERED FRAMES, AND THE FLOOR RE-MEASURED
+Pass 1 (produce + cloth + underlight), whole-town draft A/B 15 a side: **ALL FIFTEEN cameras
+moved, 2.233% to 38.068% above 4/255** — deep-stairs 38.068/15.551, quay-west 31.439/14.011,
+waterfront 14.611/2.243, fishdock 14.188/2.810, boatyard 11.283/3.087, weave 10.507/1.981,
+lockfive 9.079/2.630, shelf-west 5.575/0.600, crossing 4.619/2.253, loop-stairs 4.264/0.462,
+lockhead 3.455/0.822, cottage 3.333/0.794, shelf-east 3.061/0.311, gate 3.050/0.638,
+north-landing 2.233/0.373. Floor RE-MEASURED as two draft renders of the SAME post-fix master
+on the four smallest movers: **shelf-east 0.003 · gate 0.003 · north-landing 0.002 · cottage
+0.001** above 4/255 and 0.000 above 12/255, so the A/B is **740x to 38,000x its own floor and
+NOTHING was refused**. Cause is nameable and the same shape as round 11's all-fifteen result:
+four new 150 W sources with `diffuse_bounces 4`, plus 30 new meshes and 555 reshaded polygons.
+Pass 2 (the canvas correction only): **crossing 0.394 · quay-west 0.041 · weave 0.033 · gate
+0.018 · waterfront 0.010 · deep-stairs 0.009 · shelf-east 0.009 REBAKED; REFUSED WITH THEIR
+NUMBERS lockhead 0.007 · shelf-west 0.007 · loop-stairs 0.006 · boatyard 0.006 · north-landing
+0.001 · fishdock 0.001 · cottage 0.001 · lockfive 0.000** (the line is round 12's own weakest
+inclusion, 2.5x floor).
+
+### FOUR TRAPS PAID FOR, ALL CHEAP TO REPEAT
+  1. **A TEXTURE REGENERATED ON DISK IS LIVE IN THE VERY NEXT RENDER WITH NOTHING IN THE BLEND
+     CHANGING.** The master LINKS `//../textures/...`, it does not pack them. The first arm A
+     of this round was rendered after `qm_awning_canvas maps` had already run, so it contained
+     one of the fixes; it was thrown away and re-rendered from the git-committed master with
+     round 11's normal map restored. **An arm rendered from a state you did not mean is not a
+     baseline** — the sibling of round 12's magenta-backup arm.
+  2. **AND `cine_test` CANNOT SEE THAT EITHER.** Its staleness soft-warning compares plate
+     mtime against the MASTER's, so eight cameras refused on a TEXTURE change produce no
+     warning at all: the gate reads 636/1/1 as if nothing were stale. A linked texture is
+     outside its staleness model. NOT FIXED — named for round 14.
+  3. **A BAKE THAT "DONE IN 2 s" IS A SILENT FAILURE.** cottage exited two seconds after
+     `APPLIED GRADE` in the 15-plate run and wrote nothing; the driver's
+     `| grep ... || true` had thrown the exit code away, so the loop carried on and the plate
+     would have shipped four hours stale had the artifact not been checked by mtime. Re-run
+     alone it baked in 187 s, rc 0. **The proof of a bake is the artifact, never the log** —
+     and a per-plate wall clock two orders under its neighbours IS the tell.
+  4. **`dh_produce_kit`'s snapshot holds the original mesh datablock's NAME**, so the rebuilt
+     one takes a `.NNN` suffix that reaches the glTF `meshes[].name`. Checked rather than
+     assumed: **the NODE names of both bundles are identical before and after, 1635 of 1635,
+     empty set both ways**, and node names are what the runtime and every gate look up.
+
+### GATES
+`cine_test` **636 ok / 1 failed / 1 soft** — the failure is the pre-attributed
+deep-stairs<->waterfront seam, same `{"fired":0,"expected":10}`; the soft warning is boatyard's
+long-standing 28%-visible note. That is ONE BETTER than round 12's 635/1/2 (see trap 2 for why
+the eight refusals cost nothing here, which is a gate gap and not a merit) ·
+`slice_test` **776 / 0** · `findability_test` **69 passed / 0 failed / 11 warnings** ·
+`routes_derive --check` clean, 15 shots. Both bundles re-exported from the master that ships,
+plus `town_export`'s two ortho plates, and **VERIFIED PER MESH, NOT BY HISTOGRAM**: the 15
+cloth objects keep their triangle count EXACTLY and lose vertices (awnings 96 -> 39, laundry
+324 -> 184, banners 120 -> 59) — the smooth-shading signature, and the artifact's own proof
+that not one vertex moved — while the 5 produce objects gain triangles (144 -> 288, 84 -> 252,
+108 -> 228). BAKES: **fifteen then seven, 1-WIDE SERIAL, one Blender town-wide, rc 0, 2869 s +
+1418 s** (shelf-east 162 s ... lockfive 241 s), `memory_pressure -Q` 88-89% free before every
+spawn, never a second Blender, no Metal kernel-cache SIGABRT this window.
+
+### OWED / NAMED FOR ROUND 14
+  1. **THE AFTER-ARM JUDGE, BLOCKED ON CREDIT** (see the top of this entry). Until it runs,
+     every claim in this round is an instrument claim and none is a judge claim.
+  2. **A DEPLOY IS OWED** — fifteen plates and both bundles supersede the site, and round 12's
+     deploy is still what is live.
+  3. **THE AWNING'S VALUE IS AN OPEN QUESTION WITH A MEASURED START**: L p50 117.0 against
+     `mat_qm_paving`'s 117.8, up from 93.8, because the dark crease facets are gone. Round 9's
+     pull was tuned against the crease defect.
+  4. **`mat_boil` IS THE NORTH-LANDING "STEPPING STONES"** — opaque, near-neutral, 33% brighter
+     than its pool, four hard wedge silhouettes, one camera. Material and opacity, not
+     placement. water-transparency.md is the canon.
+  5. **`cine_test` CANNOT SEE A STALE PLATE CAUSED BY A LINKED TEXTURE** (trap 2). Eight
+     cameras are currently 0.001-0.007% behind the master's material set with the gate green.
+  6. **THE REST OF THE `t2c_` FAMILY IS MEASURED AND MOSTLY FINE.** The census is in
+     `evidence/t2c-census.json`: the flat-shaded 4v/1f PAINT PANELS (8 objects — `*_hut_paint`,
+     `*_shed_doors`, `*_gable_paint`, `*_shutters_hi`) are the next candidate class, and
+     `t2c_F1_wf_awnings` at 5.39% of waterfront is the single biggest member of the family and
+     has never been looked at closely.
+  7. The `barge_*` produce wears the donor's own 20v/12f drum at **0% smooth** — three objects,
+     invisible in all fifteen frames today, and one camera move away from being visible.
+
 ## 2026-08-10 — DELLHOLLOW GRAPHICS ROUND 12: A REGRESSION THAT WAS A COIN FLIP, A THIRD
 ## GRAMMAR THAT IS SIX TIMES BIGGER THAN IT LOOKED AND HAD A KIT ALL ALONG, AND A SHADOW
 ## FLOOR NO GLOBAL PARAMETER CAN REACH
