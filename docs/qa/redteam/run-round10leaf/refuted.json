@@ -1,0 +1,109 @@
+[
+ {
+  "fid": "F9",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "gate",
+  "item": null,
+  "category": "navigation",
+  "where": "lower-left dock and staircase area",
+  "bbox": [
+   0.024,
+   0.52,
+   0.26,
+   0.99
+  ],
+  "severity": 2,
+  "desc": "Dense layering of wooden structures, stairs, and water hazards creates visual noise that conceals walkable routes.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The lower-left dock structures and staircases are clearly defined and legible as walkable harbor pathways from this elevated perspective."
+  }
+ },
+ {
+  "fid": "F21",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "long ladder on the right cliff face",
+  "bbox": [
+   0.68,
+   0.38,
+   0.85,
+   0.99
+  ],
+  "severity": 1,
+  "desc": "The ladder floats slightly off the cliff face without clear anchors or support structures underneath.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "78.2,85.9,15.5,23.4",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.2,85.9,15.5,23.4"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The long ladder is visibly attached to and supported by vertical wooden posts and framing structures running underneath it."
+  }
+ },
+ {
+  "fid": "F45",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "occlusion",
+  "where": "walkway beneath the large upper deck",
+  "bbox": [
+   0.521,
+   0.281,
+   0.98,
+   0.575
+  ],
+  "severity": 2,
+  "desc": "The massive upper wooden deck completely blocks the view of the lower pathways underneath, hiding navigation options.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The area beneath the deck is lit and visible with clear pathways and posts, not completely obscured."
+  }
+ },
+ {
+  "fid": "F50",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "lockfive",
+  "item": null,
+  "category": "navigation",
+  "where": "multi-level cliffside walkways and structures",
+  "bbox": [
+   0.42,
+   0.2,
+   0.85,
+   0.7
+  ],
+  "severity": 2,
+  "desc": "The dense, overlapping wooden platforms and staircases along the cliff face make it difficult to visually identify valid walkable paths.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The multi-tiered walkways are clearly defined by distinct platforms, railings, and lighting, making this standard environment design rather than a visual flaw."
+  }
+ }
+]

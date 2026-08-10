@@ -1,0 +1,28 @@
+[
+ {
+  "fid": "F8",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "navigation",
+  "where": "cavern entrance along the top-left cliff",
+  "bbox": [
+   0.25,
+   0.06,
+   0.34,
+   0.2
+  ],
+  "severity": 2,
+  "desc": "The dark cavern entrance blends directly into dark cliff shadows with no lighting cues, making it ambiguous whether it is an accessible route or solid background geometry.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The cavern entrance sits against sunlit cliff walls rather than blending into cliff shadows, making it stand out as a stark black shape."
+  }
+ }
+]

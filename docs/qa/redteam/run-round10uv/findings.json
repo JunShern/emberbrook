@@ -1,0 +1,530 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "round10uv",
+ "generated": "2026-08-10T03:26:25.362Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "public/assets/scenes/del-cine",
+ "cine": "public/assets/scenes/del-cine/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "cottage",
+   "name": "Keepers' Spur",
+   "replayOf": null,
+   "baked": "2026-08-10T03:23:36Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T03:05:47.528Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "weave",
+   "name": "The Weave",
+   "replayOf": null,
+   "baked": "2026-08-10T03:23:36Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T03:12:12.981Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  }
+ ],
+ "raw": 13,
+ "survivors": [
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "center broken wooden bridge",
+   "bbox": [
+    0.412,
+    0.263,
+    0.846,
+    0.932
+   ],
+   "severity": 2,
+   "desc": "The main wooden walkway is fractured into jagged, disjointed planks, making it unclear whether it is a walkable path or an impassable hazard.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The middle section of the main walkway is broken into chaotic, floating planks, leaving players unable to tell if it is a functional path or a dead end."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "floating green tree cone on left cliff wall",
+   "bbox": [
+    0.258,
+    0.254,
+    0.287,
+    0.35
+   ],
+   "severity": 2,
+   "desc": "A stylized green tree model floats in mid-air off the cliff face without any attachment or structural support.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "91.7,95.4,15.5,18.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,95.4,15.5,18.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cone-shaped tree asset on the upper-left rock face clearly hovers in mid-air with a visible shadow gap between it and the cliff."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "fractured green plank bridge section",
+   "bbox": [
+    0.417,
+    0.268,
+    0.836,
+    0.638
+   ],
+   "severity": 2,
+   "desc": "The wooden walkway is broken into steep, disjointed, overlapping planks, making it ambiguous whether it is navigable or blocked rubble.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green-painted walkway planks are disjointed at sharp angles, creating severe gameplay ambiguity regarding navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "deep shadow area under the central wooden structures",
+   "bbox": [
+    0.33,
+    0.28,
+    0.66,
+    0.83
+   ],
+   "severity": 2,
+   "desc": "Heavy cast shadows obscure the lower ground beneath the broken bridge, hiding whether the terrain underneath is walkable or an drop.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Extreme pitch-black shadows under the main structure obscure the terrain below, hiding whether it is safe ground or a fatal pit."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "broken wooden ramp in the lower center",
+   "bbox": [
+    0.23,
+    0.53,
+    0.48,
+    0.93
+   ],
+   "severity": 2,
+   "desc": "The collapsed wooden ramp consists of floating, disjointed plank segments without proper physics or visual support underneath.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "86.6,96,16.5,24.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.6,96,16.5,24.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The collapsed ramp planks hover in mid-air without attached support posts or structural geometry beneath them."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "central village walkways and roofs",
+   "bbox": [
+    0.15,
+    0.295,
+    0.52,
+    0.615
+   ],
+   "severity": 2,
+   "desc": "The dense visual overlap between wooden walkways and adjacent roofs made of identical materials makes distinguishing walkable paths from impassable roofs difficult.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense arrangement of wooden walkways and adjacent sloped roofs with identical textures makes it difficult to read navigable paths versus impassable rooftops."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "overlapping rooftops and platforms in the central settlement",
+   "bbox": [
+    0.3,
+    0.32,
+    0.9,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "Dense layering of sloped roofs and flat walkways makes it ambiguous which surfaces are walkable paths and which are inaccessible rooftops.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Flat walkways and angled roofs intersect tightly with very similar material colors, creating genuine visual ambiguity regarding walkable surfaces."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "elevated deck floor on the upper right",
+   "bbox": [
+    0.63,
+    0.34,
+    0.82,
+    0.525
+   ],
+   "severity": 2,
+   "desc": "The elevated deck floor exhibits severe z-fighting and flickering texture patterns intersecting through the platform boards.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "49.8,61.9,9.6,21.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 49.8,61.9,9.6,21.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Clear z-fighting and flickering dark coplanar geometry artifacts are visible across the surface of the upper-right elevated platform."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "central village platform and walkway complex",
+   "bbox": [
+    0.16,
+    0.3,
+    0.65,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "The dense overlap of wooden platforms, roofs, and stilts using uniform textures makes it difficult to distinguish walkable paths from non-navigable roofs.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The visual clutter of stilts, roofs, and platforms using uniform wood textures hides path boundaries and impairs gameplay navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "small green tree on left cliff face",
+   "bbox": [
+    0.256,
+    0.255,
+    0.286,
+    0.351
+   ],
+   "severity": 1,
+   "desc": "A stylized tree model protrudes directly out of a vertical cliff face without any supporting ledge or base.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "91.7,95.5,15.5,18.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,95.5,15.5,18.9"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The green vegetation model on the lower-left cliff face rests against a sloping rock surface rather than protruding impossibly from sheer cliff face."
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "orange tree cones clipped into rock wall",
+   "bbox": [
+    0.627,
+    0.264,
+    0.658,
+    0.382
+   ],
+   "severity": 1,
+   "desc": "The orange tree models clip directly into the vertical cliff geometry without visible bases or trunks.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "83.4,87.1,13.1,20.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 83.4,87.1,13.1,20.1"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Simple cone assets embedded in rock walls are a standard stylistic choice for background foliage in low-poly hand-stylized environments."
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "occlusion",
+   "where": "ground level beneath the elevated stilts",
+   "bbox": [
+    0.26,
+    0.52,
+    0.54,
+    0.98
+   ],
+   "severity": 2,
+   "desc": "Dense overhead walkways and roofs obscure the ground-level space beneath the stilts, hiding potential paths and play areas.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Walkways built on stilts naturally cast shade and occlude the ground below, which is standard environmental layout rather than a flaw."
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "rock face along the upper left ridge",
+   "bbox": [
+    0.14,
+    0.09,
+    0.32,
+    0.36
+   ],
+   "severity": 1,
+   "desc": "The rock face along the ridge exhibits harsh, unsmoothed polygonal edges that stand out against the surrounding terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "74.6,149.4,-3.2,22.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 74.6,149.4,-3.2,22.8"
+   },
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "Faceted rock geometry is intentional and consistent with the low-poly, stylized art direction used throughout the environment."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 8,
+  "promptTok": 12027,
+  "replyTok": 12445,
+  "errors": 0,
+  "byStage": {
+   "naive": 6,
+   "refute-naive": 2
+  }
+ },
+ "bboxAgreement": {
+  "n": 0,
+  "hit": 0,
+  "frac": null
+ },
+ "aimCensus": {
+  "n": 0,
+  "refuted": 0,
+  "onSubject": 0,
+  "absenceClaim": 0,
+  "unmeasurable": 0,
+  "min": 0.02,
+  "applied": true,
+  "byFamily": {}
+ },
+ "rhetoric": {
+  "n": 4,
+  "intent": 3,
+  "byClass": {
+   "foliage-other": {
+    "n": 2,
+    "intent": 1
+   },
+   "occlusion-nonfoliage": {
+    "n": 1,
+    "intent": 1
+   },
+   "rest": {
+    "n": 1,
+    "intent": 1
+   }
+  },
+  "byMode": {
+   "naive": {
+    "n": 4,
+    "intent": 3
+   }
+  },
+  "byCategory": {
+   "geometry": {
+    "n": 2,
+    "intent": 1
+   },
+   "immersion": {
+    "n": 1,
+    "intent": 1
+   },
+   "occlusion": {
+    "n": 1,
+    "intent": 1
+   }
+  },
+  "examples": [
+   {
+    "fid": "F12",
+    "shot": "weave",
+    "mode": "naive",
+    "cls": "occlusion-nonfoliage",
+    "desc": "Dense overhead walkways and roofs obscure the ground-level space beneath the stilts, hiding potential paths and play areas.",
+    "why": "Walkways built on stilts naturally cast shade and occlude the ground below, which is standard environmental layout rather than a flaw."
+   }
+  ]
+ },
+ "calibration": null
+}

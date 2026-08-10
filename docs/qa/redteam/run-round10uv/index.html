@@ -1,0 +1,354 @@
+<meta charset="utf-8"><title>Scene red-team — dellhollow — run round10uv</title>
+<style>
+:root{--bg:#14110e;--fg:#efe6d8;--dim:#a2957f;--line:#33291f;--hit:#5fb56b;--miss:#c9584a;
+      --naive:#e0a33c;--checklist:#5aa9d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1.55 -apple-system,Segoe UI,Roboto,sans-serif}
+.pad{max-width:1240px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:38px 0 6px;border-bottom:1px solid var(--line);
+  padding-bottom:6px}h3{font-size:15px;margin:24px 0 4px}
+.small{color:var(--dim);font-size:12px}.blurb{color:var(--dim);margin:2px 0 10px;font-size:13px}
+code{background:#241d16;padding:1px 5px;border-radius:3px;font-size:12px}
+.verdict{background:#1e1912;border:1px solid var(--line);border-left:4px solid var(--naive);
+  padding:14px 16px;border-radius:6px;margin:14px 0 6px;font-size:16px;line-height:1.6}
+table{border-collapse:collapse;width:100%;margin-top:10px}
+th,td{border:1px solid var(--line);padding:9px;vertical-align:top;font-size:13px}
+th{background:#1e1912;text-align:left;font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.refcell{width:210px}.refcell img{width:100%;border-radius:4px;display:block}
+.whatcell{width:250px}.said{color:var(--dim);font-style:italic;margin:4px 0}
+td.hit{background:#16240f}td.miss{background:#2a1512}
+td.hit b{color:var(--hit)}td.miss b{color:var(--miss)}
+.quote{margin-top:6px;padding-left:8px;border-left:2px solid var(--line)}
+.src{display:block;color:var(--dim);font-size:11px}
+.wrap{position:relative;display:block;line-height:0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.wrap img.plate{width:100%;display:block}
+.bx{position:absolute;border:2px solid var(--naive);border-radius:2px;box-shadow:0 0 0 1px #0008}
+.bx.checklist{border-color:var(--checklist)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.card{background:#1a1610;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.card.sev3{border-color:#6b3229}
+.ch{padding:8px 10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.pill{font-size:10.5px;padding:1px 6px;border-radius:99px;background:#2a2118;color:var(--dim);
+  text-transform:uppercase;letter-spacing:.04em}
+.pill.naive{background:#3a2c12;color:var(--naive)}.pill.checklist{background:#122c3a;color:var(--checklist)}
+.shot{margin-left:auto;font-size:12px;color:var(--dim)}
+.crop{width:100%;aspect-ratio:16/9;background:#000 no-repeat;border-bottom:1px solid var(--line)}
+.cb{padding:10px}.q{font-size:13px}
+.meta{color:var(--dim);font-size:11.5px;margin-top:5px}
+.meta.cmd{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;word-break:break-all;color:#8fa07d}
+.verify.upheld b{color:var(--hit)}.verify.refuted b{color:var(--miss)}
+.count{color:var(--dim);font-weight:400;font-size:12px}
+.empty{color:var(--dim);font-size:12px;padding:10px}
+.limits{background:#1c1712;border:1px solid var(--line);border-left:4px solid var(--miss);
+  padding:14px 18px;border-radius:6px}
+.limits li{margin:5px 0}
+section.shot{margin:18px 0 26px}
+.budget{color:var(--dim);font-size:12px;margin-top:8px}
+.sub{color:var(--dim);font-size:12.5px;font-weight:400;margin-top:8px;line-height:1.5}
+td.adj{width:190px}td.adj.hit{background:#16240f}td.adj.hit b{color:var(--hit)}
+td.adj.weak{background:#2a2410}td.adj.weak b{color:var(--naive)}
+td.adj.miss{background:#2a1512}td.adj.miss b{color:var(--miss)}
+.pill.sup{background:#22301f;color:#8fbf7f}
+</style>
+<div class="pad">
+<h1>Scene red-team — dellhollow</h1>
+<div class="small">run <code>round10uv</code> · judge <code>gemini:gemini-3.6-flash</code> (pinned) ·
+  2 plates · naive · naive N=3 ·
+  generated 2026-08-10T03:26:25.362Z by <code>tools/scene_redteam.mjs</code> · plates baked 2026-08-10T03:23:36Z</div>
+
+<h2>1 &nbsp;The prompts, verbatim</h2>
+<p class="blurb">Exactly what each judge call was asked (judge <code>gemini:gemini-3.6-flash</code>, pinned) —
+read these first; everything below is these prompts' output. The naive prompt is fixed for the whole
+run; the checklist and sceptic prompts are templates filled per plate — shown here filled with this
+run's own data. The style paragraph switches between art and blockout mode; this run used
+art mode, and that is the version shown.</p>
+<details class="prompt"><summary>Stage 1 — the naive critic (every plate, each of the N looks)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are a first-time player. The image is one frame of a video game, exactly what is on
+screen. You have never been here, you have no map, and nobody has told you anything.
+
+Critique this frame. Report anything that would make the place HARD TO UNDERSTAND or
+HARD TO PLAY. Use exactly these category tokens:
+  navigation  — you would not know where to go, or the way on is ambiguous
+  occlusion   — something blocks your understanding of the space
+  geometry    — incomplete, stray, floating, clipping, or plainly ugly geometry
+  exit        — a door or way out that does not read as a door or a way out
+  immersion   — floating objects, z-fighting, wrong scale, anything that breaks belief
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+RULES. Report only things you can actually point at in this image. Do NOT invent
+problems to fill the list, and do NOT list matters of taste. If the frame is fine,
+return an empty list — that is a valid and useful answer. At most 6 findings.
+severity: 3 = a player would be stuck or would think the game is broken, 2 = clearly
+wrong but survivable, 1 = a blemish.
+
+Answer with JSON only, in this exact shape:
+{&quot;findings&quot;:[{&quot;category&quot;:&quot;occlusion&quot;,&quot;where&quot;:&quot;a few words locating it in the frame&quot;,
+ &quot;bbox&quot;:[x0,y0,x1,y1],&quot;severity&quot;:2,&quot;desc&quot;:&quot;one sentence&quot;}]}
+bbox is in normalised image coordinates: x 0 at the left edge and 1 at the right, y 0
+at the top edge and 1 at the bottom.</pre></details>
+<details class="prompt"><summary>Stage 1 — the checklist auditor</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">(no checklist-mode plate in this run)</pre></details>
+<details class="prompt"><summary>Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review, and your job is to protect the team from
+wasted work. Below are criticisms somebody has made of THIS frame. For each one,
+decide honestly whether it is a REAL problem for a player, or whether it is a
+misreading of the picture, a matter of taste, or simply normal for this art style.
+
+UPHOLD only if you can find the same thing in the frame yourself AND it would really
+cost a player something. REFUTE if the thing described is not there, is not what the
+critic thought it was, is normal for the style, or does not matter. Do not be polite:
+refuting a weak criticism is the useful answer.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [navigation] center broken wooden bridge: The main wooden walkway is fractured into jagged, disjointed planks, making it unclear whether it is a walkable path or an impassable hazard.
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+<details class="prompt"><summary>Stage 2 — the checklist sceptic (contract-aware: told the object's existence is not in question; shown with one real claim)</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">You are the sceptic on a game art review. The claims below are about objects that the
+DESIGNER'S OWN MAP says really are in this shot. That they belong here is NOT in
+question, and &quot;it is not there&quot; / &quot;this area would not have one&quot; / &quot;expecting it is
+arbitrary&quot; are NOT valid refutations. The only question is whether the claim about how
+well a player can FIND or READ the object is fair.
+
+UPHOLD if, looking at the frame yourself, you agree the object is genuinely hard to
+find, hidden behind something, or does not read as the kind of thing it is. REFUTE if
+you can point straight at it and it is plainly legible, or if the complaint is really
+about a missing sign, label, icon or name rather than about the art.
+
+Claims tagged [quality] are JUDGMENTS that a sky, a backdrop, the world at the frame
+edges, or a water surface fails to hold up as art (a flat fill, a painted plane, an
+unfinished edge of the world). For those, UPHOLD if your own look at the frame agrees
+it falls short in the way described; REFUTE only if the surface genuinely holds up in
+this frame. &quot;It is normal for games&quot; is not a refutation of a quality claim.
+
+The scene is a finished hand-stylised illustration; a painterly or simplified look is
+the intended art style and is not a problem in itself.
+
+Claims:
+  1. [occlusion] (no checklist claims in this run): 
+
+Answer with JSON only, one entry per claim, in order:
+{&quot;verdicts&quot;:[{&quot;n&quot;:1,&quot;verdict&quot;:&quot;upheld&quot;,&quot;why&quot;:&quot;one sentence&quot;}]}</pre></details>
+
+<h2>2 &nbsp;How well does this work?</h2>
+<div class="verdict">No calibration was scored in this run.</div>
+<p class="blurb">The gate is recall against complaints the user made <em>by hand</em>, before this tool
+existed. The judge is never told what the complaints are; it is shown the shipped plate that holds the
+object and asked to criticise it. Two numbers because there is a real ambiguity: <b>exact plate</b> counts
+the finding only on the one shot whose frame most nearly holds what the user circled; <b>any plate</b>
+counts it on any shot holding the same object. <b>Not reproducible, and said plainly:</b> all five
+references were screenshot from a free orbit camera, from angles no shipped plate holds — so this
+measures whether the same defect is <em>catchable from the shipped frames</em>, not whether the judge
+can reproduce the user's screenshots.</p>
+
+
+<h2>3 &nbsp;The sweep — surviving findings, triaged</h2>
+<p class="blurb">9 survivors from 13 raw findings over 2
+plates. Deduped across shots: a finding seen on more than one plate is listed once and says so.</p>
+
+
+<h3>Already known / tracked <span class="count">1</span></h3><p class="blurb">The judge re-found something the repo already knows about. Useful as a confirmation that the instrument sees real defects; not new work.</p>
+      <div class="grid"><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">geometry</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">cottage</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/cottage.png');background-size:250% auto;background-position:35.5% 73.0%"></div>
+    <div class="cb"><div class="q">The collapsed wooden ramp consists of floating, disjointed plank segments without proper physics or visual support underneath.</div>
+      <div class="meta">where: broken wooden ramp in the lower center</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The collapsed ramp planks hover in mid-air without attached support posts or structural geometry beneath them.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 86.6,96,16.5,24.3</div>
+      
+    </div></div></div>
+<h3>New, and looks real <span class="count">8</span></h3><p class="blurb">Not matched to anything tracked. This is the bucket that earns the tool its keep — and the bucket a human must read before anybody acts on it.</p>
+      <div class="grid"><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">cottage</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/cottage.png');background-size:149% auto;background-position:62.9% 59.8%"></div>
+    <div class="cb"><div class="q">The main wooden walkway is fractured into jagged, disjointed planks, making it unclear whether it is a walkable path or an impassable hazard.</div>
+      <div class="meta">where: center broken wooden bridge</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The middle section of the main walkway is broken into chaotic, floating planks, leaving players unable to tell if it is a functional path or a dead end.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">cottage</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/cottage.png');background-size:500% auto;background-position:27.2% 30.2%"></div>
+    <div class="cb"><div class="q">A stylized green tree model floats in mid-air off the cliff face without any attachment or structural support.</div>
+      <div class="meta">where: floating green tree cone on left cliff wall</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The cone-shaped tree asset on the upper-left rock face clearly hovers in mid-air with a visible shadow gap between it and the cliff.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,95.4,15.5,18.9</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">cottage</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/cottage.png');background-size:239% auto;background-position:62.6% 45.3%"></div>
+    <div class="cb"><div class="q">The wooden walkway is broken into steep, disjointed, overlapping planks, making it ambiguous whether it is navigable or blocked rubble.</div>
+      <div class="meta">where: fractured green plank bridge section</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The green-painted walkway planks are disjointed at sharp angles, creating severe gameplay ambiguity regarding navigation.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">occlusion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">cottage</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/cottage.png');background-size:182% auto;background-position:49.5% 55.5%"></div>
+    <div class="cb"><div class="q">Heavy cast shadows obscure the lower ground beneath the broken bridge, hiding whether the terrain underneath is walkable or an drop.</div>
+      <div class="meta">where: deep shadow area under the central wooden structures</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Extreme pitch-black shadows under the main structure obscure the terrain below, hiding whether it is safe ground or a fatal pit.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">weave</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/weave.png');background-size:270% auto;background-position:33.5% 45.5%"></div>
+    <div class="cb"><div class="q">The dense visual overlap between wooden walkways and adjacent roofs made of identical materials makes distinguishing walkable paths from impassable roofs difficult.</div>
+      <div class="meta">where: central village walkways and roofs</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The dense arrangement of wooden walkways and adjacent sloped roofs with identical textures makes it difficult to read navigable paths versus impassable rooftops.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">weave</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/weave.png');background-size:167% auto;background-position:60.0% 53.5%"></div>
+    <div class="cb"><div class="q">Dense layering of sloped roofs and flat walkways makes it ambiguous which surfaces are walkable paths and which are inaccessible rooftops.</div>
+      <div class="meta">where: overlapping rooftops and platforms in the central settlement</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Flat walkways and angled roofs intersect tightly with very similar material colors, creating genuine visual ambiguity regarding walkable surfaces.</div>
+      
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">immersion</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">weave</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/weave.png');background-size:500% auto;background-position:72.5% 43.3%"></div>
+    <div class="cb"><div class="q">The elevated deck floor exhibits severe z-fighting and flickering texture patterns intersecting through the platform boards.</div>
+      <div class="meta">where: elevated deck floor on the upper right</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — Clear z-fighting and flickering dark coplanar geometry artifacts are visible across the surface of the upper-right elevated platform.</div>
+      <div class="meta cmd">Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 49.8,61.9,9.6,21.5</div>
+      
+    </div></div><div class="card sev2">
+    <div class="ch"><span class="pill naive">naive</span>
+      <span class="pill cat">navigation</span>
+      <span class="pill sev">sev 2</span>
+      <span class="pill sup" title="independent looks that raised it">1/3 looks</span>
+      <span class="shot">weave</span>
+      
+    </div>
+    <div class="crop" style="background-image:url('plates/weave.png');background-size:204% auto;background-position:40.5% 52.5%"></div>
+    <div class="cb"><div class="q">The dense overlap of wooden platforms, roofs, and stilts using uniform textures makes it difficult to distinguish walkable paths from non-navigable roofs.</div>
+      <div class="meta">where: central village platform and walkway complex</div>
+      
+      
+      <div class="meta verify upheld">verify: <b>upheld</b> by adversarial-judge:naive — The visual clutter of stilts, roofs, and platforms using uniform wood textures hides path boundaries and impairs gameplay navigation.</div>
+      
+      
+    </div></div></div>
+<h3>Style bar — waits for the dressing pass <span class="count">0</span></h3><p class="blurb">Material and detail complaints against a massing blockout. Correct observations, wrong stage.</p>
+      <div class="grid"><div class="empty">nothing in this bucket</div></div>
+
+<h2>4 &nbsp;Every plate, with its findings drawn on</h2>
+<p class="blurb">Boxes are the judge's own bboxes: <span style="color:var(--naive)">orange = naive</span>,
+<span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
+format, machine-made.</p>
+
+<section class="shot"><h3>cottage <span class="small">Keepers' Spur · bake 2026-08-10T03:23:36Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/cottage.png" alt="">
+        <div class="bx naive" style="left:41.20%;top:26.30%;width:43.40%;height:66.90%"></div><div class="bx naive" style="left:25.80%;top:25.40%;width:2.90%;height:9.60%"></div><div class="bx naive" style="left:41.70%;top:26.80%;width:41.90%;height:37.00%"></div><div class="bx naive" style="left:33.00%;top:28.00%;width:33.00%;height:55.00%"></div><div class="bx naive" style="left:23.00%;top:53.00%;width:25.00%;height:40.00%"></div></div>
+      <div class="small">5 surviving findings ·
+        2 refuted ·
+        0 checklist items</div></section>
+<section class="shot"><h3>weave <span class="small">The Weave · bake 2026-08-10T03:23:36Z</span></h3>
+      <div class="wrap"><img class="plate" src="plates/weave.png" alt="">
+        <div class="bx naive" style="left:15.00%;top:29.50%;width:37.00%;height:32.00%"></div><div class="bx naive" style="left:30.00%;top:32.00%;width:60.00%;height:43.00%"></div><div class="bx naive" style="left:63.00%;top:34.00%;width:19.00%;height:18.50%"></div><div class="bx naive" style="left:16.00%;top:30.00%;width:49.00%;height:45.00%"></div></div>
+      <div class="small">4 surviving findings ·
+        2 refuted ·
+        0 checklist items</div></section>
+
+<h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
+<div class="limits">
+<p>This tool looks at <b>pixels</b>. Seam-canon §10.3 (amended after the loop-stairs post-mortem) is the
+reason that sentence needs a warning label:</p>
+<p style="font-size:15px;margin:10px 0"><b>&ldquo;in frame&rdquo; &ne; &ldquo;visible&rdquo; &ne;
+&ldquo;unobstructed ray&rdquo; &ne; <span style="color:var(--miss)">catches a foot</span></b></p>
+<p>The loop-stairs flight was 72% visible, correctly framed, unoccluded and handsome — and unwalkable,
+because <code>walkGround</code> keeps the highest surface in the step window and the neighbouring
+flight's top tread covered its head. It caught a foot in 0 of 72 entries. <b>No critique of that plate
+could ever have found it.</b> What this tool cannot see, and where each of those defects <em>is</em>
+caught:</p>
+<ul>
+<li>whether a walk surface catches a foot &rarr; <code>tools/ls_nav_probe.mjs</code>, <code>seam_walk.mjs</code></li>
+<li>whether a solid blocks the body &rarr; WALKLOCK / <code>boxSolid</code>, <code>seam_test.mjs</code></li>
+<li>whether a naive reading of the frame actually <em>escapes</em> the shot &rarr; <code>tools/nav_eval.mjs</code> (it walks the answer)</li>
+<li>whether a seam fires where it should &rarr; <code>seam_test.mjs</code>, <code>transition_test.mjs</code></li>
+<li>true occlusion over a whole object, in metres &rarr; the bake ray-cast — the <em>only</em> visibility oracle — and <code>cine_visprobe.py</code></li>
+<li>anything outside the shipped fixed frames &rarr; nothing automated sees it. The user plays with a free orbit camera; all five reference frames were taken from angles no plate holds.</li>
+</ul>
+<p>A finding here is a <b>perception</b>, and a perception is not a measurement. Geometry findings ship
+with a <code>geometry_audit --region</code> command for exactly this reason: the next step is to measure
+it, not to believe it.</p>
+</div>
+
+<div class="budget">Budget: 8 judge calls
+(naive 6, refute-naive 2) ·
+12,027 prompt + 12,445 reply tokens ·
+0 errors. Raw replies in <code>raw/</code>, findings in
+<code>findings.json</code>, discarded claims in <code>refuted.json</code>.</div>
+</div>

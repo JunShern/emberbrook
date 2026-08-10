@@ -1,0 +1,115 @@
+[
+ {
+  "fid": "F2",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "geometry",
+  "where": "small green tree on left cliff face",
+  "bbox": [
+   0.256,
+   0.255,
+   0.286,
+   0.351
+  ],
+  "severity": 1,
+  "desc": "A stylized tree model protrudes directly out of a vertical cliff face without any supporting ledge or base.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "91.7,95.5,15.5,18.9",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,95.5,15.5,18.9"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "The green vegetation model on the lower-left cliff face rests against a sloping rock surface rather than protruding impossibly from sheer cliff face."
+  }
+ },
+ {
+  "fid": "F6",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "cottage",
+  "item": null,
+  "category": "immersion",
+  "where": "orange tree cones clipped into rock wall",
+  "bbox": [
+   0.627,
+   0.264,
+   0.658,
+   0.382
+  ],
+  "severity": 1,
+  "desc": "The orange tree models clip directly into the vertical cliff geometry without visible bases or trunks.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "83.4,87.1,13.1,20.1",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 83.4,87.1,13.1,20.1"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Simple cone assets embedded in rock walls are a standard stylistic choice for background foliage in low-poly hand-stylized environments."
+  }
+ },
+ {
+  "fid": "F12",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "occlusion",
+  "where": "ground level beneath the elevated stilts",
+  "bbox": [
+   0.26,
+   0.52,
+   0.54,
+   0.98
+  ],
+  "severity": 2,
+  "desc": "Dense overhead walkways and roofs obscure the ground-level space beneath the stilts, hiding potential paths and play areas.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": null,
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Walkways built on stilts naturally cast shade and occlude the ground below, which is standard environmental layout rather than a flaw."
+  }
+ },
+ {
+  "fid": "F13",
+  "mode": "naive",
+  "town": "dellhollow",
+  "shot": "weave",
+  "item": null,
+  "category": "geometry",
+  "where": "rock face along the upper left ridge",
+  "bbox": [
+   0.14,
+   0.09,
+   0.32,
+   0.36
+  ],
+  "severity": 1,
+  "desc": "The rock face along the ridge exhibits harsh, unsmoothed polygonal edges that stand out against the surrounding terrain.",
+  "support": 1,
+  "of": 3,
+  "census": null,
+  "hint": {
+   "region": "74.6,149.4,-3.2,22.8",
+   "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 74.6,149.4,-3.2,22.8"
+  },
+  "verify": {
+   "verdict": "refuted",
+   "by": "adversarial-judge:naive",
+   "why": "Faceted rock geometry is intentional and consistent with the low-poly, stylized art direction used throughout the environment."
+  }
+ }
+]

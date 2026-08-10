@@ -1,0 +1,644 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "round10before",
+ "generated": "2026-08-10T02:53:14.307Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive"
+ ],
+ "n": 3,
+ "freshFrom": null,
+ "replaySources": {},
+ "plates": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/r10/before-bundle",
+ "cine": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-multiplayer-rpg/0da611dd-7462-46ce-8365-f3487c06e598/scratchpad/r10/before-bundle/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "cottage",
+   "name": "Keepers' Spur",
+   "replayOf": null,
+   "baked": "2026-08-10T02:40:38Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T02:52:31.202Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  },
+  {
+   "shot": "weave",
+   "name": "The Weave",
+   "replayOf": null,
+   "baked": "2026-08-10T02:40:38Z",
+   "supersededBake": null,
+   "plateMtime": "2026-08-10T02:52:31.250Z",
+   "items": 0,
+   "char": null,
+   "checklist": []
+  }
+ ],
+ "raw": 17,
+ "survivors": [
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "upper left rock wall and upper building roof",
+   "bbox": [
+    0.23,
+    0.02,
+    0.52,
+    0.48
+   ],
+   "severity": 2,
+   "desc": "A pitch-black shadow completely obscures the cliff face and structures underneath, concealing geometry and potential paths.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A completely black, unlit shadow casts across the upper-left area, entirely hiding terrain details and building geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "center broken wooden bridge and ramp structure",
+   "bbox": [
+    0.23,
+    0.27,
+    0.84,
+    0.94
+   ],
+   "severity": 2,
+   "desc": "The middle section of the wooden walkway collapses into fragmented, overlapping planks, making it visually ambiguous whether the route is walkable or impassable visual noise.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The fractured planks on the central ramp create a chaotic mesh where it is impossible to tell if the path is walkable or blocked."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "top of the long ladder on the right",
+   "bbox": [
+    0.78,
+    0.38,
+    0.85,
+    0.5
+   ],
+   "severity": 2,
+   "desc": "The ladder extends upwards and clips directly into the solid underside of the wooden bridge deck with no opening for a player to climb through.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "79,84,15.2,19.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79,84,15.2,19.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The top of the wooden ladder leads directly into the solid floorboards of the bridge platform above without any opening."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "center left broken wooden ramp",
+   "bbox": [
+    0.235,
+    0.58,
+    0.485,
+    0.93
+   ],
+   "severity": 2,
+   "desc": "The chaotic overlap of broken wooden planks makes it ambiguous whether this is a walkable slope or impassable visual debris.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The middle section of the walkway features a disorderly pile of broken planks that obscures the navigable path."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "upper left cliff face shadow",
+   "bbox": [
+    0.23,
+    0.02,
+    0.52,
+    0.3
+   ],
+   "severity": 2,
+   "desc": "An extremely dark pitch-black shadow completely obscures the cliff geometry and hut structure, hiding potential pathways.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The shadow cast across the upper-left section is pitch black, completely obscuring the cliff face and hut geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "cone tree on upper cliff wall",
+   "bbox": [
+    0.255,
+    0.25,
+    0.287,
+    0.35
+   ],
+   "severity": 1,
+   "desc": "A conical tree model sticks directly out of a steep vertical rock wall without visible support or roots.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "91.7,95.5,15.5,18.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,95.5,15.5,18.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A yellow conical tree model protrudes horizontally straight out of a vertical cliff wall with no visible roots or ledge."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F15",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "occlusion",
+   "where": "upper-left cliff and building under dark shadow",
+   "bbox": [
+    0.03,
+    0.23,
+    0.52,
+    0.48
+   ],
+   "severity": 2,
+   "desc": "A harsh, completely black shadow conceals the terrain and building geometry beneath the upper cliff, making depth and pathing unreadable.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Harsh, un-shadow-mapped pitch-black geometry in the upper-left hides structural details and potential walkways."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F16",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "yellow cone prop on the left cliff wall",
+   "bbox": [
+    0.255,
+    0.252,
+    0.287,
+    0.349
+   ],
+   "severity": 1,
+   "desc": "The stylized tree or cone prop is attached horizontally to a vertical cliff face without any supporting ledge or surface.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "91.7,95.5,15.5,18.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 91.7,95.5,15.5,18.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The stylized yellow tree model on the upper-left cliff wall is placed floating sideways out of the vertical rock face."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F17",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "collapsed ramp structure in the center",
+   "bbox": [
+    0.41,
+    0.38,
+    0.64,
+    0.59
+   ],
+   "severity": 1,
+   "desc": "Wooden planks and support beams intersect and clip haphazardly into each other without structural joins.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "83.6,92.2,14.4,21.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 83.6,92.2,14.4,21.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Planks and beams in the collapsed ramp section clip aggressively through one another without believable physical joints."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "central wooden platform and walkway network",
+   "bbox": [
+    0.16,
+    0.32,
+    0.52,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "The dense layering of wooden platforms, roofs, and stilts without clear visual distinction makes it difficult to discern walkable paths from roofs.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dense layering of identical wooden materials across rooftops, platforms, and stilts makes it difficult to distinguish walkable paths from non-traversable roofs."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "immersion",
+   "where": "dark cave opening at the upper left wall",
+   "bbox": [
+    0.26,
+    0.07,
+    0.33,
+    0.19
+   ],
+   "severity": 2,
+   "desc": "The cave entrance is a flat pitch-black polygon without ambient lighting or geometry falloff, breaking environment realism.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "82.9,133.7,-2.4,18.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 82.9,133.7,-2.4,18.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cave entrance is rendered as a flat, pitch-black silhouette lacking internal geometry or light falloff."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "geometry",
+   "where": "upper right boardwalk fence posts and roof intersection",
+   "bbox": [
+    0.62,
+    0.34,
+    0.91,
+    0.53
+   ],
+   "severity": 1,
+   "desc": "Wooden fence posts and support beams clip directly through the sloped roof surfaces below.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "47.2,61.8,7,21.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 47.2,61.8,7,21.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Vertical support posts and railings pass directly through the sloped green roof panels without proper structural mounting or cutouts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "center platform and roof complex",
+   "bbox": [
+    0.22,
+    0.52,
+    0.5,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "Uniform brown wood materials across roofs, walkways, railings, and support pillars create high visual noise, making walkable paths visually indistinguishable from roofs.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Uniform brown wood textures used across rooftops, railings, and walkways create high visual noise and obscure playable paths."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "layered wooden stairs along the middle-left cliff face",
+   "bbox": [
+    0.15,
+    0.2,
+    0.34,
+    0.53
+   ],
+   "severity": 1,
+   "desc": "Multiple overlapping stairs, ramps, and roof edges share identical colors and silhouettes, making the climbing route up the cliff face visually confusing.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Overlapping stairs, ramps, and roof edges along the cliff face use identical materials and silhouettes, creating a visually confusing climbing route."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "central complex of layered boardwalks and rooftops",
+   "bbox": [
+    0.15,
+    0.3,
+    0.55,
+    0.65
+   ],
+   "severity": 2,
+   "desc": "Multiple overlapping layers of dark wooden boardwalks, roofs, and stilts blend together, making it difficult to distinguish walkable paths from non-traversable architecture.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Multiple overlapping layers of dark wooden structures blend together, making it hard to identify traversable boardwalks."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F14",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "exit",
+   "where": "dark cave opening on the top-left cliffside",
+   "bbox": [
+    0.26,
+    0.07,
+    0.33,
+    0.19
+   ],
+   "severity": 2,
+   "desc": "The cave entrance is a completely flat, pitch-black void without depth or lighting falloff, making it ambiguous whether it is an accessible tunnel or background art.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cave opening appears as a flat, unlit black void without visual depth, leaving its function as a tunnel unclear."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "weave",
+   "item": null,
+   "category": "navigation",
+   "where": "cavern entrance along the top-left cliff",
+   "bbox": [
+    0.25,
+    0.06,
+    0.34,
+    0.2
+   ],
+   "severity": 2,
+   "desc": "The dark cavern entrance blends directly into dark cliff shadows with no lighting cues, making it ambiguous whether it is an accessible route or solid background geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The cavern entrance sits against sunlit cliff walls rather than blending into cliff shadows, making it stand out as a stark black shape."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 8,
+  "promptTok": 12216,
+  "replyTok": 13861,
+  "errors": 0,
+  "byStage": {
+   "naive": 6,
+   "refute-naive": 2
+  }
+ },
+ "bboxAgreement": {
+  "n": 0,
+  "hit": 0,
+  "frac": null
+ },
+ "aimCensus": {
+  "n": 0,
+  "refuted": 0,
+  "onSubject": 0,
+  "absenceClaim": 0,
+  "unmeasurable": 0,
+  "min": 0.02,
+  "applied": true,
+  "byFamily": {}
+ },
+ "rhetoric": {
+  "n": 1,
+  "intent": 0,
+  "byClass": {
+   "rest": {
+    "n": 1,
+    "intent": 0
+   }
+  },
+  "byMode": {
+   "naive": {
+    "n": 1,
+    "intent": 0
+   }
+  },
+  "byCategory": {
+   "navigation": {
+    "n": 1,
+    "intent": 0
+   }
+  },
+  "examples": []
+ },
+ "calibration": null
+}
