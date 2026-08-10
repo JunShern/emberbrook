@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>Emberbrook red-team — round 1 (2026-08-09)</title>
+<title>Emberbrook red-team — rounds 1–2 (2026-08-09/10)</title>
 <style>
 :root{--bg:#14161a;--fg:#e6e8ec;--dim:#9aa3b0;--line:#2a2f38;--card:#1a1e24;--hi:#ffcc66;--bad:#ff7a70;--ok:#7fd18b;--info:#8ab4f8}
 *{box-sizing:border-box}
@@ -16,6 +16,7 @@ th{background:#1d2229;color:var(--dim);font-weight:600}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin:14px 0}
 .lead{border-left:3px solid var(--hi)}
+p.lede{color:var(--dim);margin:0 0 14px}
 .kill{border-left:3px solid var(--bad)}
 .meth{border-left:3px solid var(--info)}
 img{max-width:100%;border-radius:5px;border:1px solid var(--line);display:block;margin:10px 0 4px}
@@ -35,7 +36,8 @@ ul{margin:6px 0 6px 20px;padding:0}li{margin:3px 0}
 details summary{cursor:pointer;color:var(--info);margin:8px 0}
 </style>
 <main>
-<h1>Emberbrook red-team — round 1</h1>
+<h1>Emberbrook red-team — rounds 1&ndash;2</h1>
+<p class="sub" style="margin-bottom:6px">Round 2 (2026-08-10) is <a href="#round2">&sect;9</a>.</p>
 <p class="sub">2026-08-09 · <code>scene_redteam</code> judge <b>gemini-3.6-flash</b> (PINNED), naive + checklist, N=3, adversarial verify, aim census armed ·
 11 plates · bake pinned to a copy of <code>public/assets/scenes/emb-cine</code> taken at run start ·
 run dir <a href="../redteam/run-20260809-emb-round1/index.html">docs/qa/redteam/run-20260809-emb-round1/</a> ·
@@ -462,5 +464,185 @@ translucent and does not respond to emission.</li>
 <li><b>The root fix for the coincident pads belongs in <code>emb_blockout</code></b>, which emitted
 two threshold pads at one landmark's height with no overlap test. 55 pairs town-wide.</li>
 </ol>
+
+<h2 id="round2">9 · ROUND 2 (2026-08-10) — the paving is stacked, and the tan panel has a name</h2>
+<p class="lede">Round 2 took round 1's owed list. Two of its five items turned out to be
+<b>one defect measured two different ways</b>, the #1 item is named to an object and a material, and the
+class the judge writes about most is now measured in square metres instead of counted in sentences.</p>
+
+<div class="card lead">
+<h3 style="margin-top:0">THE HEADLINE: 106.0 m&sup2; of Emberbrook's paving is TWO paving surfaces stacked, at a median step of 70&nbsp;mm</h3>
+<p>Instrument: <code>tools/emb_padstack.mjs</code> (no Blender, ~6&nbsp;s), over the shipped
+<code>emb-cine/scene.glb</code>. Every up-facing <code>walk_*</code> triangle is rasterised onto a 5&nbsp;cm plan
+grid; a cell carrying floor faces from two nodes is DOUBLE-COVERED, and its step is the gap between the two.</p>
+<table>
+<tr><th>band</th><th class="num">cells</th><th class="num">m&sup2;</th><th>what it is</th></tr>
+<tr><td>&le; 2 mm</td><td class="num">1927</td><td class="num">4.82</td><td>z-fighting — <b>round 1 fixed only this</b> (<code>emb_padcoplanar</code>, 55 bbox pairs, one at dz 0.0000)</td></tr>
+<tr><td>2–20 mm</td><td class="num">1240</td><td class="num">3.10</td><td>near-coincident</td></tr>
+<tr><td>20–60 mm</td><td class="num">9192</td><td class="num">22.98</td><td rowspan="2">A PLATE FLOATING ON A PLATE. Does not z-fight; photographs as a lit riser with a shadow line.</td></tr>
+<tr><td>60–120 mm</td><td class="num">19423</td><td class="num">48.56</td></tr>
+<tr><td>120–250 mm</td><td class="num">4941</td><td class="num">12.35</td><td>deep step</td></tr>
+<tr><td>&gt; 250 mm</td><td class="num">5679</td><td class="num">14.20</td><td>real terraces (the plaza stands 0.45 m over the pond road) — REFUSED by the fix, on purpose</td></tr>
+<tr><td><b>total</b></td><td class="num">42402</td><td class="num"><b>106.0</b></td><td><b>7.0% of the town's 1,510 m&sup2; of paved plan</b></td></tr>
+</table>
+<p><b>WHY IT IS THERE.</b> <code>walk_pad_*</code> takes its height from the terrain at its own doorstep,
+<code>walk_e_*</code> from a smoothed chain of lane waypoints, <code>walk_lm_*</code> from the area's own floor.
+Three independent height sources, each right on its own, and nothing in <code>emb_blockout</code> has ever
+compared them where the footprints overlap.</p>
+</div>
+
+<h3>TARGET 1 — the untextured tan panel is <code>emb_dress_mill_gable+1</code>, and it is not untextured</h3>
+<p>Round 1 could not name it: <code>emb_plate_object</code> put the pixels 1.16–1.41 m in front of the nearest
+massing, which is the right answer to the wrong question — the collision bundle is the gray blockout and the
+thing making those pixels is dressing. <b>New instrument: <code>tools/emb_ray_census.py</code></b> — 870 rays
+from the shipped solved camera into <code>emberbrook-dressed.blend</code>, per-object BVHs over a
+185-of-5,183-mesh shortlist rather than a depsgraph BVH over 6.36 M scattered instances.</p>
+<table>
+<tr><th>first opaque hit</th><th class="num">rays</th><th class="num">share</th><th>material</th><th>distance</th></tr>
+<tr><td><code>emb_dress_mill_gable+1</code></td><td class="num">642</td><td class="num"><b>73.8%</b></td><td><code>emb_dress_boarding</code></td><td>39.96–42.95 m</td></tr>
+<tr><td><code>emb_dress_mill_infill</code></td><td class="num">83</td><td class="num">9.5%</td><td><code>emb_dress_daub</code></td><td>42.93–45.26 m</td></tr>
+<tr><td>eleven <code>_sh-1_*</code> shingles</td><td class="num">~100</td><td class="num">~11%</td><td><code>mat_shingle_cedar</code></td><td>41.4–43.0 m</td></tr>
+</table>
+<p><b>The generator line is ONE BOX</b> — <code>box("emb_dress_mill_gable%+d", …, (0.18, hd + 0.8, RIDGE − EAVE))</code>
+— measured in the blend at <b>0.18 × 10.20 × 2.92 m</b>, one flat face, with a dead-level top edge 0.30 m under the
+ridge while the roof it closes slopes away on both sides. And <code>emb_dress_boarding</code> is <i>not</i>
+untextured: it carries a stretched noise grain and a bump. Its only spatial frequency is <b>1/26 m = 38 mm</b>, and
+<code>homerow</code> is fov 20 over 768 rows at 42 m = <b>18.4 mm per plate pixel</b>. <b>The grain is a two-pixel
+feature and the denoiser takes it.</b></p>
+<p>Measured on the shipped plate (5×5 local sd, <code>plate_probe.local_sd</code>): gable box
+<b>sd 3.45, L50 142.3</b> against a ring of <b>sd 9.11, L50 87.6</b> — <b>2.6× flatter and 1.6× brighter than
+everything around it</b>. The daub panels beside it, same mill, same appended-material pipeline, read sd 10.70
+against a ring of 8.96 (0.84×): <b>the material family is not the defect, this box is.</b></p>
+<p><b>A MATERIAL CANNOT RESCUE A SURFACE WHOSE ONLY FREQUENCY IS AT THE SENSOR'S NYQUIST LIMIT.</b> Everything
+around it that reads — the studs, the daub, the cedar shingles, the sawn log — carries GEOMETRY at 0.1–0.5 m.
+Fixed as geometry, in <code>emb_dress.py</code> (the generator) and <code>tools/emb_millgable.py</code> (the
+carrier for the three blends already built): 42 vertical boards a side at a 0.24 m pitch — <b>13 plate pixels
+against the noise's 2</b> — ±0.018 m relief, each cut to the roof plane above it, plus a barge-board per slope.
+88 members, 0 refused.</p>
+<div class="card meth">
+<p style="margin:0"><b>AND THE CARRIER'S FIRST ASSERTION WAS ITSELF A FINDING.</b> It derives each board's top by
+casting UP against the mill's own <code>roofdeck</code> meshes rather than repeating a pitch constant — and it
+asserted on all 42 boards, because the gable box sits at local x ±(hw/2 + 1.0) and the deck spans only
+±(hw + 1.5)/2. <b>The panel stands 0.25 m PROUD of the roof it is supposed to close.</b></p>
+</div>
+
+<h3>TARGETS 2 &amp; 3 WERE ONE DEFECT — and the pin rule was right for a seam and wrong for a step</h3>
+<p>Round 1's <code>emb_pavechop</code> pinned any rim vertex with another walk mesh's top under its outward foot
+(within 0.30 m in z). That refusal was derived from the case where it is right — two coplanar plaza blocks, where
+a chamfer would cut a 0.12 m trench along an internal seam — and it is wrong for a STEP: a doorstep pad standing
+70 mm above the road keeps its full 0.12 m riser, ON the road. <b>The neighbour's HEIGHT now decides, three ways,
+each counted:</b></p>
+<table>
+<tr><th>neighbour</th><th>action</th><th class="num">verts</th></tr>
+<tr><td>level within <code>--joinlevel</code> 0.02 m (or above)</td><td>PIN — round 1's case, unchanged</td><td class="num">2089</td></tr>
+<tr><td>below by ≤ <code>--joinstep</code> 0.20 m</td><td><b>SEAT the rim ONTO the paving below</b>, not onto the ground</td><td class="num">108</td></tr>
+<tr><td>below by more</td><td>a real terrace — PIN, <b>and COUNT</b></td><td class="num">4</td></tr>
+<tr><td>no neighbour</td><td>seat onto the ground (round 1)</td><td class="num">1191</td></tr>
+</table>
+<p>Seating a stacked rim onto the GROUND would have been worse than pinning it: the ground under a stacked pad is
+0.12 m below the road, which is itself below the pad, so a ground-seated chamfer dives straight through the road.
+The 108 are the right 108 — <code>walk_pad_item-shop</code>, <code>_inn</code>, <code>_waystone</code>,
+<code>_barn</code>, <code>_pond-jetty</code>, <code>_road-gate</code>, <code>_hillside-cottage</code>,
+<code>_elder-house</code>, <code>_pips-den</code>, <code>_home-lane-end</code>, <code>_brook-bridge</code>,
+<code>_poppy-stall</code>, <code>_bakery</code>, <code>_lake-home</code>, <code>_watermill</code> and
+<code>walk_lm_gate-court</code> — <b>every one of them a pad the judge named</b>
+(<code>walk_pad_waystone</code> is 43.5% of waystone F14 <i>"the path slab terminates awkwardly, floating above
+the ground"</i>; <code>walk_pad_road-gate</code> is 71.6% of arch F6; <code>walk_pad_pips-den</code> is 36.2% of
+pondlane F88). Most pads have exactly 8 boundary vertices and went <code>drop 0 / pin 8</code> → <code>drop 8 /
+step 8</code>: <b>the whole rim, not part of it.</b></p>
+<p><b>THE ROOT IS IN <code>emb_blockout</code>, AND IT NOW SPEAKS.</b> Reconciling the three height sources is a
+walk-network change that pass cannot validate on its own (<code>DOOR[i][2]</code> is read downstream by the
+ribbon ends and by <code>scenegraph_derive</code>), so what shipped there is the CENSUS: after every walk surface
+is emitted it prints the stacks and the area, so a rebuild can never again ship the defect in silence. Round 9's
+floating stair treads were a <code>continue</code> with no log line under a summary that counted treads.</p>
+
+<h3>AND THE OTHER HALF OF THE SAME FAMILY: 37.3 m&sup2; of paving-enclosed HOLE with nothing standing in it</h3>
+<p><code>emb_padstack --holes</code>. An area apron is cut on a 0.45 m lattice around every landmark footprint,
+and where the cut is wider than the thing standing in it the player sees terrain 0.12 m below the paving through a
+square hole. Enclosed holes only (flood-filled from outside the apron's own bbox, so a bay open to the edge is
+not a hole); occupancy tested against the blockout's own solids.</p>
+<table>
+<tr><th>apron</th><th class="num">paved m&sup2;</th><th>holes</th><th class="num">occupied m&sup2;</th><th class="num">EMPTY m&sup2;</th><th class="num">% of its own area</th></tr>
+<tr><td><code>walk_lm_square-plaza</code></td><td class="num">434.2</td><td>6</td><td class="num">41.74 (3)</td><td class="num"><b>20.65</b> (3)</td><td class="num">4.8%</td></tr>
+<tr><td><code>walk_lm_gate-court</code></td><td class="num">200.5</td><td>2</td><td class="num">0.00 (0)</td><td class="num"><b>16.63</b> (2)</td><td class="num">8.3%</td></tr>
+<tr><td><code>walk_lm_orchard</code></td><td class="num">258.5</td><td>1</td><td class="num">0.00</td><td class="num">0.63</td><td class="num">0.2%</td></tr>
+</table>
+<p>That is square F40/F49/F50 (<i>"severe geometry tearing and black void seams"</i>), pondlane F76/F88/F90
+(<i>"black hole voids"</i>, <i>"sharp triangular holes"</i>) and gatefield F114/F121 (<i>"rectangular cutouts
+around the pillar bases, leaving missing tiles and black voids"</i>). <b>NOT fixed this round</b> — it is a
+generation-side cut, and the fix is to size the cut to the thing standing in it. Named with its number for round 3.
+The occupancy column reads the COLLISION bundle, so a hole covered only by dressing reads as empty: it is a screen
+that ranks holes for the eye, never a verdict.</p>
+
+<h3>REFUTATIONS — four findings whose box does not contain what it names</h3>
+<p>The <code>--aim-census</code> only arms on <code>[QUALITY]</code> families. <b>Run
+<code>emb_plate_object</code> over EVERY finding and it is an aim census for all of them.</b> Of the 27 geometry
+survivors checked this way, three name a subject their own bbox demonstrably does not hold, and a fourth came out
+of the quality census:</p>
+<table>
+<tr><th>finding</th><th>the judge's words</th><th>what the box actually holds</th></tr>
+<tr><td><code>gateroad F115</code></td><td><i>"The ground path ends abruptly with a sharp, unblended edge against the grass terrain"</i> (12.0% of frame)</td><td><b>94.1% <code>emb_ground_valley</code></b>; every <code>walk_*</code> mesh in the box adds to 4.0%. <span class="warn">There is no path in it.</span></td></tr>
+<tr><td><code>square F54</code></td><td><i>"The building is sunken directly into the terrain without proper foundation or wall transitions"</i></td><td><b>94.8% <code>emb_ground_valley</code></b>, 5.2% <code>walk_pad_smokehouse</code>. <span class="warn">There is no building in it.</span></td></tr>
+<tr><td><code>therise F31 / F36</code></td><td><i>"The path terrain slabs clip awkwardly through the angled ground mesh"</i> / <i>"Flat grey polygonal meshes cut unnaturally through the terrain"</i></td><td><b>96.0% / 96.4% <code>lm_infill_03_body</code></b> — a HOUSE. <span class="warn">There is no path in it.</span></td></tr>
+<tr><td><code>gatefield</code> <code>quality:water-read</code></td><td>WEAK verdict</td><td><b>0.0% on-subject</b> by <code>--aim-census</code>. Of three water-read findings, one is misaimed, one is an absence-claim (abstains) and one is ABSENT: <b><code>emb_brookchop</code> is NOT regressed.</b></td></tr>
+</table>
+
+<h3>What round 2 did NOT fix, each with its number</h3>
+<ol>
+<li><b>37.3 m&sup2; of empty enclosed holes in the paving</b> (above). Generation-side; size the footprint cut to
+the footprint.</li>
+<li><b><code>emb_dress_mill_lucam</code> is the gable's twin</b> — the other <code>PLANK</code> box on the same
+mill, 2.6 × 1.9 × 2.6 m, and homerow-after's F3/F7 (<i>"an untextured box-like extension sits atop the roof
+beam"</i>). Measured on the shipped plate: <b>local sd 4.72 against a ring of 10.59 (2.2× flatter)</b>. Same
+mechanism, same material, same fix shape; not carried this round.</li>
+<li><b><code>lm_infill_30_track0..3</code></b> — northlane F87/F96, <i>"a sharp, unblended rectangular grey slab
+sits abruptly in the grass"</i>. 43.4% of the box across four cart-track meshes: a pale quad with a razor edge
+and a squared-off end, stopping dead in the middle of a field. <b>Looked at</b>
+(<code>ev/northlane-track</code>) — the judge is right and it is an EDGE problem, not a shape one.</li>
+<li><b>The water wheel reads as a sawn log</b> — homerow F85, the highest-support geometry finding in the run
+(2/3), <i>"a giant sliced wood log geometry clips unnaturally into the building wall and ground"</i>. Attribution
+is watermill massing at residual 0.85–1.06 m, i.e. dressing again. Not ray-censused this round.</li>
+<li><b>The Heartlight cap</b> — unchanged from round 1: a 2 × 2 × 0.2 m pale slab 0.75 m under a 5200 W point,
+and the emission lever is REFUTED at ×12.</li>
+<li><b>The &gt;250 mm stack band (14.20 m&sup2;)</b> — refused by the taper on purpose; whether the plaza's
+0.45 m terrace over the pond road should read as a wall or a ramp is a design call, not a defect.</li>
+</ol>
+
+<h3>THE REBAKE LIST, DERIVED FROM RENDERED FRAMES — and two plates refused with their numbers</h3>
+<p>Whole-town draft A/B, <code>tools/plate_ab.py</code> (new). Arm A is the round-1 geometry rebuilt from
+<code>emb_pavechop</code>'s own snapshot and the round-1 revision of that file — it reproduced round 1's manifest
+to the vertex (<code>1192 seated / 2197 pinned</code>) — and arm B is round 2's. <b>Both arms at the same draft
+grade</b>, which is what makes it a ruler.</p>
+<table>
+<tr><th>shot</th><th class="num">changed &gt; 4/255</th><th class="num">&gt; 12/255</th><th>verdict</th></tr>
+<tr><td>square</td><td class="num">3.379%</td><td class="num">0.596%</td><td>REBAKE</td></tr>
+<tr><td>homerow</td><td class="num">1.936%</td><td class="num">1.124%</td><td>REBAKE</td></tr>
+<tr><td>northlane</td><td class="num">1.469%</td><td class="num">0.494%</td><td>REBAKE</td></tr>
+<tr><td>pondlane</td><td class="num">0.575%</td><td class="num">0.098%</td><td>REBAKE</td></tr>
+<tr><td>therise</td><td class="num">0.470%</td><td class="num">0.293%</td><td>REBAKE</td></tr>
+<tr><td>arch</td><td class="num">0.168%</td><td class="num">0.089%</td><td>REBAKE</td></tr>
+<tr><td>woodroad</td><td class="num">0.166%</td><td class="num">0.003%</td><td>REBAKE</td></tr>
+<tr><td>gateroad</td><td class="num">0.159%</td><td class="num">0.026%</td><td>REBAKE</td></tr>
+<tr><td>waystone</td><td class="num">0.143%</td><td class="num">0.008%</td><td>REBAKE</td></tr>
+<tr><td>gatefield</td><td class="num">0.005%</td><td class="num">0.001%</td><td class="warn">REFUSED — under the 0.01% floor</td></tr>
+<tr><td>orchard</td><td class="num">0.000%</td><td class="num">0.000%</td><td class="warn">REFUSED — under the 0.01% floor</td></tr>
+</table>
+<p><b>gatefield's refusal is the honest confirmation that target 4 is NOT fixed.</b> Its
+<code>walk_lm_gate-court</code> took 8 stepped seats, and the frame did not move: what that camera is looking at
+is the 16.63 m&sup2; of empty hole, which this round measured and did not touch.</p>
+<div class="card meth">
+<p style="margin:0"><b>AND THE REGRADE TRAP BITES THE DRAFT TOO, IN THE OTHER DIRECTION.</b> Both arms are
+drafted at <code>defaults.exposure</code> 0.55 — right for a RULER, useless as a PICTURE: the woodroad and
+waystone A/B crops are near-black and nothing can be judged by eye in them. So the numbers come from the draft
+and <b>the eye check comes from the shipped bake</b>, which <code>tools/emb_bake_shipped.mjs</code> drives off
+each plate's own <code>appliedGrade</code> (eleven plates, SEVEN grade groups).</p>
+</div>
+<img src="ev/r2-gable-ab.jpg" alt="watermill gable before and after">
+<p class="cap">The gable, <code>homerow</code>, draft A/B at 5&times; with a numeric exposure lift <b>for the eye
+only</b>. LEFT: one flat panel with a dead-level top edge. RIGHT: cut to the roof rake it is supposed to close,
+with the 0.24 m board seams legible.</p>
+
+
+<p class="cap" id="r2foot">Round 2 evidence: <code>docs/qa/emberbrook-redteam/round2-draft-ab.json</code>, <code>padstack-before.json</code>, <code>padstack-after-master.json</code>. Instruments: <code>tools/emb_padstack.mjs</code>, <code>tools/emb_ray_census.py</code>, <code>tools/plate_ab.py</code>, <code>tools/emb_bake_shipped.mjs</code>, <code>tools/emb_millgable.py</code>.</p>
 
 </main>
