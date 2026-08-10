@@ -93,21 +93,20 @@ VC_NODE = "surv_col"
 UVMATS = ("mat_leaf_autumn", "mat_leaf_green", "mat_leaf_creeper",
           "mat_leaf_autumn_far")
 
-# HELD BACK, WITH THE MEASUREMENT THAT HOLDS THEM.  Repairing an attribute can make
-# a SECOND defect legible, and here it does: `locksfoot_build` builds `veg_lf_fern_*`
-# with `obox()`, i.e. LITERAL BOXES, where every other district's groundcover is a
-# tuft.  Black, they were furniture; coloured, they are lime-green blocks on
-# lockfive's strand (1.34% of that frame) and the picture is worse than the defect.
-# Two rungs were measured before this call, not after: baking the object-space Z
-# ramp at world z gave (0.2372, 0.2423, 0.0895) against the 165 healthy grass
-# meshes' (0.1376, 0.1509, 0.0570), and re-baking with each mesh's origin moved to
-# its own base gave (0.1756, 0.1858, 0.0694) — right by the ruler, and by eye the
-# blocks are unchanged, because no gradient makes a box a plant.  So the colour is
-# owed the geometry first.  Delete the entry to ship it.
-HOLD = {
-    "mat_grass": "veg_lf_fern_* are obox() boxes; colour makes the box legible",
-    "mat_fern":  "veg_lf_fern_* are obox() boxes; colour makes the box legible",
-}
+# THE HOLD IS GONE, AND WHAT PAID IT OFF WAS GEOMETRY (round 11).  Round 10 held
+# `mat_grass`/`mat_fern` back with a measurement rather than a shrug: `locksfoot_build`
+# built `veg_lf_fern_*` with `obox()` — literal BOXES — so black they were furniture
+# and coloured they were lime blocks on lockfive's strand (1.34% of that frame).  Two
+# colour rungs were measured before that call and both were right by the ruler and
+# wrong by eye (object-space Z at world z 0.2372/0.2423/0.0895, own-base
+# 0.1756/0.1858/0.0694, against the healthy 0.1376/0.1509/0.0570), because no gradient
+# makes a box a plant.  Round 11 found the town already HAD a kit — 150 tufts at
+# 160/64 and 131 ferns at 110/44 — and that the orphan set was TWO districts, not one:
+# 78 `veg_lf_fern_*` boxes and 26 `veg_lk_tuft_*` crossed quads, which is exactly the
+# "104" round 10 named.  `tools/dh_veg_kit.py` re-shapes all 104 from the town's own
+# donor mesh and MUST RUN BEFORE THIS TOOL.  Colour is owed the geometry first; the
+# geometry has been paid.
+HOLD = {}
 
 # material -> the node whose Color output was the ORIGINAL Base Color, before
 # master_survivability relinked it to `surv_col`.  Asserted unlinked at run time:
@@ -310,19 +309,43 @@ for n in orphans:
 # the mesh's own base FOR THE BAKE and put back exactly afterwards; world vertex
 # positions never move (the data translation and the object translation cancel),
 # which is why the geometry gate still holds.
+#
+# AND THE SHIFT IS CONDITIONAL, BECAUSE THE DEFECT IT CURES IS NOT "the origin is not
+# the base" — IT IS "the mesh does not lie in the ramp's domain at all" (round 11).
+# Measured on the shipped materials: the Map Range is `From Min 0.0, From Max 0.45`
+# (`mat_grass`) / `0.55` (`mat_fern`), CLAMPED.  So the ramp only has an opinion about
+# object-space z in [0, From Max], and the 281 healthy kit meshes are authored CENTRED
+# ON ZERO (local z p50 -0.189..0.266 grass, -0.355..0.399 fern) — half of every healthy
+# plant clamps to the dark end and that is what the town looks like.  Shifting such a
+# mesh to base-at-zero lifts its whole body into the lit half: measured on the 104
+# kit-shaped meshes, `mat_grass` came back (0.1633, 0.1745, 0.0654) against the healthy
+# 150's (0.1214, 0.1359, 0.0517) — 35% bright — for no reason but the shift.
+# So shift ONLY a mesh that lies OUTSIDE the ramp's domain entirely, which is exactly
+# the `obox()`/`join_meshes()` case this was written for (object space = world space,
+# so every tuft evaluates the ramp at its gorge altitude and clamps to one end).
+FROM_MAX = max(
+    float(n.inputs['From Max'].default_value)
+    for m in need
+    for n in bpy.data.materials[m].node_tree.nodes if n.type == 'MAP_RANGE')
 origins = {}
+inside = 0
 for n in orphans:
     o = bpy.data.objects[n]
     me = o.data
     co = np.zeros(len(me.vertices) * 3, dtype=np.float32)
     me.vertices.foreach_get("co", co)
-    c = Vector((0.0, 0.0, float(co.reshape(-1, 3)[:, 2].min())))
+    z = co.reshape(-1, 3)[:, 2]
+    if float(z.max()) > 0.0 and float(z.min()) < FROM_MAX:
+        inside += 1                      # already authored in the space the ramp reads
+        continue
+    c = Vector((0.0, 0.0, float(z.min())))
     if c.length < 1e-6:
         continue
     me.transform(Matrix.Translation(-c))
     o.location = o.location + c
     origins[n] = c
-print("origins moved to the mesh's own base for the bake: %d" % len(origins))
+print("ramp domain is object z 0..%.2f; %d orphan meshes already lie in it (left alone), "
+      "%d moved to their own base" % (FROM_MAX, inside, len(origins)))
 
 sc.render.engine = 'CYCLES'
 sc.cycles.samples = 1
@@ -401,10 +424,35 @@ mean = np.mean(stats, axis=0) if stats else np.zeros(3)
 print("\nbaked cured-loop mean  : (%.4f, %.4f, %.4f)  over %d meshes"
       % (mean[0], mean[1], mean[2], len(stats)))
 print("healthy clumps' own mean: (0.3080, 0.1190, 0.0360)  [autumn reference]")
+# AND THE COMPARISON THAT MATTERS IS PER MATERIAL AGAINST ITS OWN HEALTHY FAMILY.
+# The single "autumn reference" line above is one material's number and it silently
+# passed a `mat_grass` repair that came back at 57% of its own family (round 11).
+healthy_mean, healthy_n = {}, {}
+for mm in permat:
+    acc = []
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.name in set(orphans):
+            continue
+        if mm not in [sl.material.name for sl in o.material_slots if sl.material]:
+            continue
+        ca = o.data.color_attributes.get(ATTR)
+        if ca is None:
+            continue
+        c = np.zeros(len(ca.data) * 4, dtype=np.float32)
+        ca.data.foreach_get("color", c)
+        acc.append(c.reshape(-1, 4)[:, :3].mean(axis=0))
+    if acc:
+        healthy_mean[mm] = np.mean(acc, axis=0)
+        healthy_n[mm] = len(acc)
 for mm, vv in sorted(permat.items()):
     a = np.mean(vv, axis=0)
-    print("   %-20s repaired mean (%.4f, %.4f, %.4f) over %d meshes"
-          % (mm, a[0], a[1], a[2], len(vv)))
+    hm = healthy_mean.get(mm)
+    rel = ("  vs its own healthy family (%.4f, %.4f, %.4f) over %d meshes = %.0f%%"
+           % (hm[0], hm[1], hm[2], healthy_n[mm],
+              100 * float(np.mean(a / np.maximum(hm, 1e-6))))
+           ) if hm is not None else "  (no healthy family to compare against)"
+    print("   %-20s repaired mean (%.4f, %.4f, %.4f) over %d meshes%s"
+          % (mm, a[0], a[1], a[2], len(vv), rel))
 
 geo1 = geom_digest()
 assert geo0 == geo1, "GEOMETRY MOVED — refusing"
