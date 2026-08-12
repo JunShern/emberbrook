@@ -1534,6 +1534,51 @@ git runs here, on branch `migration/3d-hybrid`.
   the walkable town) and `emb_lightbodies` has never run on it either; and **the shipped dressed
   blend is behind its own generator** — a re-dress today also gains 21 `emb_dress_bank*` and moves
   bunting to 2.4 m, so draft-A/B before ever baking one.
+- **tools/rt_visual_gate.mjs — A BUNDLE THAT PARSES IS NOT A WORLD THAT DRAWS** (2026-08-12, and
+  this is the largest defect found in the project so far). **NOTHING HERE HAD EVER RENDERED THE
+  WALKABLE TOWN**: `walk_engine_gate` asks where a body can stand, `cine_test` grades plates,
+  `transition_test` counts GPU resources, and three deploys running parsed glTF on the wire —
+  attributes present, per-mesh vert/tri deltas exact — **and not one of them looked at the
+  picture.**
+  WHAT THAT HID: **3,918 of 8,366 drawn `emb-townwalk` meshes sample a texture with no `uv`**
+  (2,311 of 2,470 primitives carry no `TEXCOORD_0`, 1,477 of them wearing a textured material),
+  so three.js reads uv (0,0) and paints **one texel over the whole surface**. CAUSE, read out of
+  the blend: **3,522 of 3,522 textured material slots sit on objects with ZERO uv layers, because
+  every Image Texture is driven from generated/object coords at `projection = BOX`** — tri-planar,
+  which **Cycles renders correctly (so every plate is right) and glTF cannot express at all.**
+  Same one-cause-two-symptoms shape as the 41 foliage meshes that were invisible in Cycles and
+  white in the runtime — and again only the plate half was ever caught.
+  **MEASURED IN PIXELS, NOT COUNTS**: hiding exactly that set moves **homerow 93.2% of frame,
+  pondlane 83.7%, square 79.8%, spawn 70.9%**; Dellhollow's `townwalk` 52-57%; **`ow-valley` 0%,
+  which proves this is not how a bundle has to be.** I looked at the frame
+  (`docs/qa/rtvis/evidence/emb-townwalk-flat.jpg`): the town the player explores is flat paint
+  where its own plates are textured stone, thatch and warm lamplight.
+  THE GATE: real Chrome, per scene, against the DRAWN scene graph — boots, asserts
+  **`SIM.gpu().collide !== 0`** (the arena_playtest lesson), no console error, and that every
+  viewpoint is A PICTURE (not ≥98% blown, not ≥98% crushed, **not ≥90% in one 16³ colour bin**).
+  Then a REGRESSION LEDGER: `texNoUv` may not rise, per-viewpoint flat/blown share may not rise
+  past `--tol`. **Ledgered, not absolute, because the current numbers are terrible and a
+  permanently-red gate gets skipped.** 18 s for three scenes; `--selftest` 11/11 in 0.05 s.
+  Red-then-green proved BOTH in-page and **on the wire** — two symlink farms over one `public/`
+  differing only in whether `ground_valley` keeps `TEXCOORD_0`, with a faithful-re-serialisation
+  control arm to rule out the farm itself.
+  **AND A GATE MUST PHOTOGRAPH A DEFINED POSE**: one viewpoint read 34.9% and 77.4% on alternate
+  sessions off **0.75 m of boom**, because play3d's occlusion clamp is snap-in/slow-out and still
+  in flight 3 rAFs after a teleport. It now boots `?camclip=0` and camera positions are
+  byte-identical across sessions.
+  **WHAT IT DOES NOT CATCH, stated by its author**: wrong colour/grade/texture, z-fighting, seams,
+  holes; only its own viewpoints; a mesh drawing NOTHING is invisible to the pixel half by
+  construction; and **all-zero UVs pass and look identical to the defect**.
+  **THE FIX IS A DRESSING-PIPELINE JOB, NOT A CARRIER** — bake the box projection to a UV set, or
+  unwrap the textured classes. `ow-valley` is the worked example and the ledger is the receipt.
+  Also refuted here: **`emb_lightbodies` is a NO-OP on the realtime tier** (its only shipped effect
+  is a Cycles `visible_shadow` flag glTF does not carry; the runtime town has one directional
+  light with `castShadow` false, both hemispheres at 0, and **zero of 8,366 meshes casting
+  shadows** — the 14 emissive shells already are the light). And the lucam IS visible in the
+  walkable tier (14 of 96 sampled poses, up to 1.52% of frame) — the inherited guess that it was
+  not is wrong — but boarding it was still REFUSED, because the boards would land on an
+  untextured white box in a town that is 93% flat paint. It should ride the same re-export as the
+  UV fix.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
