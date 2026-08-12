@@ -25621,3 +25621,87 @@ is carried, in either direction**, and the per-plate table below is data, not a 
   6. **`lm_infill_30_track0..3`** and **the Heartlight cap** — both unchanged from round 2.
   7. **A DEPLOY IS STILL OWED** (round 2's residual 7, still open).
 
+
+## 2026-08-12 — EMBERBROOK ROUND 4: the lucam bomb was armed, and it was FOUR bombs
+
+Round 3's residual #4 said `emb_dress.py` never got the lucam mirror and *"a re-dress silently
+drops the 36 members"*. **Armed, and understated.** The demonstration is a real re-dress, not an
+argument: `emb_dress --region all --tier plate --key emberwake --noshoot` off the shipped
+`emberbrook-master.blend` into a SCRATCH `--out` (3 min), censused object-by-object against
+`emberbrook-dressed.blend`:
+
+    emb_dress_mill_lucamx*           emb_millucam        36 members ->  0   + the embml snapshot
+    lamp glass visible_shadow False  emb_lightbodies     14         ->  0
+    walk pads/edges nudged 4 mm      emb_padcoplanar     34 objects ->  0   (dz exactly -0.0040)
+    water_emb_* vert counts          emb_brookchop       welded     ->  the raft again
+                                     + emb_water_shader  (pond 1556 -> 5664 v, brook 1190 -> 3000)
+
+**FOUR CARRIERS, THREE OF THEM FIXES WITH PUBLISHED RECEIPTS** — half the crushed frame at
+homerow (66.1% -> 37.9% of pixels <= 8/255), the black hole on the path at
+`walk_pad_grandmothers-bench` (p50 57.9 -> 83.5), at-water luminance p50 0.056 -> 0.108. Round 3
+saw one of the four and called it a lucam problem. It is not: **A GENERATOR THAT REBUILDS ITS
+OUTPUT FROM AN UPSTREAM SOURCE OWNS NOTHING A CARRIER PUT ON THAT OUTPUT, AND NOTHING IN THE
+TREE SAID SO.** Instrument: `tools/emb_carriers.py` (no API, ~10 s a blend).
+
+**THE SIBLING CENSUS.** Nine Emberbrook carriers stamp a JSON snapshot — four on the SCENE
+(`embmg embml emblb embpad`), five on the objects/materials they touched (`embpc embpf embpl
+embbc embws`). `embpc/embpf/embpl` were also run on the MASTER, so a re-dress INHERITS them
+(222/17/16 holders, unchanged in the scratch build) — that is the whole difference between a
+carrier that survives and one that does not, and it is not written down anywhere else.
+`emberbrook-realtime.blend` carries `embbc/embws/embmg` and **NOT `emblb`/`embml`**: the mill's
+lucam boarding has never existed in the realtime tier, so the plate town and the walkable town
+disagree about the same roof (36 members vs 0).
+
+**THE FIX IS A CALL, NOT A COPY, AND THE GABLE IS WHY.** Round 2's answer for the gable was to
+copy the recipe into `emb_dress.py`. That copy has already drifted where anyone can see it: the
+shipped blend holds the CARRIER's **84** boards named `gableboard+1board00`; a fresh dress builds
+the GENERATOR's **86** named `gableboard+1_00`. Two tools, one object, two answers. So
+`emb_millucam.py`'s build is now `board_lucams()`, import-safe below `__main__`, and
+`emb_dress.build_mill()` CALLS it — one recipe, two entry points, and the function writes the
+`embml` snapshot itself, so a dressed blend is stamped exactly as a carried one and the carrier's
+own guard refuses to board the boards from either direction. **RECEIPT: bit-exact.** All 36
+member names identical to the shipped blend, worst `matrix_world` element delta **0.000e+00**,
+zero differences in verts/tris/material.
+
+**AND CALLING IT FOUND A DEFECT A COPY WOULD HAVE HIDDEN.** The first mirrored run built **21**
+members on a **1.00 x 1.00 x 1.00** lucam with a 0.30 x 0.44 m loading door, and printed a green
+receipt. `emb_dress.obj()` assigns `location`/`scale`/`rotation_euler`; **`matrix_world` IS A
+CACHE and is only recomputed by a depsgraph evaluation**, so every dimension the carrier derives
+was read off an IDENTITY matrix — including the roof centroid that decides which way OUTWARD is.
+A carrier opens a saved blend and never meets this; a generator calling the same code meets it on
+the first line. Fixed with `bpy.context.view_layer.update()` inside `board_lucams()` and a guard
+that generalises: for an unparented object `matrix_world` IS `matrix_basis`, so any disagreement
+is asserted with the cause named.
+
+**THE GATE: `tools/emb_carriers.py` + a ledger per blend.** `--record` writes
+`tools/blends/districts/emb_carriers.<stem>.json`; the default mode exits 1 on any carrier
+footprint that SHRANK, printing the command that puts it back and the ordering note
+(`emb_water_shader` revert -> `emb_brookchop` -> `emb_water_shader`). A missing ledger is a
+FAILURE, never a pass. `--as <stem>` checks a scratch build against another blend's ledger, which
+is how the demonstration above is run. **RED THEN GREEN, both measured:** pre-fix scratch re-dress
+**exit 1**, 8 shortfalls including `lucam_members 36 -> 0`; shipped dressed **exit 0**; shipped
+realtime **exit 0**; post-fix scratch re-dress **exit 1 with 5** — the four carriers that genuinely
+cannot be mirrored, and no lucam line. `emb_dress.py` now prints the same census as the LAST thing
+every build does, so the receipt reaches the person who caused the loss. A carrier the generator
+has taken over (`embmg`, `embml`) is gated on its MEMBER COUNT and not its stamp — a report that
+cries wolf on every legitimate dress is a report nobody reads.
+
+**WHAT WAS REFUSED.** No blend was rebuilt and no plate was rebaked: the shipped dressed blend
+already carries all 36 members, so the picture did not move and there is nothing to bake. The
+generator mirror is proved on a scratch `--out` and stays latent until the next real re-dress —
+which is exactly the state the fix is for.
+
+### RESIDUALS FOR ROUND 5
+
+  1. **THE REALTIME TIER HAS NO LUCAM BOARDING** (0 members against the plate tier's 36).
+     One `emb_millucam -- save` on `emberbrook-realtime.blend` closes it, but it then owes an
+     `emb-townwalk` re-export (+ the two ortho plates) and the walk gates. Not done here.
+  2. **`emb_lightbodies` HAS NEVER RUN ON THE REALTIME BLEND EITHER** — `emblb` absent. Whether
+     that matters is a question about runtime lighting, not about this gate; nobody has asked it.
+  3. **THE SHIPPED DRESSED BLEND IS BEHIND ITS OWN GENERATOR.** It holds the carrier's gable
+     names, so the last full dress predates `5fa45724` (2026-08-10 04:19). A re-dress today also
+     gains 21 `emb_dress_bank*` and moves the bunting up to 2.4 m. Whoever re-dresses next owns
+     that delta and should draft-A/B it before baking.
+  4. **THE GABLE STILL HAS TWO OWNERS** (84/86, two naming schemes). `emb_millgable` can no longer
+     run on a fresh dress at all — its `assert GABLES` finds no plain box — so it is HISTORICAL,
+     and the honest repair is the same `board_*()` call shape the lucam now has.
