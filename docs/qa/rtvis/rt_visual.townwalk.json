@@ -1,0 +1,260 @@
+{
+ "scene": "townwalk",
+ "recorded": "2026-08-12T11:42:43.214Z",
+ "drawn": 2415,
+ "texMeshes": 718,
+ "texNoUv": {
+  "meshes": 532,
+  "tris": 289790
+ },
+ "byMat": {
+  "mat_timber": {
+   "meshes": 127,
+   "tris": 19460,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "boatwright_shed_2",
+    "bunting_masts",
+    "by_yard_clutter_2"
+   ]
+  },
+  "mat_timber_dark": {
+   "meshes": 67,
+   "tris": 19870,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "yard_joists",
+    "yard_piles",
+    "wf_stairmouth_1"
+   ]
+  },
+  "mat_wallwood_dark": {
+   "meshes": 56,
+   "tris": 7732,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "boatwright_shed_3",
+    "hero_hull_clinker_2",
+    "kit_barrel001"
+   ]
+  },
+  "mat_rock": {
+   "meshes": 28,
+   "tris": 68843,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "k_pitch_kettle_1",
+    "riverbed",
+    "slipway_ramp_1"
+   ]
+  },
+  "mat_freshwood": {
+   "meshes": 22,
+   "tris": 552,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "foreground_timber_2",
+    "shed_bench_clutter_1",
+    "wf_fish_gear_1"
+   ]
+  },
+  "mat_deck": {
+   "meshes": 21,
+   "tris": 11376,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "by_yard_clutter_1",
+    "hero_hull_clinker_1",
+    "lock_four_dam_7"
+   ]
+  },
+  "mat_wet": {
+   "meshes": 17,
+   "tris": 6228,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "slipway_ramp_3",
+    "wf_stakenet_1",
+    "wf_piles"
+   ]
+  },
+  "mat_shelf_stone": {
+   "meshes": 13,
+   "tris": 718,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "shelf_inn001",
+    "shelf_item_shop001",
+    "shelf_weapon_shop001"
+   ]
+  },
+  "mat_shingle_mossy": {
+   "meshes": 12,
+   "tris": 29580,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "lock_four_dam_11",
+    "gate_arch001_4",
+    "shelf_inn001_9"
+   ]
+  },
+  "mat_shelf_paint_teal": {
+   "meshes": 12,
+   "tris": 668,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "shelf_item_shop001_1",
+    "shelf_weapon_shop001_10",
+    "shelf_home_c001_1"
+   ]
+  },
+  "mat_shelf_paint_ochre": {
+   "meshes": 11,
+   "tris": 404,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "shelf_item_shop001_9",
+    "shelf_armor_shop001_1",
+    "t2c_DS1_yard_tarps_1"
+   ]
+  },
+  "mat_qm_deck": {
+   "meshes": 11,
+   "tris": 6030,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "qm_planking",
+    "lk_rail_2",
+    "lk_surface_3"
+   ]
+  },
+  "mat_rock_townwall": {
+   "meshes": 9,
+   "tris": 13206,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "cliff_town_west2",
+    "cliff_town_skirt",
+    "cliff_town_west"
+   ]
+  },
+  "mat_shelf_paint_bone": {
+   "meshes": 9,
+   "tris": 482,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "shelf_inn001_10",
+    "shelf_item_shop001_5",
+    "shelf_armor_shop001_5"
+   ]
+  },
+  "mat_shelf_paint_rust": {
+   "meshes": 8,
+   "tris": 346,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "shelf_inn001_12",
+    "shelf_weapon_shop001_1",
+    "shelf_armor_shop001_12"
+   ]
+  },
+  "mat_qm_stone": {
+   "meshes": 8,
+   "tris": 3324,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "qm_revetment_1",
+    "qm_cookhouse_1",
+    "qm_notice_board_2"
+   ]
+  },
+  "mat_qm_paint_red": {
+   "meshes": 8,
+   "tris": 458,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "qm_cookhouse_2",
+    "qm_notice_board_7",
+    "qm_stall_0_2"
+   ]
+  },
+  "mat_gate_timber": {
+   "meshes": 6,
+   "tris": 1092,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "lock_four_dam_2",
+    "gate_arch001_1",
+    "gate_leaves001"
+   ]
+  },
+  "mat_qm_paint_bone": {
+   "meshes": 6,
+   "tris": 168,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "qm_notice_board_6",
+    "qm_stairhead_4",
+    "qm_stall_4_2"
+   ]
+  },
+  "mat_shelf_paint_madder": {
+   "meshes": 6,
+   "tris": 94,
+   "slot": "metalnessMap@uv",
+   "eg": [
+    "t2c_DS2_hull_paint",
+    "t2c_G5_gatehouse_door",
+    "t2c_LH6_hut_gable_paint_1"
+   ]
+  }
+ },
+ "gpu": {
+  "collide": 1512,
+  "meshes": 2383,
+  "walk": 275,
+  "geometries": 1157
+ },
+ "views": [
+  {
+   "id": "court",
+   "W": 1344,
+   "H": 768,
+   "cam": [
+    33.26,
+    20.05,
+    -14.66
+   ],
+   "fwd": [
+    -0.661,
+    -0.343,
+    -0.667
+   ],
+   "blownFrac": 0.005,
+   "crushedFrac": 0,
+   "modalFrac": 17.569,
+   "colourBins": 211,
+   "flatFrac": 56.657
+  },
+  {
+   "id": "shelf",
+   "W": 1344,
+   "H": 768,
+   "cam": [
+    64.26,
+    20.05,
+    -21.37
+   ],
+   "fwd": [
+    0.553,
+    -0.343,
+    -0.759
+   ],
+   "blownFrac": 0,
+   "crushedFrac": 0.094,
+   "modalFrac": 25.599,
+   "colourBins": 168,
+   "flatFrac": 51.93
+  }
+ ]
+}

@@ -25705,3 +25705,135 @@ which is exactly the state the fix is for.
   4. **THE GABLE STILL HAS TWO OWNERS** (84/86, two naming schemes). `emb_millgable` can no longer
      run on a fresh dress at all — its `assert GABLES` finds no plain box — so it is HISTORICAL,
      and the honest repair is the same `board_*()` call shape the lucam now has.
+
+## 2026-08-12 — THE WALKABLE TOWN IS DRAWN BY A PROJECTION glTF CANNOT EXPRESS, and nothing
+##               in this repo had ever looked at it (REALTIME-VISUAL lane, round 4)
+
+Sent to carry `emb_millucam` and `emb_lightbodies` onto `emberbrook-realtime.blend` (the ledger
+`emb_carriers.emberbrook-realtime.json` reads `lucam_members 0` against the dressed blend's 36,
+and no `emblb` at all). **BOTH CARRIES ARE REFUSED, ONE OF THEM PROVABLY INERT, AND THE
+MEASUREMENT THAT SETTLED IT FOUND SOMETHING FAR LARGER.** New gate:
+`tools/rt_visual_gate.mjs`, ledgers in `docs/qa/rtvis/`.
+
+### 1. THE HEADLINE: 3,918 OF 8,366 DRAWN MESHES IN `emb-townwalk` ARE FLAT PAINT
+
+Measured three ways that agree, from the bytes up:
+
+  * **THE WIRE.** `emb-townwalk/scene.glb`: **2,311 of 2,470 primitives carry no `TEXCOORD_0`**,
+    and **1,477 of them reference a TEXTURED material** (128,400 tris). `townwalk` (Dellhollow):
+    532 primitives. `ow-valley`: **ZERO** — so this is not how a bundle has to be.
+  * **THE RUNTIME.** In the running page, 3,918 drawn meshes wear a material with a `map`
+    (or normal/rough/ao/emissive map) whose geometry has no `uv` attribute. three.js samples an
+    absent `uv` as (0,0): **one texel stretched over the whole surface.** Every shingle roof
+    (`mat_shingle_cedar`, 828 meshes), every timber (734), every rubble wall (687), `mat_rock`
+    (404), the lanes (236) and `emb_ground_valley` itself.
+  * **THE PIXELS.** Hiding exactly that set and differencing the frame: **homerow 93.2%,
+    pondlane 83.7%, square 79.8%, spawn 70.9%, mill 34.8%** of the frame. Dellhollow's own
+    walkable bundle reads 52-57%.
+
+**THE CAUSE IS ONE MECHANISM AND IT IS NOT A BUG IN ANYBODY'S EXPORTER.** Blender census of
+`emberbrook-realtime.blend`: **3,522 of 3,522 textured material slots sit on objects with ZERO
+UV layers**, because every Image Texture is driven from `TEX_COORD`/`NEW_GEOMETRY` (or a
+`VECT_MATH` of them) at **`projection = BOX`** — tri-planar. Cycles renders that natively, which
+is why the PLATES are correct; glTF has no way to say it, so the exporter writes a
+`baseColorTexture` with a `TEXCOORD_0` index that does not exist. **THE PLATE TIER AND THE
+WALKABLE TIER ARE DRAWN BY TWO DIFFERENT PROJECTIONS AND ONLY ONE OF THEM SURVIVES AN EXPORT.**
+Same shape as the 41 foliage meshes that drew flat white while being invisible in Cycles — one
+cause, two symptoms, and only the plate half was ever caught.
+
+### 2. WHY NOBODY SAW IT: THE APPEARANCE OF THE EXPLORABLE WORLD WAS UNVERIFIED BY CONSTRUCTION
+
+`walk_engine_gate` asks where a body may stand. `cine_test` grades PLATES. `transition_test`
+counts GPU resources. `glb_census`/`glb_read` parse the wire. **Not one instrument in the tree
+had ever rendered the walkable town and looked.** THE DURABLE LAW: **A BUNDLE THAT PARSES IS NOT
+A WORLD THAT DRAWS.**
+
+### 3. `tools/rt_visual_gate.mjs` — WHAT IT ASSERTS, WHAT IT COSTS, WHAT IT CANNOT SEE
+
+Real Chrome through `cdp.mjs`, five walk-network viewpoints in `emb-townwalk`, two each in
+`townwalk` and `ow-valley`. HARD, ledger-independent: the page boots; **`SIM.gpu().collide !== 0`**
+(the `arena_playtest` lesson — modules self-arm before the bundle lands); no console error; and
+at every viewpoint the frame is a PICTURE — not >=98% blown, not >=98% crushed, **and not >=90%
+inside one 16^3 colour bin.** LEDGERED (a REGRESSION test, because a permanently-red gate is a
+gate that gets skipped): `texNoUv` meshes/tris may not RISE, and per-viewpoint `flatFrac` and
+`blownFrac` may not rise past `--tol` 0.60 points.
+
+**PROVED RED BEFORE GREEN, BOTH ARMS.** In page, `--induce '^ground_valley'` on the one clean
+bundle: texNoUv 0 -> 3 / 53,582 tris, flatFrac 0% -> 97.0% and 0% -> 62.5%, exit 1. **On the
+wire**, two symlink farms over the same `public/` served on two ports differing ONLY in
+`ow-valley/scene.glb`: the faithful re-serialisation (58,006,228 B) exits **0**, the one with
+`TEXCOORD_0` deleted from `ground_valley`'s three primitives (58,006,184 B) exits **1** with the
+same four failures. The control arm is the half people skip and it is what rules out the farm.
+An `--induce` that matches nothing is itself a FAILURE.
+
+**COST 18 s for all three scenes** (emb-townwalk alone 8 s; `--selftest` 11/11 in 0.05 s).
+
+**WHAT IT DOES NOT CATCH, said plainly:** it is not a look gate (wrong colour, wrong grade, wrong
+texture, z-fighting, seams, holes all pass); it only sees its viewpoints; a mesh that draws
+NOTHING is invisible to the pixel half by construction; a material with a map AND a uv is never
+asked whether the image decoded or whether the UVs are sane (all-zero UVs pass and look exactly
+like the defect above); and a material that SHOULD have had a texture and shipped with none is
+not counted.
+
+**ONE DETERMINISM TRAP PAID FOR.** Inside a session the numbers repeat to 0.04 points; ACROSS
+sessions `mill` read 34.9% and 77.4% on alternate runs. The camera position printed beside it
+says why: the boom was **0.75 m shorter** — play3d's occlusion clamp is deliberately SNAP-IN /
+SLOW-OUT and three rAFs after a teleport it is still in flight, and 0.75 m there is the
+difference between standing outside the mill and standing in its wall. **A GATE MUST PHOTOGRAPH
+A DEFINED POSE**: the probe boots `?camclip=0`, camera positions are then identical across
+sessions and the spread falls to <= 0.09 points. The `modalFrac` clause was earned in the same
+breath — with the clamp off, one candidate viewpoint's boom ends inside the terrain and draws a
+flat mid-green field with the player floating in it, which is neither blown nor crushed.
+
+### 4. PART A, BOTH CARRIES, WITH THE MEASUREMENT THAT SETTLED EACH
+
+**THE LAMPS: `emb_lightbodies` ON THE REALTIME TIER IS PROVABLY A NO-OP. REFUSED.** Two halves,
+both dead: (i) its shipped effect on `emberbrook-dressed.blend` is `visible_shadow = False` on
+14 glass shells and NOTHING ELSE — read out of the blend, the `emblb` snapshot's pre-edit
+emissions are IDENTICAL to the live ones, i.e. it was run at the default `--flame 1.0`. That flag
+is a Cycles property; glTF does not carry it. And in the runtime it could not matter anyway:
+**`emb-townwalk` has FOUR lights (one directional, ambient and both hemispheres at intensity 0 —
+`scene.environment` replaced them), the directional does not cast, ZERO of 8,366 meshes have
+`castShadow`, and there is no lamp light of any kind** — the 14 emissive shells are what lights
+the town, at `emissive ffdda6 / intensity 3.5`, exactly as intended.
+
+**THE LUCAM: IT IS VISIBLE, AND THE CARRY IS STILL REFUSED — FOR A BETTER REASON.** The
+inherited guess was that it might never be seen from the walkable tier. **It is seen.** Sweeping
+16 walk cells x 3 pitches x 2 boom lengths with the yaw aimed at the mill and measuring its own
+contribution by hiding it: visible at 14 of 96 poses, **up to 1.52% of frame at 20 m** (0.5-1.2%
+at four more cells). At the default town pitch of 0.62 it is off the TOP of the frame (all eight
+NDC corners at y 1.07-1.71 — the town camera looks DOWN), so it is a low-pitch/far-cell object.
+Looked at: it is a blown-out white box on the skyline — `emb_dress_boarding`, `color ffffff`,
+`map:false`, no UV.
+
+REFUSED BECAUSE **THE 36 BOARDS WOULD LAND ON A SURFACE WITH NO TEXTURE IN A TOWN WHERE 93% OF
+THE FRAME IS ALREADY FLAT PAINT**, and the carry is not free: `emb_millucam -- save` owes
+`emb_decimate --save`, a `town_export` of the 94 MB shared bundle plus its two ortho plates,
+`routes_derive --check` and both walk gates. That whole chain buys a silhouette on the one object
+while the ground under it is one texel. **It should ride the SAME re-export as the UV fix, not a
+separate one.** No ledger was re-recorded: `emb_carriers.emberbrook-realtime.json` is already
+current (2026-08-12 11:44) and correctly records `lucam_members 0`, `lamp_glass_unsealed 0`.
+
+### 5. TWO SMALLER THINGS MEASURED IN PASSING
+
+  * **A MAGENTA PAINT PASS CANNOT MEASURE A POST-PROCESSED FRAME.** The first visibility probe
+    read ZERO everywhere, including from 0.1 m under the object. `MeshBasicMaterial` at
+    `toneMapped:false` still goes through the composer: pure magenta came back at roughly
+    (192, 96, 192), i.e. green well past the `<80` test every probe in this repo uses. The
+    A/B-hide-and-difference form is immune to the whole chain and is what shipped.
+  * **`lm_far-rooftops-nw_1_win0` — A BACKDROP PROP AT 7.1 m.** Standing on the walk network at
+    (26.8, -63.2), the biggest thing in frame is a blown white rectangle: an `emb_mat_window`
+    emissive at `emissiveIntensity 2.6` on a "far rooftops" massing block, **7.1 m from the
+    camera**. Not chased here; named for whoever owns the backdrop skirt.
+
+### 6. WHAT THE NEXT ROUND INHERITS
+
+  1. **THE UV FIX IS THE FIRST-ORDER LEVER FOR THE WALKABLE TOWN AND IT IS A DRESSING-PIPELINE
+     JOB, NOT A CARRIER.** Either bake the box projection to a UV set at export time, or give
+     `emb_dress` a real UV unwrap for the classes that carry image textures. `ow-valley` reads 0
+     and is the worked example. The gate's ledger is the receipt: watch `flatFrac` fall.
+  2. **DELLHOLLOW HAS THE SAME DEFECT AT HALF THE SCALE** (532 primitives, 52-57% of frame).
+     Same fix, different lane.
+  3. `emb_millucam` on the realtime blend is owed, but ONLY inside the next `town_export`.
+  4. The gate has no `emb-cine` / interior coverage and no reference frames. Adding viewpoints
+     is one line of data each.

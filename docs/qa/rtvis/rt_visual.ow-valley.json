@@ -1,0 +1,59 @@
+{
+ "scene": "ow-valley",
+ "recorded": "2026-08-12T11:42:43.214Z",
+ "drawn": 72,
+ "texMeshes": 42,
+ "texNoUv": {
+  "meshes": 0,
+  "tris": 0
+ },
+ "byMat": {},
+ "gpu": {
+  "collide": 31,
+  "meshes": 55,
+  "walk": 5,
+  "geometries": 86
+ },
+ "views": [
+  {
+   "id": "road-w",
+   "W": 1344,
+   "H": 768,
+   "cam": [
+    -4.99,
+    40.49,
+    35.19
+   ],
+   "fwd": [
+    -0.674,
+    -0.286,
+    -0.681
+   ],
+   "blownFrac": 0,
+   "crushedFrac": 0,
+   "modalFrac": 39.649,
+   "colourBins": 308,
+   "flatFrac": 0
+  },
+  {
+   "id": "road-e",
+   "W": 1344,
+   "H": 768,
+   "cam": [
+    -11.92,
+    40.49,
+    2.25
+   ],
+   "fwd": [
+    0.707,
+    -0.286,
+    -0.647
+   ],
+   "blownFrac": 0,
+   "crushedFrac": 0,
+   "modalFrac": 5.985,
+   "colourBins": 381,
+   "flatFrac": 0
+  }
+ ]
+}
