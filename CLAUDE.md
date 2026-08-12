@@ -1491,6 +1491,49 @@ git runs here, on branch `migration/3d-hybrid`.
   **LIVE TIME BOMB, NAMED AND NOT YET FIXED**: `emb_dress.py` still builds the plain lucam box and
   knows nothing about the 36 boarding members — **a re-dress silently drops them.** Same family as
   `t2_cliff_south` re-asserting a texture rotation another tool owned. Round 4 owes the mirror.
+- **tools/emb_carriers.py — A GENERATOR THAT REBUILDS ITS OUTPUT FROM AN UPSTREAM SOURCE OWNS
+  NOTHING A CARRIER PUT ON THAT OUTPUT** (2026-08-12). Round 3 named ONE time bomb (`emb_dress`
+  rebuilding the plain lucam box and dropping `emb_millucam`'s 36 boarding members). **IT WAS
+  FOUR, AND THREE OF THEM ARE FIXES WITH PUBLISHED RECEIPTS.** Demonstrated, not inferred — a
+  real `emb_dress` into a scratch `--out`, censused object by object against the shipped dressed
+  blend:
+
+  | carrier | in the shipped blend | after a re-dress |
+  |---|---|---|
+  | `emb_millucam` | 36 lucam members | **0** |
+  | `emb_lightbodies` | 14 lamp glasses unsealed | **0** — the lamps are sealed again |
+  | `emb_padcoplanar` | 34 pads nudged (dz −0.0040) | **0**, all coplanar again |
+  | `emb_brookchop` + `emb_water_shader` | welded water sheets | **the raft of boxes again** |
+
+  So a single re-dress would silently undo half the crushed frame at homerow, re-open the black
+  hole at `walk_pad_grandmothers-bench`, and put the water back to floating slabs — **with every
+  gate green and only a picture to tell**, which is exactly the `t2_cliff_south` class one level
+  up. **WHY `embpc/embpf/embpl` SURVIVE AND THE OTHERS DO NOT IS THE WHOLE LESSON: they were also
+  run on the MASTER, so the re-dress inherits them.** A carrier that edits only the dressed output
+  is a carrier with a countdown on it.
+  **THE FIX IS A CALL, NOT A COPY**: `emb_millucam`'s build is now `board_lucams()`, import-safe,
+  and `emb_dress.build_mill()` calls it — one recipe, two entry points, the function stamps its
+  own snapshot so both paths are identical (36/36 names, worst `matrix_world` delta 0.000e+00).
+  A copy was rejected because **the gable's copy has already drifted**: shipped holds the
+  carrier's 84 boards named `gableboard+1board00`, a fresh dress builds 86 named
+  `gableboard+1_00`, and `emb_millgable` can no longer run on a fresh dress at all (its
+  `assert GABLES` finds no plain box) — it is HISTORICAL.
+  **AND CALLING IT FOUND A DEFECT A COPY WOULD HAVE HIDDEN: `matrix_world` IS A CACHE.**
+  `emb_dress.obj()` assigns `location`/`scale`/`rotation_euler`, and `matrix_world` is only
+  refreshed by a depsgraph evaluation — so the first mirrored run read every dimension, including
+  the roof centroid that decides OUTWARD, off an IDENTITY matrix, and built 21 members on a
+  1x1x1 lucam **with a green receipt**. Fixed with `view_layer.update()` plus a guard that
+  asserts with the cause named. **A CARRIER OPENS A SAVED BLEND AND NEVER MEETS THIS; A GENERATOR
+  CALLING THE SAME CODE MEETS IT ON LINE ONE.**
+  THE GATE: `--record` writes `tools/blends/districts/emb_carriers.<stem>.json` per blend;
+  default mode exits 1 on any SHRUNK footprint and prints the re-run command; **a missing ledger
+  is a failure, never a pass**; `emb_dress` prints the same census as the last thing it does.
+  Red-then-green: pre-fix scratch re-dress exit 1 with 8 shortfalls; shipped dressed and realtime
+  exit 0; post-fix scratch exit 1 with 5 — the four unmirrorable carriers and no lucam line.
+  **KNOWN AND UNFIXED**: the realtime tier has **0 lucam members** (the boarding never existed in
+  the walkable town) and `emb_lightbodies` has never run on it either; and **the shipped dressed
+  blend is behind its own generator** — a re-dress today also gains 21 `emb_dress_bank*` and moves
+  bunting to 2.4 m, so draft-A/B before ever baking one.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
