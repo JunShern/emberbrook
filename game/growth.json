@@ -1,0 +1,80 @@
+{
+ "_schema": "curve: xpToNext(level) = k * level^2 (xp needed to advance FROM that level). characters: base = level-1 stats, growth = per-level gains (fractions accumulate and floor). active:false members exist in data from day one (party-of-N canon) and join via story flags.",
+ "curve": {
+  "type": "quadratic",
+  "k": 10,
+  "_why": "2026-07-31 user ruling: leveling should be quicker in the first ~5 levels with starter enemies. k 25->10: to L5 costs 300xp total (~15 forest / ~25 meadow fights) instead of 750. Late-game pacing re-tunes when later regions land."
+ },
+ "characters": {
+  "vesper": {
+   "name": "Vesper",
+   "active": true,
+   "base": {
+    "hp": 34,
+    "atk": 7,
+    "def": 5,
+    "spd": 6
+   },
+   "growth": {
+    "hp": 6,
+    "atk": 2,
+    "def": 1.5,
+    "spd": 1
+   },
+   "startEquip": {
+    "weapon": "walking-staff",
+    "armor": "quilted-vest"
+   },
+   "desc": "The traveler. Balanced, steady, stubborn."
+  },
+  "lake": {
+   "name": "Lake",
+   "active": false,
+   "joinFlag": "lake-joined",
+   "base": {
+    "hp": 32,
+    "atk": 6,
+    "def": 6,
+    "spd": 7
+   },
+   "growth": {
+    "hp": 5,
+    "atk": 1.5,
+    "def": 2,
+    "spd": 1
+   },
+   "startEquip": {
+    "weapon": "walking-staff",
+    "armor": "quilted-vest"
+   },
+   "desc": "The last lamplighter of Emberbrook. Steadier than Vesper, slower to swing, harder to knock down.",
+   "_why": "ADDED 2026-08-02 (end-to-end wiring, plan §4/0b). He is player two in Chapter One's script and the second half of the pact, and he had NO party record at all — the audit's G6. He joins on 'lake-joined', which Chapter One's pact beat sets — the moment the two keepers swear the oath — and never leaves. He is NOT active at new game: Act I is Vesper walking in alone, and starting him active would silently halve the xp share of the chapter before he exists. Whether he is a BATTLING party member at all or a narrative companion is an OPEN USER QUESTION (docs/plans/end-to-end-wiring.md R8); if the answer is companion, this record loses its joinFlag and nothing else changes. Stats are Vesper's silhouette rotated, not a copy: -1 atk, +1 def, +1 spd at base, and def grows fastest of the three — the one who stands in front."
+  },
+  "maren": {
+   "name": "Maren",
+   "active": false,
+   "joinFlag": "maren-joined",
+   "base": {
+    "hp": 28,
+    "atk": 6,
+    "def": 4,
+    "spd": 9
+   },
+   "growth": {
+    "hp": 5,
+    "atk": 1.5,
+    "def": 1,
+    "spd": 2
+   },
+   "startEquip": {
+    "weapon": null,
+    "armor": null
+   },
+   "desc": "Rapids-runner of Dellhollow, Odessa's daughter. Fast on her feet, faster in an argument."
+  }
+ },
+ "startGold": 30,
+ "startInventory": {
+  "tonic": 2
+ }
+}

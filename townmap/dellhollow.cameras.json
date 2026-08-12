@@ -1,0 +1,572 @@
+{
+ "_doc": [
+  "DELLHOLLOW — THE CINEMATIC CAMERAS. Hand-authored companion to dellhollow.map.json:",
+  "the town played as a sequence of FIXED pre-rendered shots (the FF7/8/9 grammar).",
+  "",
+  "This file is DATA and it is the ONLY place a shot is defined. Adding, removing,",
+  "re-aiming or re-splitting a camera is an edit HERE plus two re-runs:",
+  "  node tools/cine_solve.mjs        -> dellhollow.cameras.solved.json (framing solved",
+  "                                      against townwalk's walk geometry; a build artifact)",
+  "  node tools/scenegraph_derive.mjs -> public/world/scenegraph.json (the silent cut edges)",
+  "  Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py -- <ids...>",
+  "                                      -> public/assets/scenes/del-cine/ (the art + depth)",
+  "No camera id, region, radius or shot lives in any .js/.py/.html file.",
+  "",
+  "OWNERSHIP IS THE COVERAGE CONTRACT. Every camera OWNS a set of the town map's",
+  "landmarks and a set of its walk edges, and the union must be the WHOLE town — that",
+  "is what makes 'every walkable area is reachable through static cameras alone' a",
+  "checkable claim instead of a hope. Ownership is by MAP RECORD, not by polygon,",
+  "because the town's walk meshes are named after the records that made them",
+  "(walk_pad_<landmark>, walk_lm_<landmark>, walk_e_<from>__<to>_*), so every one of",
+  "townwalk's 315 walk_ meshes has exactly one owner by construction and tools/",
+  "cine_test.mjs can prove it. The xz polygon each camera owns is DERIVED from that",
+  "ownership (the hull of its walk meshes) — see the solved file.",
+  "  landmarks: [ '<landmark id>', ... ]   whole landmark: the record AND every walk",
+  "               mesh named after it",
+  "             [ {id:'<landmark id>', cells:{min:[x,y], max:[x,y]}}, ... ]  A SUBSET OF",
+  "               ONE LANDMARK'S CELLS — only the walk meshes whose centre falls in that",
+  "               map-space box. Added 2026-08-01 for Emberbrook's Festival Square, whose",
+  "               plaza floor is 57 derived cells rather than one mesh, so a second camera",
+  "               can be given part of a room. TWO RULES, both asserted in loadCine: exactly",
+  "               one camera must still own the landmark AS A BARE STRING (that camera is the",
+  "               PRIMARY owner and carries the landmark's IDENTITY — totality is checked",
+  "               against it and derivedCuts reads it at both ends of every edge terminating",
+  "               there), and two claims on one landmark may not overlap. A cell claim moves",
+  "               FLOOR between regions; it never moves the node the topology hangs off, which",
+  "               is what stops a shared room sprouting a cut on every edge that leaves it.",
+  "               IT DOES NOT BY ITSELF MAKE A SPLIT LEGAL: cuts derive from map edges, so two",
+  "               cameras sharing a floor with no edge between them change camera by positional",
+  "               CORRECTION, which seam-canon 2 forbids on a normal route. The floor needs an",
+  "               articulation the map can carry as well. Dellhollow uses none of this and is",
+  "               byte-identical with it in the tool.",
+  "  edges:     [ '<from>__<to>', ... ]  the map edge, whole",
+  "             [ '<from>__<to>@0..0.45', ... ]  a FRACTION of it, measured along the",
+  "             edge's own polyline from `from` to `to`. Ranges on one edge must tile",
+  "             [0,1]. This is how a long boardwalk or a deep flight is split between",
+  "             two shots, and the cut then lands MID-EDGE — which is exactly the FF",
+  "             move of the camera changing as you walk on.",
+  "",
+  "FRAMING IS INTENT, NOT A TRANSFORM. A shot states where it looks FROM and how much",
+  "air it wants; tools/cine_solve.mjs solves the STANDOFF so the owned region is",
+  "actually in frame, and reports the character's on-screen height so legibility is a",
+  "measured number and not a hope. Author `pos`/`aim` explicitly only to reproduce a",
+  "shot a human already accepted (the Boatyard v10 hero camera).",
+  "  yaw    degrees, the direction FROM the aim point TO the camera in the map's xy",
+  "         plane. 0 = +x (downstream / north), 90 = +y (out over the river, away from",
+  "         the cliff), 180 = -x (upstream), 270 = -y (into the cliff face).",
+  "  pitch  degrees the camera sits above the aim point. Dellhollow is a canyon wall:",
+  "         y=0 is the cliff top, y~30 is the river, and height falls with y, so most",
+  "         shots stand out over the gorge (yaw near 90) and look back into the wall.",
+  "  fov    VERTICAL degrees. 35 is the projection canon (MIGRATION.md, user-ratified).",
+  "  margin fraction of the frame kept clear around the owned region (0.10 = a 10%",
+  "         border). Bigger = more air, smaller character.",
+  "  aimLift metres the aim point rises above the walk surface (eye/head height).",
+  "  maxDist hard cap on the solved standoff. Hitting it means the shot cannot hold",
+  "         the whole region and the region wants splitting — the solver says so.",
+  "",
+  "ARRIVALS ARE DERIVED, AND MAY BE OVERRIDDEN. Where a cut puts you down is computed:",
+  "the first point along the path that is clear of the band (cutClearance). That is the",
+  "right default and it is blind to exactly one thing — what the camera can SEE. A derived",
+  "arrival can land a player behind a house, under the flight they just walked down, or",
+  "inside the shot's own hero prop, and no amount of clearance fixes it, because clearance",
+  "is a fact about the BAND and not about the sightline. So a shot may name a better",
+  "standing point, per incoming edge, in its own record:",
+  "  arrivals: { '<from>__<to>:<sending camera>': [x, y, z] }   RUNTIME coords [x, up, -y]",
+  "The key carries the SENDING camera because one shot can receive two arrivals on one",
+  "edge (the Crossing is entered from both ends of the same bridge) and the edge alone",
+  "would silently pick one.",
+  "A DOOR arrival is overridable in the same layer, on the camera that OWNS the",
+  "landmark, keyed on the door instead of on an edge:",
+  "  arrivals: { 'door:<landmark id>': [x, y, z] }             RUNTIME coords [x, up, -y]",
+  "It is needed because the door derivation is blinder than the cut one: scenegraph_",
+  "derive's streetDir picks which way to step off the pad by an ALPHABETICAL tie-break",
+  "between equally flat roads, and at the weapon shop that chose the one direction its",
+  "own camera cannot see. scenegraph_derive checks it (on the walk network; outside the",
+  "door's own trigger radius) and REJECTS it loudly, keeping the derived point.",
+  "AN OVERRIDE IS A PROPOSAL, NOT A FACT. cine_regions.cutGeometry checks every one and",
+  "REJECTS it loudly unless it is on the walk network, on THIS camera's own ground (else",
+  "the positional safety net corrects the camera straight back), outside the band it just",
+  "crossed, and no worse than the derived point for clearance. Of the first six ever",
+  "authored the checker caught two: one that stood on the neighbouring shot's road, and",
+  "one whose coordinate had never been converted out of map order and sat 29 m in the air.",
+  "",
+  "ENTRANCES AND EXITS MUST BE IN FRAME. The map's walk edges say where a player can",
+  "arrive in a region; every one of those crossings is a cut, and tools/cine_test.mjs",
+  "projects each cut's spawn point through the camera that receives it. A player must",
+  "never materialise off-screen. That is why the cameras came after the wiring."
+ ],
+ "town": "dellhollow",
+ "sceneKey": "del-cine",
+ "defaults": {
+  "_closeness_redline": "USER REDLINE (2026-08-02, ratified as a WORLD rule — authored on Emberbrook, stamped here because the user ratified it for Dellhollow too; the full statement with the measured interior bound lives in emberbrook.cameras.json defaults._closeness_redline): cameras too high/far, characters read as ants; interior closeness is the upper bound on closeness, ordinary shots sit between it and a far floor well above the old 50 px, establishing shots stay wider but keep the player easily visible. Dellhollow's shipped set is NOT re-solved this round — known drone-y shots are flagged to the cliff lane's slate instead.",
+  "frameExits": true,
+  "fov": 35,
+  "margin": 0.1,
+  "aimLift": 1.2,
+  "maxDist": 46,
+  "clip": [
+   0.05,
+   1400
+  ],
+  "aspect": 1.75,
+  "charH": 1.7,
+  "cutOffset": 2.8,
+  "cutBackoff": 2.4,
+  "cutThickness": 1.1,
+  "cutVTol": 1.6,
+  "cutClearance": 1.6,
+  "_cutClearance_why": "2026-07-31 hotfix: 1.0 left the deep-stairs<->waterfront arrival at +0.012 past its own band on the switchback — one step re-triggered the cut backwards, a hard progression loop (user hit it live). 1.6 forces every arrival a real stride past the band it crossed.",
+  "cutHeightClear": 0.75,
+  "cutSlide": 6,
+  "cutWidthPad": 1.2,
+  "cutWidthMax": 13,
+  "exposure": 0.15,
+  "_exposure_why": "The town's grade, and the ONE place it is written: cine_bake.py grades every backdrop from here (through the solved file) and tools/look_golden.py asserts the master blend agrees, so the blend and the deliverable cannot drift. 2026-07-30: -0.52 -> +0.15 with the ratified late-afternoon key (probe variant C). The old number was a dusk rig's pull-down and the single biggest reason the backdrops read brown.",
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "_doc_cut": [
+   "A camera-to-camera cut is a BAND across the walk corridor, not a circle: on an",
+   "11 m harbour deck a 1.7 m trigger sphere is a thing you walk around, and a cut",
+   "you can walk around is a camera that never changes. cutThickness is the band's",
+   "half-depth along the path; its half-width is measured from the walk surface",
+   "itself at bake time (+cutWidthPad, capped at cutWidthMax).",
+   "cutOffset: how far past a landmark's pad the seam sits. cutClearance: how far",
+   "PAST the band, measured on its own normal, the arrival must sit — arc-length",
+   "back-off (cutBackoff, now only a fallback) is not enough on a switchback, where",
+   "2.4 m along an S-bend flight is 0.7 m along the seam normal and the arrival lands",
+   "back inside the band it just came through."
+  ],
+  "minDist": 15,
+  "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it.",
+  "_frameExits_why": "RULED ON 2026-07-31 (was a migration flag): every shot frames the seams it exits by — the solver default new towns inherit. Turned on with the full-town re-bake; lockhead/cottage re-aimed to pay for it (surgeon's frameExits diff, seam-canon §9).",
+  "cutVTolPerEdge": {
+   "weave-huts__moorage": 0.52
+  },
+  "_cutVTolPerEdge_why": "2026-08-05, PT-20260805-049's STAIRS_V2 migration: the pivot-split moved l1 sideways and it now passes back through the weave<->lockfive band's plan window. Measured (scenegraph_derive's own band-cell sweep over the edge's ribbon tops): the seam's own crossing floors sit at dy <= 0.37, the folded l1's at >= 0.67. 0.52 is the midpoint of that gap — crossings on l0 still fire, a body on the folded leg no longer does, and seam_test's one-cut replay on moorage__tenant-shack is the gate that proves it."
+ },
+ "cameras": [
+  {
+   "id": "gate",
+   "name": "The Valley Gate",
+   "entry": true,
+   "shot": "Arrival, from where you arrive. The camera stands behind and above the player at the rim's own height, looking east down the town's axis: the porters' yard and its canopy in the near field, the valley gate's arch and the gatehouse centre-right where she is put down, and the gorge falling away to the left with the stilt town, the moorage and the river running out of frame downstream. The way on — the flight down to the shop street — is the line leading away from her. INTERIM: the cliff this frame is built against is scheduled for a rebuild (task #35), which will force this plate to be re-baked.",
+   "owns": {
+    "landmarks": [
+     "valley-gate",
+     "gatehouse",
+     "winch-head",
+     "valley-road"
+    ],
+    "edges": [
+     "valley-gate__gatehouse",
+     "gatehouse__winch-head",
+     "valley-gate__valley-road",
+     "winch-head__winch-foot"
+    ],
+    "_doc_bet2_2026-08-06": "OWNERSHIP FOLLOWS THE MAP, NOT A RE-AIM: 'valley-gate__winch-head' was deleted and re-rooted as 'gatehouse__winch-head' by the Bet 2 descent rebuild (the wide ONE-DESCENT flight owns the old road's corridor; see the map edge notes). Same district, same frame intent. The SOLVE IS NOW STALE against the new geometry — re-solve, arrival re-search (this shot's arrivals override stood on the deleted ribbon) and re-bake are the closing lane's, per the phase law. This edit only keeps the owns list from referencing a nonexistent edge.",
+    "_doc": "2026-08-02, USER REDLINE #4: 'porters-yard' and 'valley-gate__porters-yard' are GONE from the map (the yard was deleted; the ground is a road). This shot now owns the road's mouth landmark 'valley-road' and the road edge reaching it, which is what puts the overworld exit marker in this frame near its own bottom edge. FOR ANYONE READING A DIFF OF THE SOLVE: the owned hull's west lobe shrinks from an 8 m walk disc to a 2.6 m pad, so cine_solve legitimately re-frames the shot. That is the redline landing, not a regression."
+   },
+   "arrivals": {
+    "valley-gate__inn:shelf-west": [
+     17.64,
+     24.0,
+     -5.0
+    ]
+   },
+   "charPxMin": 44,
+   "_framing_note_prior": "RE-FRAMED AS A VISTA, and pos/aim are AUTHORED because a solved standoff cannot produce this shot: the solver fits the smallest standoff that holds the owned region, which is ~29 m here, and the vista is 75 m. The numbers are tools/cine_vista.py's winner over 11 664 candidates plus a 2 560-candidate refinement, ray-cast against the master over the town's 308 walk records and 320 points on the water. Chosen from a PARETO FRONT OVER DEPRESSION rather than by maximising coverage, because coverage rises monotonically with altitude and maximising it returns an aerial photograph (74.4% of the town at 38 deg down, camera at h 93.7, and the render is a contour map). Ceiling per band: 8 deg 59.9% | 14 61.7 | 20 63.5 | 26 64.1 | 32 70.5 | 38 74.4 — the whole trade from 8 to 26 degrees is 4.2 points, and the 15 above it are bought by leaving the canyon. THIS FRAME: 61.2% of the walk network and 15.0% of the river visible by ray-cast, 100% of the town in frame, 12.2 deg of depression, 75 m standoff, camera at h 29.2 — just over the far rim, a height a person could stand at. SUPERSEDES the yaw 55 / pitch 28 solved frame and the 90-composition sweep that produced it; that sweep's finding (composition beats terrain on the gate stair, but the legibility gate spends most of it) is preserved in the DAYLOG and is the reason this shot needed a ruling rather than another re-aim.",
+   "_framing_note": "THE WALKING-IN ENTRANCE, ON THE USER'S REJECTION OF THE VISTA (2026-08-01): 'the camera is from opposite the town, looking at the town... Vesper is extremely small, and I cannot tell at all where I am or how I'm supposed to find the next scene transition.' Searched, not chosen: 136 compositions solved by cine_solve.mjs (yaw 140-220 x pitch 6-34) and ray-cast against the master on four questions the brief names — is the player readable where the portal puts her, is the way ON visible, does the town spread out beyond her, and is the camera standing in anything. THE CONTROL, the shipped vista, measures: player 25 px and 27% of her body unoccluded, stair (valley-gate__inn) 24% visible, town 60% visible, eye 0.6 m from the far rim's own rock. THIS FRAME (the user's pick D, adjusted): player 61 px and 67% unoccluded, stair 28% visible, town 41% visible by ray-cast on the walk ribbons (89% of them in frame — the ribbons are under roofs and decks, so that number understates what the eye sees). The trade is stated plainly: 19 points of town for 2.4x the player and a way on that reads. YAW 170 -> 174 AND PITCH 22 -> 20 ARE THE ADJUSTMENTS ON TOP OF THE USER'S PICK, and it answers their second redline ('we can see exactly where the town cuts off'): a bottom-band probe casts 600 rays through the lowest 8% of frame, marching past render-only volumes and leaf cards, and counts rays that LEAVE THE WORLD. At 170/22 that is 6.00% of the band — the town's edge, visible. At 174/22 it is 0.00%, with the pitch, the standoff and the read unchanged. The whole yaw row was measured: 170 gives 0.00 at pitch 16-18 and 6-8% at 22-32; 174 gives 0.00 from pitch 16 to 22 and only 0.83% at 24. NOT ASSERTED ON THE BACKFACE COUNT: a first version of the probe also counted rays landing on backfaces and read 25-35% everywhere, which turned out to be fx_haze_south's fog cube (118 of 156 hits) and the cliff shells' own normals — a modelling convention, not a cut edge. Only the MISS count is asserted here, and the backface figure is deliberately NOT used as a gate. AND THEN THE FIRST ADJUSTMENT COST THE WAY ON, WHICH IS WHY THE PITCH MOVED TOO. At 174/22 the gate staircase — this shot's ONLY onward exit — measured 0.00 by ray-cast and 8.5% VISIBLE on the baked plate (shot_probe), against 37.8% on the rejected vista: from 22 degrees of depression the entrance tier's own ground hides the flight that drops off it. A frame that cannot show its only exit can never score, whichever way it is argued, so the pitch came back to 20: staircase 0.26 by ray-cast (the user's own pick D, at 170/22, measured 0.28 — so the way on is delivered as they saw it), bottom band still 0.00% leaving the world, player 66 px against D's 63, town 0.21 against D's 0.23. The whole clean-bottom row was measured before choosing: 174/16 recovers the most staircase (0.42) and the biggest player (72 px) but flattens the vantage the user asked for and drops the town to 0.14. 20 is the highest pitch that keeps all three.",
+   "framing": {
+    "yaw": 174,
+    "pitch": 20,
+    "margin": 0.1
+   },
+   "_charPxMin_why_prior": "PER-SHOT LEGIBILITY OVERRIDE, 24 px against the town's 50 px floor. RULED BY THE USER, via the coordinator, 2026-08-01: 'the town entrance camera angle for that scene should actually be a cinematic camera angle (so not a cutscene), but the actual framing for the normal entrance shot should be a cinematic vista.' A vista and the 50 px floor cannot both hold — the floor caps a walkable camera at ~41 m, which at fov 35 frames a 40-60 m swath, and Dellhollow is 100 m long — so one of them had to be named and written down. The floor is NOT lowered globally; this ONE shot carries an explicit number and cine_test enforces THAT number, so the exemption is narrow, named, and cannot spread by accident. The risk it buys is navigation legibility at 26 px and it is accepted knowingly; see the DAYLOG for the mitigations taken and what nav_eval must check when the judge key is topped up. THE NUMBER IS THE SHOT'S OWN MEASURED FAR-CORNER VALUE (32 px near, 24 px far, solved), deliberately with NO headroom under it. A floor set a couple of pixels below the measurement would be a number fitted to the frame and would quietly absorb the next regression; set exactly at it, this is a RATCHET — any change that costs this shot a single pixel of legibility fails the gate and has to be argued for. That is the tightest available statement of 'this frame and no looser'.",
+   "_charPxMin_why_2026-08-02": "45 -> 44 px, AND THE RATCHET IS WORKING AS DESIGNED: the note below says any change that costs this shot a pixel FAILS cine_test and must be argued for, and this is the argument. USER REDLINE #4 deletes the porters-yard landmark and gives this shot the valley road's mouth instead, so the owned hull's west lobe changes from an 8 m walk disc centred at (6,8) to a 2.6 m pad at (1.6,6.2) — 1.7 m NEARER the camera on the frame's near edge. cine_solve holds the whole hull, so it stands back: pos (-15.487,9.27,36.601) -> (-16.945,9.104,36.55), 1.47 m, and the far end of the 21 m of rim road this shot owns loses ONE pixel (charPxFar 45 -> 44; charPxNear 105 -> 104). MEASURED, not estimated: cine_solve's own report, and the pixel is spent on the WINCH-HEAD end 40+ m out, not on the player, who reads 104 px where the road puts her. The redline is not optional and the cost is one pixel at the far end of a shot the user asked to be a walking-in entrance; taken knowingly, and the floor is re-set exactly at the new measured value with no headroom so the ratchet still bites the next change.",
+   "_charPxMin_why": "PER-SHOT LEGIBILITY OVERRIDE, NARROWED FROM 24 TO 44 px by the walking-in re-composition. The exemption survives, but it is now a much smaller one and it is worth being exact about WHO breaches the floor: not the player. Vesper at the ow-valley arrival point reads 61 px here (25 px in the vista); what falls under 50 is charPxFar, the far end of the 21 m of rim road this shot owns, at the winch-head end 40+ m out. Set exactly at the measured value with no headroom, on the same ratchet argument as the 24: any change that costs this shot a pixel fails cine_test and must be argued for. THE WAY TO RETIRE IT ALTOGETHER IS MEASURED AND ON FILE: with porters-yard and the gatehouse moved out of this shot's ownership, the same sweep solves at 17-20 m and returns player 136-195 px with charPxFar 72-87 — comfortably over the floor, at the cost of most of the town beyond (townVis 0.02-0.15 against this frame's 0.41). That is an ownership ruling and a second camera, not a re-aim, and it is the coordinator's call.",
+   "_arrivals_why_prior": "Re-searched TWICE in one round, each time as the stated price of a change made elsewhere, and both are kept because the sequence is the evidence. (1) The 2026-08-01 map stamp moved `valley-gate__winch-head`'s ribbon off the gate stair's treads; this camera FRAMES that ribbon, so cine_solve moved it 0.624 m and the arrival lost 10.7 points of chest — 57.1% -> 46.4%, across seam-canon §10.2's line — and nothing else in the sixteen changed. (2) The 68 -> 55 re-aim then swung the whole frame and took the replacement point to 7.1% chest. Re-searched at the final aim with the RAY-CAST oracle rather than a plate, which is what let each search happen BEFORE its bake instead of after: 761 walk-network samples, filtered to those clearing the seam band's 2.25 u half-width by the 0.5 m floor. RANKED BY DISTANCE FROM THE SEAM, NOT BY SCORE, and that choice matters — eleven candidates scored a perfect 100/100 but sat 7 m east on the winch road, and teleporting a player 7 m off the flight they were walking is a worse defect than the one being fixed. [17.5, 24.04, -2.75] is 3.34 m from the seam on walk_pad_valley-gate: chest 7.1% -> 100.0%, body 93.4%, and 3.34 m of band clearance against the required 2.75. The gate side of the seam, as an arrival into `gate` must be.",
+   "_arrivals_why": "RE-SEARCHED FOR THE WALKING-IN FRAME, because the old override was searched for the vista and the vista is gone: [17.5,24.04,-2.75] measured 0.0% visible / 0.0% chest against the new plate (arrival_probe, --scenegraph) — a player walking back up the flight materialised entirely behind the gate's own arch. Re-searched at 0.15 m along all four edges the shot owns, filtered to the gate side of the band and to the solver's clearance rule, and RANKED BY DISTANCE FROM THE SEAM rather than by score (the 2026-08-01 ruling: eleven points scored 100/100 seven metres away on the winch road, and teleporting a player off the flight she was walking is the worse defect). [17.64,24.0,-5.0] on valley-gate__winch-head, 3.19 m from the seam centre against the derived point's 3.34, clearance 1.87 u past the band edge against the 1.6 target: 100.0% visible, 100.0% chest."
+  },
+  {
+   "id": "shelf-west",
+   "name": "The Shelf — shop street, west",
+   "shot": "The shop street's west half, read from the gorge side and from up-street: the gate stair coming down at the left, the Boatmen's Rest with its gable and door square to the frame, the chandlery's awninged front beside it, the street running away east past both of them. The two doors you can enter on this screen are the two doors this camera can see.",
+   "framing": {
+    "yaw": 129,
+    "pitch": 10,
+    "margin": 0.1
+   },
+   "owns": {
+    "landmarks": [
+     "inn",
+     "item-shop"
+    ],
+    "edges": [
+     "valley-gate__inn",
+     "inn__item-shop",
+     "item-shop__weapon-shop"
+    ]
+   },
+   "arrivals": {
+    "valley-gate__inn:gate": [
+     22.556,
+     21.42,
+     -5.601
+    ],
+    "door:inn": [
+     28.48,
+     19.11,
+     -7.52
+    ]
+   },
+   "_arrivals_why_door_inn_2026-08-06": "CLOSING-BAKE REPAIR: leaving the Boatmen's Rest measured 3.3% visible / 0.0% chest on the re-baked plate (flagged pre-existing at 17.55% before the door-recomposition; the camera's 3.2 u re-solve after the Bet 2 one-descent rebuild finished burying it — the derived point [24.187,20.084,-5.091] steps TOWARD the gate flight, behind the stair cheek). Searched on walk-mesh footprints only (the phantom-floor lesson, paid twice this window), outside the door's 1.8 u trigger, probed against the new plate: [28.48,19.11,-7.52] on walk_e_inn__item-shop_l7 — the street the inn actually fronts — 100.0% visible / 100.0% chest at 2.05 u from the door.",
+   "_arrivals_why_2026-08-06": "RE-SEARCHED AT THE CLOSING BAKE, because the Bet 2 one-descent rebuild deleted the flight the old override [23.18,20.11,-3.53] stood on — cine_solve REJECTED it ('off the walk network, nearest surface none') and the derived fallback measured 23.1%/7.1% on the new plate. Same method as the prior search: candidates at 0.15 m along the new flight from the seam, floors taken from the ENGINE (_court_probe --at; the first pass probed gate-road ART at y 24 that WALKLOCK cannot stand on — an off-network floor probes as a phantom candidate), arrival_probe per candidate against the NEW plate, ranked by distance from the seam among those clearing the bar. Winner [22.556,21.42,-5.601]: tread of the new flight (walk_e_valley-gate__inn_l0_t06/t07 line), 3.30 m from the seam centre, 81.3% visible / 100.0% chest. The upper treads (d 0.6-2.7) all measure under 37% — the stair's own cheek wall, same occluder the prior search fought. d=4.50 reaches 84.6%/100% but is a metre further from the flight she was walking; the distance ruling holds.",
+   "_arrivals_why": "THE RE-COMPOSITION'S ONE MEASURED COST, REPAIRED IN THE ARRIVALS LAYER RATHER THAN LEFT. Coming down the gate stair into this shot, the DERIVED spawn [23.179,20.71,-3.026] measured 68.1% visible / 67.9% chest at yaw 105 and 9.9% / 0.0% at yaw 129 (arrival_probe against the shipped plate, before and after): from the new eye the stair's own cheek wall stands in front of that tread. Re-searched along the flight and the street at 0.15 m, filtered by the band's own clearance rule and RANKED BY DISTANCE FROM THE SEAM, not by score — the 2026-08-01 gate ruling, because teleporting a player metres off the flight she was walking is a worse defect than the one being repaired. Nearest point that both clears the band by the SOLVER's own measure (past the band edge, not from its centre — the two differ by the band's 1.1 u half-thickness, and the first candidate taken here was 2.25 m from the centre and therefore only 1.23 m past the edge, which the solver correctly warned about) and is visible: [23.18,20.11,-3.53], 2.84 m along the flight from the seam centre, clearance ABOVE the 1.6 target so no trade is booked, 73.6% visible / 75.0% chest. Points a metre further down reach 100%/100% but stand on inn__item-shop, 3.1 m away on the street proper — a different place from the one you were walking, and the 2026-08-01 gate ruling refuses that trade.",
+   "_framing_note": "RE-COMPOSED FOR THE DOORS (2026-08-01, finisher lane, on the user's reference docs/qa/refs/user_shoprow_camera_ref.png: a camera 'allowing the character to walk through all the shops and identify the doors'). THE FACT THE OLD SWEEP NEVER MEASURED: a shop DOOR is a one-sided surface. shelf_build.py stands the inn's leaf facing x- and the chandlery's facing y+ (south side of the street), and the weapon and armour shops' facing y- (north side) — so a camera can only be in the outward half-space of ONE of those two groups at a time, and both shipped shop-row cameras stood on the gorge side (y 28.1 and y 15.8). MEASURED against the master, 9 probes per leaf, each gated on the camera standing in the leaf's own outward half-space and ray-cast for line of sight: BEFORE, shelf-west inn 0.78 at 8.5 px / chandlery 0.89 at 43.5 px / weapon 0.00 / armour 0.00, and shelf-east 0.00 on ALL FOUR — the shot that owned the armour shop could not see the armour shop's door. 0 of 4 doors identifiable (>=0.67 visible AND >=20 px) from the pair. THE SEARCH: 720 compositions solved by cine_solve.mjs itself (yaw 0-350 x 10, pitch 10-55 x 5) plus 310 refining candidates, every one ray-cast against dellhollow-master. NO SINGLE COMPOSITION IN 1030 SEES ALL FOUR DOORS, and the arithmetic says why: the chandlery's leaf needs an eye at y > 5.87 and the weapon shop's needs y < 8.63, so the pair must sit on OPPOSITE sides of a 3 m street. That is a structural answer, not a taste one, and it is why the row's ownership moved with the aim (see _owns_note). AFTER, at yaw 129 / pitch 10: inn 0.89 at 30.3 px, chandlery 1.00 at 32.8 px; the street item-shop__weapon-shop 0.795 -> 1.000 visible, inn__item-shop 0.978 -> 0.957, the gate staircase 0.180 -> 0.200 (it is NOT paid for by the stair, which the 105 sweep had feared). charPxFar 72 -> 69, both clear of the 50 px floor — this is a WALKABLE shot and takes no cinematic exemption. Pitch: the shelf street is roofed by the gate tier's gallery plate (underside 23.33-23.66 over x 19-29.4), so it cannot be shot from above at all — every candidate above pitch ~16 loses the inn's door behind that plate (inn 0.89 at pitch 10, 0.44 at 16, 0.00 at 22). 10 is the reference's direction taken as far as this architecture allows.",
+   "_framing_note_prior": "RE-AIMED TO 105 — THE ONLY SETTING WHERE ALL FOUR MEASURES ARE GOOD, FOUND BY SWEEPING, NOT BY PICKING. yaw went 120 -> 40 in 0c0b522 as a stair-visibility test and shipped in 766da20 on one number: the gate staircase 20.7 -> 37.8%. Nobody measured what it cost, because shot_probe was only ever pointed at valley-gate__inn. It cost this shot its own street. Ray-cast from each SOLVED position against the master, 82 rays per edge: item-shop__weapon-shop — 8.6 m of road NO OTHER CAMERA OWNS — is 7.3% clear at yaw 40 and 73.2% at yaw 105 (89.0% at 120), because at yaw 40 the camera stands at x 47 on the far side of the street and shelf_weapon_shop takes 92.7% of the rays to its own frontage. The weapon shop's DOOR arrival and the shelf-east>shelf-west CUT arrival are both blocked at yaw 40 and both CLEAR at yaw 120 — which is why neither carries an arrivals override any more: the derivation was right all along and the CAMERA was wrong. THE SWEEP IS THE REASON IT IS 105 AND NOT 120. Ray-cast at yaw 60/75/90/105/120/135, stair / street / door / gate-arrival clear-%: 26.8 36.6 0 50 | 19.5 57.3 0 50 | 25.6 67.1 100 50 | 23.2 73.2 100 100 | 14.6 89.0 100 50 | 0.0 91.5 50 0. Only 105 has all four. 120 recovers 16 more points of street and pays for them with 8.6 points of staircase AND with this shot's own entry arrival from the gate, which drops to 28.6% chest behind gate_corbels and CANNOT be bought back in the arrivals layer — every walkable sample within 4 m is either inside the band, under the 0.5 m clearance floor, or (at the flight's foot, where the sightline is clean) breaks the round-trip: seam gate<->shelf-west fired 9 of 10 cuts. THE COST AT 105, reported not buried: the staircase goes 36.6% -> 23.2% clear. The staircase is framed by the `gate` camera too (29.3% after the awning surgery), and shelf-west's stair number never cashed out in legibility — nav_eval scored this shot 0/10 at N=10 on four consecutive bakes, at BOTH yaws. A shot that cannot see the street it owns is the worse defect.",
+   "_owns_note": "THE WEAPON SHOP MOVED TO shelf-east WITH THE RE-COMPOSITION, and the rule it follows is the one the door measurement produced: A SHOT OWNS THE SHOPS WHOSE FRONTS IT CAN SEE. Its leaf faces y- and this camera stands at y 22.3, so its door is 0.00 visible here and 0.67 at 12.9 px from shelf-east; leaving it here would have put the player on its doorstep in the one frame that cannot show the door. The middle road item-shop__weapon-shop STAYS with this shot (it is 1.000 visible here, 0.864 from the east), so the derived seam now sits at the far end of that road, ~2.8 m short of the weapon shop's pad: you cross into shelf-east BEFORE you reach the door it can show you. valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either — it belongs to the street it delivers you to."
+  },
+  {
+   "id": "shelf-east",
+   "name": "The Shelf — shop street, east",
+   "shot": "The shop street's east half from the cliff side, looking back west down the row: the armour shop's front and the forge's front both square to the frame with their signs out, the shelf homes' roofs stacked in the near corner, the street running away toward the chandlery. The two doors you can enter on this screen are the two doors this camera can see.",
+   "framing": {
+    "yaw": 342,
+    "pitch": 22,
+    "margin": 0.1
+   },
+   "owns": {
+    "landmarks": [
+     "weapon-shop",
+     "armor-shop"
+    ],
+    "edges": [
+     "weapon-shop__armor-shop",
+     "armor-shop__shelf-homes"
+    ]
+   },
+   "_framing_note": "CROSSED TO THE CLIFF SIDE, which is the whole point (see shelf-west's _framing_note for the door-normal arithmetic and the 1030-composition search). At the shipped yaw 32 this camera stood at y 15.8, out over the gorge, and scored 0.00 on all four doors including the armour shop's, which it owned. At yaw 342 / pitch 22 it stands at y 2.9 — inside the outward half-space of both north-side leaves — and MEASURES: armour 0.00 -> 1.00 visible at 30.8 px, forge 0.00 -> 0.67 at 12.9 px. The street it owns comes with it: weapon-shop__armor-shop 0.895 -> 0.974 visible, armor-shop__shelf-homes 0.529 -> 1.000, and the road it now looks up, item-shop__weapon-shop, 0.091 -> 0.864. charPxFar 90 -> 84, well clear of the 50 px floor. THE COST, reported not buried: the forge's leaf reads 12.9 px against the armour shop's 30.8 — it is 22 m up-street and oblique, and 12.9 px is the smallest identifiable door in the pair. Nearer compositions (yaw 340 / pitch 18, 15 px) trade 0.14 of the owned street's visible fraction for those 2 px; 342/22 was taken because the street is what the player has to read first."
+  },
+  {
+   "id": "loop-stairs",
+   "name": "The Loop Stairs",
+   "transit": true,
+   "shot": "The descent to the market: the shelf homes' little yard at the top of frame and ONE wide flight leaving it east along the shelf wall, dropping to the market stalls from the north. Shot from out over the gorge so the tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "_shot_note_2026-08-06": "RE-WRITTEN AT THE CLOSING BAKE: the fork this prose described (a landing where the way split to the market OR down to the harbour deck) was DELETED by Bet 2 iteration 2 — the quay interchange collapsed it to the single v2 market flight (w2.0), and the harbour deck is reached through the market. The owns list was re-rooted in the same iteration; this prose lagged the geometry by four days. The solve against the new bundle owns 18 walk meshes (was 27) and the cut to quay-west rides shelf-homes__market-stalls.",
+   "framing": {
+    "yaw": 104,
+    "pitch": 15,
+    "margin": 0.11
+   },
+   "_framing_note": "This shot owns the JUNCTION as well as both flights, and that is still the whole point — but the junction MOVED, and why is worth keeping. It used to be the shelf-homes yard with both flights leaving it: the quay flight at 44.8 deg and the market flight at 17.4 deg, on plan bearings 6.34 deg apart. Two flights leaving one point on one bearing at gradients 27 deg apart MUST overlap in plan, and the shallower one's first tread then stands over the steeper one INSIDE walkGround's 0.73 m step-up window — so the quay flight's second and third treads could never catch a foot, and the flight was unwalkable from its head (0 of 72 held headings reached its foot, offline AND in the shipped game; nav-eval's oracle scored this shot 0.00 on three separate runs and seam-canon §10.3 had filed that as the walker's fault). The 2.60 m yard could not carry two 1.4 m flight heads in any case — short by 0.23 m. Map stamp c046f51 re-origined the quay flight onto the market flight's first landing (the new `loop-landing` portal), so ONE flight leaves the yard and forks at a landing: 88.5 deg apart at gradients 0.39 deg apart, which puts 55x of headroom between the ribbons and the step-up window. This shot owns the yard, the landing and both onward flights, so each still gets exactly ONE seam at its foot. THE PREMISE THAT WAS SPENT, recorded rather than quietly dropped: this shot was pitched as 'TWO flights leaving one yard' and it is now one descent that forks lower down. Navigation beat composition on the coordinator's ruling — town-legibility is this project's founding principle, and one clear entrance reads better than two competing heads on a pad too small for them.",
+   "owns": {
+    "landmarks": [
+     "shelf-homes"
+    ],
+    "edges": [
+     "shelf-homes__market-stalls"
+    ],
+    "_doc_bet2_2026-08-06": "THE FORK IS GONE (Bet 2, user simplicity ruling): edge 'loop-landing__quay-deck' and the 'loop-landing' portal are deleted from the map — the branch overlaid the plaza's own walk disc by construction (the fork stood 5.59 u from the centre of an extent-5.5 area, so the stairs trim could never clear it) and the market flight already lands one flat hop from the plaza. The framing note above records the fork as the 2026-08-01 repair; this deletion completes the same argument ('one clear entrance reads better than two'). This shot now owns one descent. Re-solve/re-bake are the closing lane's."
+   },
+   "arrivals": {
+    "armor-shop__shelf-homes:shelf-east": [
+     53.2,
+     18.75,
+     -9.48
+    ]
+   },
+   "_arrivals_why": "shelf_home_a: she arrived behind a house, 403/403 samples occluded. 2.56 m along the yard; 100% -> 0.0%."
+  },
+  {
+   "id": "quay-west",
+   "name": "The Harbour Deck",
+   "shot": "The heart of the town, from over the gorge at deck level: the cookhouse glow on the left, the notice board mid-deck, the open crowd space of the harbour deck, and the deep stairs' shadowed corner far left. The Shelf's lights stack up the wall behind.",
+   "framing": {
+    "yaw": 107,
+    "pitch": 19,
+    "margin": 0.06
+   },
+   "owns": {
+    "landmarks": [
+     "cookhouse",
+     "notice-board",
+     "quay-deck",
+     "deep-stairs-head",
+     "market-stalls"
+    ],
+    "edges": [
+     "quay-deck__cookhouse",
+     "quay-deck__notice-board",
+     "quay-deck__deep-stairs-head",
+     "quay-deck__market-stalls",
+     "deep-stairs-head__deep-stairs-foot@0..0.22"
+    ]
+   }
+  },
+  {
+   "id": "lockhead",
+   "name": "The Lockhead",
+   "shot": "The overlook, from high out over the basin: the harbourmistress's post at the deck's end, the long plank approach running away toward it, the maintenance ladder plunging off the edge, and Lock Five with the dam small and thunderous far below.",
+   "framing": {
+    "yaw": 66,
+    "pitch": 24,
+    "margin": 0.06
+   },
+   "owns": {
+    "landmarks": [
+     "lockhead"
+    ],
+    "edges": [
+     "market-stalls__lockhead",
+     "lockhead__lock-five"
+    ]
+   }
+  },
+  {
+   "id": "cottage",
+   "name": "Keepers' Spur",
+   "shot": "Intimate, from out over the basin: the keepers' cottage set against the cliff with its balcony over the drop, warm windows, and the path from the Lockhead climbing into frame from the left.",
+   "framing": {
+    "yaw": 98,
+    "pitch": 28,
+    "margin": 0.05
+   },
+   "owns": {
+    "landmarks": [
+     "keepers-cottage"
+    ],
+    "edges": [
+     "lockhead__keepers-cottage"
+    ]
+   }
+  },
+  {
+   "id": "crossing",
+   "name": "The Crossing",
+   "transit": true,
+   "shot": "The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) — no landmarks by design.",
+   "framing": {
+    "yaw": 195,
+    "pitch": 26,
+    "margin": 0.11
+   },
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "weave-huts__keepers-cottage"
+    ]
+   },
+   "thresholdPair": true,
+   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this.",
+   "arrivals": {
+    "weave-huts__keepers-cottage:weave": [
+     84.54,
+     7.42,
+     -22.78
+    ]
+   },
+   "_arrivals_why": "cx_approach, the bridge approach ramp. 6.50 m out onto the span; 45.2% -> 0.7%. NOTE: this is the town's LONGEST cut teleport at 6.50 m, past the 4.15 m the rest of the town tops out at — kept because the alternative is a 45% occluded arrival, and flagged for ruling."
+  },
+  {
+   "id": "weave",
+   "name": "The Weave",
+   "shot": "From the cliff shoulder out over the stilt clusters — the pilot cluster's plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay's shadow, and the gorge wall receding behind. The pilot slice's proven drama angle.",
+   "framing": {
+    "yaw": 142,
+    "pitch": 22,
+    "margin": 0.1,
+    "_pt050": "yaw 118 -> 142 (2026-08-05, PT-20260805-050): the weave>lockfive seam projected at nx 0.104 -- the frame's left margin -- and its click ray landed on wv_piles/lf_ground, so five agent drives at the one labelled exit all failed. Swept offline (solver + occluder rays): at yaw 142/pitch 22 the seam draws at nx 0.203 with all three seam rays (ground/chest/head) clear of the stilt field and charPxFar 54 over the 50 px floor; region visibility 81.3% vs 90.6% at 118 -- the cost of an exit the player can actually use. Verdict on the baked plate, not this note."
+   },
+   "owns": {
+    "landmarks": [
+     "pilot-cluster",
+     "weave-north",
+     "weave-huts",
+     "drying-decks"
+    ],
+    "edges": [
+     "quay-deck__pilot-cluster",
+     "pilot-cluster__weave-huts",
+     "pilot-cluster__weave-north",
+     "weave-huts__drying-decks",
+     "weave-huts__fish-dock"
+    ]
+   },
+   "charPxMin": 47,
+   "_charPxMin_why": "PER-SHOT LEGIBILITY OVERRIDE, 47 px against the town's 50 px floor, set at the CLOSING BAKE exactly at the measured value with no headroom (the gate shot's ratchet precedent). The Bet 2 rebuilds (searched pilot hairpin it.6, moorage switchback it.8-10) grew this shot's owned hull to 25.9 x 13.0 u with 7.5 u of height, and the solver stands back to hold it: charPxFar 51 (pre-window) -> 47. MEASURED before argued: margin swept 0.10 -> 0.08/0.06/0.04 buys 48/48/49 px — the breach is region extent, not framing slack, so no knob at yaw 142 (which is PT-050's ruling and stays) reaches 50. The real fix is the fishdock precedent — 'the far figure's size is set by how many character-heights of region the shot must hold, so the only lever is splitting' — and a weave split is a re-composition, not a closing-lane move. Any change that costs this shot a further pixel fails cine_test and must be argued for."
+  },
+  {
+   "id": "deep-stairs",
+   "name": "The Deep Stairs",
+   "transit": true,
+   "shot": "The town's hidden vertical: thirteen metres of switchback flight pinned to the cliff, shot side-on so the whole zig-zag reads at once — the head's shadowed mouth at the top, the boardwalk light at the foot. No landmarks by design.",
+   "framing": {
+    "yaw": 108,
+    "pitch": 8,
+    "margin": 0.13
+   },
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "deep-stairs-head__deep-stairs-foot@0.22..1"
+    ]
+   },
+   "thresholdPair": true,
+   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this.",
+   "arrivals": {
+    "deep-stairs-head__deep-stairs-foot:waterfront": [
+     40.578,
+     8.4,
+     -26.373
+    ]
+   },
+   "_arrivals_why": "CLOSING-BAKE REPAIR on the Bet 2 zigzag: the derived waterfront>deep-stairs spawn [36.707,6.143,-24.7] landed 0.01 u along the foot band's own normal — ON the seam that sends you back (cine_test: 'outside the band by -1.09u'; slice_test: 'not clear of the return trigger'). The rebuilt flight's foot geometry gave the solver's arc-length back-off nothing to walk. Searched on the flight's own walk records (walk-mesh footprints only — the phantom-floor lesson paid twice this window). THE FIRST PICK WAS A SWITCHBACK TRAP THE CHECKER DOES NOT SEE: [34.85,5.40,-25.78] cleared the band by PLAN normal but sat one tread BELOW the seam — on a folded edge that is ALREADY PAST the cut by arc length, so cine_test's round-trip sim fired 0 of 10 cuts (the sim's own docstring names this exact lesson). The second pick [40.00,8.53,-26.78] came off an AABB grid and a ROTATED tread's box corner is not on the mesh — cine_test's on-the-walk-network assertion caught it. Final: [40.578,8.40,-26.373], a TRIANGLE CENTROID of l1's tread (on-mesh by construction), 2.0 u above the seam height — outside the band's vTol 1.6 with a full tread of headroom (the y 8.05 row cleared it by only 0.06 and was refused), arc-side correct, 100.0% visible / 100.0% chest on the new plate."
+  },
+  {
+   "id": "boatyard",
+   "name": "The Boatyard",
+   "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.",
+   "framing": {
+    "yaw": 90,
+    "pitch": 24,
+    "margin": 0.07
+   },
+   "owns": {
+    "landmarks": [
+     "slipway",
+     "drydock-frames",
+     "boatwright-shed",
+     "pitch-kettle",
+     "lockfour-overlook",
+     "lock-four-glimpse"
+    ],
+    "edges": [
+     "winch-foot__slipway@0.20..1",
+     "slipway__drydock-frames",
+     "slipway__boatwright-shed",
+     "boatwright-shed__pitch-kettle",
+     "slipway__lockfour-overlook"
+    ]
+   },
+   "_owns_note": "winch-foot__slipway is split at 0.52 rather than at the boatyard's own edge because the v10 hero frame is composed LOW along the slipway and its bottom edge cuts the near boardwalk: with the seam closer to camera, a player arriving from the Waterfront came in with their feet below frame (screen y -1.13). The shot is accepted and does not move, so the OWNERSHIP moved instead.",
+   "_framing_note": "2026-07-31: water-side yaw 90 restored — the as-built cliff refuted every cliff-side position (measured: continuous ridge h 9.3..15.3 at y~18 across x 4..32, camera was 4.5m behind it, 0.0%% visible). Water 38.9%%, charPx far 58->67. v10 hero frame remains in git as fallback.",
+   "arrivals": {
+    "winch-foot__slipway:waterfront": [
+     23.92,
+     2.274,
+     -25.9
+    ]
+   },
+   "_arrivals_why": "hero_hull_clinker — the hauled hull on the ways, this shot's own hero prop — stood 4.75 m in front of her feet. 1.30 m along the boardwalk clears it; 100% -> 0.0% occluded (vista custodian, ghost test)."
+  },
+  {
+   "id": "waterfront",
+   "name": "The Waterfront — winch foot",
+   "shot": "The boardwalk's upstream run under the cliff: the cargo winch platform and its dangling hook, the discreet mouth of the deep stairs vanishing up into shadow behind it, fish racks starting downstream. Water on the right the whole way.",
+   "framing": {
+    "yaw": 20,
+    "pitch": 18,
+    "margin": 0.08
+   },
+   "owns": {
+    "landmarks": [
+     "winch-foot",
+     "deep-stairs-foot"
+    ],
+    "edges": [
+     "winch-foot__slipway@0..0.20",
+     "fish-dock__winch-foot@0.45..1",
+     "deep-stairs-foot__fish-dock@0..0.174"
+    ]
+   },
+   "_framing_note": "Re-aimed from yaw 146 / pitch 14 (36% visible — the cliff the boardwalk is cut into was in the way) to a position just out over the water downstream, looking back UP the boardwalk so it recedes: 80% visible at 17.7 m. The sweep's top answer (yaw 60) sat 43 m out, past the river and inside the far canyon wall's airspace; this one is the same score from somewhere a camera can actually be."
+  },
+  {
+   "id": "fishdock",
+   "name": "The Fish Dock",
+   "shot": "Downstream along the same boardwalk: the fish dock's plank apron and drying racks filling frame, the Weave's stilt legs and its ladder coming down on the left, the shack and the moorage opening away east.",
+   "framing": {
+    "yaw": 116,
+    "pitch": 15,
+    "margin": 0.08
+   },
+   "_framing_note": "The waterfront was ONE camera and its far figure measured 34 px of 768 over a 41.5 m boardwalk. No fov or margin fixes that — the far figure's size is set by how many character-heights of region the shot must hold, so the only lever is splitting. Two shots, seam mid-boardwalk (fish-dock__winch-foot@0.45), which is the FF move anyway: the camera changes as you walk on.",
+   "owns": {
+    "landmarks": [
+     "fish-dock"
+    ],
+    "edges": [
+     "fish-dock__winch-foot@0..0.45",
+     "deep-stairs-foot__fish-dock@0.174..1",
+     "tenant-shack__fish-dock@0.35..1"
+    ]
+   }
+  },
+  {
+   "id": "lockfive",
+   "name": "Lock Five",
+   "shot": "The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant's shack on the near bank, and the cottage lantern-lit on the wall above — the 'house over the locks' sightline.",
+   "framing": {
+    "yaw": 160,
+    "pitch": 12,
+    "margin": 0.08,
+    "maxDist": 50
+   },
+   "owns": {
+    "landmarks": [
+     "moorage",
+     "tenant-shack",
+     "lock-five",
+     "dam-crest-gate"
+    ],
+    "edges": [
+     "weave-huts__moorage",
+     "moorage__tenant-shack",
+     "moorage__lock-five",
+     "tenant-shack__fish-dock@0..0.35"
+    ]
+   },
+   "arrivals": {
+    "weave-huts__moorage:weave": [
+     72.79,
+     1.25,
+     -29.15
+    ],
+    "tenant-shack__fish-dock:fishdock": [
+     67.88,
+     2.11,
+     -26.23
+    ]
+   },
+   "_arrivals_why": "wv_planking: she arrived UNDER the drying decks, 10.77 m of them nearer than her own feet. 3.75 m out to the moorage; 91% visible. The 6.96 m alternative reached 0.7% occlusion and was REFUSED by the coordinator — a 7 m jump would be the town's new worst teleport outlier by 68%.",
+   "_arrivals_why_fishdock_2026-08-06": "NEW AT THE CLOSING BAKE: the fishdock>lockfive derived arrival measured 14.3%/14.3% on the re-baked plate (it was not one of the two pre-existing arrives-invisible rows — the tenant-shack corridor's Bet 2 churn left the derived point in an occluded pocket where the shack row stands between spawn and eye). Searched as a 2D grid over the corridor with ENGINE floors (_court_probe --at), filtered to signed band-normal clearance, arrival_probe per candidate against the new plate, ranked by clearance ascending: winner [67.88,2.11,-26.23] ON walk_e_tenant-shack__fish-dock_l0 (candidates constrained to walk-mesh footprints out of the GLB — the first two picks stood on boardwalk ART the engine grounds on but WALKLOCK cannot stand on, and the solver rejected each), 100.0% visible / 100.0% chest, clears the band edge by 0.66 m (over the 0.5 hard floor, under the 1.6 target — the trade is booked, band clearance for a visible arrival). The straight-normal line offered only 90.1%/82.1% at 0.25 m clearance and the solver REJECTED it ('one step forward would re-fire the cut') — the first candidate written here was exactly that lesson, kept because the sequence is the evidence."
+  },
+  {
+   "id": "north-landing",
+   "name": "North Landing",
+   "shot": "The last pier and the goodbye shot: from out on the water looking back upstream, the dam's black mass and wheels behind, the whole town stacked up the cliff above it. The night-departure stage.",
+   "framing": {
+    "yaw": 8,
+    "pitch": 14,
+    "margin": 0.11
+   },
+   "owns": {
+    "landmarks": [
+     "north-landing"
+    ],
+    "edges": [
+     "lock-five__north-landing"
+    ]
+   }
+  }
+ ],
+ "_PROPOSAL": [
+  "NOT SHIPPED DATA. This is the camera file proposed by docs/plans/quay-junction-surgery.md,",
+  "kept beside it so the coordinator can diff it against public/townmap/dellhollow.cameras.json",
+  "and so anyone can re-verify the claim in one command:",
+  "  node tools/seam_test.mjs --cameras ../docs/plans/quay-junction-surgery.proposal.cameras.json",
+  "It carries the _doc/_framing_note prose of the file it was derived from; those notes on",
+  "quay-east (deleted) and boatyard (pin lifted) are stale BY DESIGN and are rewritten when",
+  "the coordinator applies the change to the real file."
+ ]
+}

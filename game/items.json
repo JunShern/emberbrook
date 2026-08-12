@@ -1,0 +1,24 @@
+{
+  "_schema": "type: consumable|weapon|armor|material|keepsake. price is the single value source; shops buy at shops.json sellRate * price. statMods apply while equipped (slot). effect for consumables. A KEEPSAKE is a story item: no price, noSell, no slot, no effect — so shop.sellable(), menu's equip list and menu's use list each pass over it by the filter they already have, and nothing new had to learn the word. It is carried, named, and never spent.",
+  "items": {
+    "hand-lamp":    { "name": "Grandmother's hand-lamp", "type": "keepsake", "noSell": true, "desc": "Her lamp, off the hook by the door. He is not pretending it is for the light." },
+
+    "tonic":        { "name": "Tonic",         "type": "consumable", "price": 12,  "effect": { "heal": 30 },  "desc": "River-herb draught. Restores 30 HP." },
+    "hale-tonic":   { "name": "Hale Tonic",    "type": "consumable", "price": 45,  "effect": { "heal": 80 },  "desc": "The strong stuff. Restores 80 HP." },
+
+    "walking-staff": { "name": "Walking Staff", "type": "weapon", "slot": "weapon", "price": 18,  "statMods": { "atk": 2 }, "desc": "A traveler's staff, more friend than weapon." },
+    "river-cudgel":  { "name": "River Cudgel",  "type": "weapon", "slot": "weapon", "price": 120, "statMods": { "atk": 5 }, "desc": "Lockworks hardwood, iron-shod. Argument-ending." },
+    "boat-hook":     { "name": "Boat Hook",     "type": "weapon", "slot": "weapon", "price": 320, "statMods": { "atk": 9 }, "desc": "Long, hooked, and meaner than it looks on the quay." },
+
+    "quilted-vest": { "name": "Quilted Vest",  "type": "armor", "slot": "armor", "price": 25,  "statMods": { "def": 2 }, "desc": "Better than a shirt. Barely." },
+    "oilskin-coat": { "name": "Oilskin Coat",  "type": "armor", "slot": "armor", "price": 150, "statMods": { "def": 4 }, "desc": "Turns rain, spray, and shallow teeth." },
+    "timber-jack":  { "name": "Timber Jack",   "type": "armor", "slot": "armor", "price": 400, "statMods": { "def": 7 }, "desc": "Boiled leather over lath — dock-brawl proof." },
+
+    "reed-tuft":     { "name": "Reed Tuft",     "type": "material", "price": 6,  "desc": "Soft weaving reed. The Weave pays for these." },
+    "sprite-dust":   { "name": "Sprite Dust",   "type": "material", "price": 18, "desc": "Glimmers faintly. Chandlers want it for lamp-wicks." },
+    "duskpad-pelt":  { "name": "Duskpad Pelt",  "type": "material", "price": 28, "desc": "Dense, dusk-gray fur. Warm and waterproof." },
+    "bramble-sap":   { "name": "Bramble Sap",   "type": "material", "price": 16, "desc": "Sticky amber sap. Caulkers boil it into pitch." },
+    "cracked-shell": { "name": "Cracked Shell", "type": "material", "price": 44, "desc": "Plate off a scree shell. Armorers grind it into jack-lath." },
+    "eel-skin":      { "name": "Eel Skin",      "type": "material", "price": 32, "desc": "Supple and slick. Good gloves, better wallets." }
+  }
+}

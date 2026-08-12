@@ -1,0 +1,789 @@
+{
+ "_doc": [
+  "BAKED CINEMATIC CAMERAS for emb-cine \u2014 what tools/cine_bake.py actually",
+  "rendered, per camera. GENERATED; the authored intent is",
+  "public/townmap/emberbrook.cameras.json and the solved numbers are",
+  "public/townmap/emberbrook.cameras.solved.json (this file must agree with it \u2014",
+  "tools/cine_test.mjs asserts every link of that chain).",
+  "public/play3d.html builds its THREE.PerspectiveCamera from pos/aim/fov/rtClip",
+  "here, and its depth quad from depth.near/far + cameras/<id>/depth.png, so the",
+  "shipped image and the shipped occlusion come from one bake of one camera.",
+  "pos/aim are MAP/Blender coords [x, y, h]; spawn is RUNTIME [x, h, -y]."
+ ],
+ "sceneKey": "emb-cine",
+ "generator": "tools/cine_bake.py",
+ "defaults": {
+  "aspect": 1.75,
+  "charH": 1.7,
+  "exposure": 0.55,
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "beautyRes": [
+   2688,
+   1536
+  ],
+  "samples": 128,
+  "denoised": true,
+  "plateSource": "tools/blends/emberbrook-dressed.blend",
+  "appliedGrade": {
+   "exposure": 0.7799999713897705,
+   "viewTransform": "AgX",
+   "look": "AgX - Medium High Contrast",
+   "sky": 0.6000000238418579,
+   "sunEnergy": 0.75,
+   "moon": 2.0,
+   "moonColor": [
+    0.65,
+    0.75,
+    1.0
+   ],
+   "moonZenithDeg": 50.0,
+   "moonAzimuthDeg": 90.0,
+   "warmAnchorGlow": 0.35,
+   "lampWatts": null,
+   "waystoneLanternW": 900.0,
+   "waystoneLanternAt": [
+    56.9,
+    -12.6,
+    2.0
+   ],
+   "waystoneLanternOn": "emb_dress_waystone_lanternglass"
+  }
+ },
+ "cameras": [
+  {
+   "id": "woodroad",
+   "name": "The Whisperwood Road",
+   "entry": true,
+   "transit": false,
+   "pos": [
+    53.193,
+    -61.877,
+    22.265
+   ],
+   "aim": [
+    53.193,
+    -23.135,
+    0.79
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    13.0244,
+    108.49
+   ],
+   "depth": {
+    "near": 26.048721313476562,
+    "far": 67.80606079101562,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/woodroad/bg.png",
+    "depth": "cameras/woodroad/depth.png"
+   },
+   "spawn": [
+    52,
+    -0.5,
+    27.955
+   ],
+   "spawnFrom": "walk_lm_arrival-clearing",
+   "visibleFrac": 1.0,
+   "probes": 40,
+   "baked": "2026-08-10T14:04:41Z",
+   "seconds": 314.0,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": 0.35,
+    "lampWatts": null,
+    "waystoneLanternW": 900.0,
+    "waystoneLanternAt": [
+     56.9,
+     -12.6,
+     2.0
+    ],
+    "waystoneLanternOn": "emb_dress_waystone_lanternglass"
+   }
+  },
+  {
+   "id": "waystone",
+   "name": "The Waystone",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    61.32,
+    -41.833,
+    20.161
+   ],
+   "aim": [
+    55.992,
+    -11.617,
+    0.989
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    9.3347,
+    84.97
+   ],
+   "depth": {
+    "near": 18.669353485107422,
+    "far": 53.10639190673828,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/waystone/bg.png",
+    "depth": "cameras/waystone/depth.png"
+   },
+   "spawn": [
+    56.363,
+    -0.184,
+    10.186
+   ],
+   "spawnFrom": "walk_pad_waystone",
+   "visibleFrac": 0.8594,
+   "probes": 64,
+   "baked": "2026-08-10T17:18:27Z",
+   "seconds": 366.8,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": 0.35,
+    "lampWatts": null,
+    "waystoneLanternW": 900.0,
+    "waystoneLanternAt": [
+     56.9,
+     -12.6,
+     2.0
+    ],
+    "waystoneLanternOn": "emb_dress_waystone_lanternglass"
+   }
+  },
+  {
+   "id": "arch",
+   "name": "The Village Arch",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    49.118,
+    -32.742,
+    9.637
+   ],
+   "aim": [
+    56.542,
+    9.359,
+    1.327
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    11.047,
+    281.534
+   ],
+   "depth": {
+    "near": 22.094051361083984,
+    "far": 175.9585723876953,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/arch/bg.png",
+    "depth": "cameras/arch/depth.png"
+   },
+   "spawn": [
+    60,
+    0.048,
+    -8
+   ],
+   "spawnFrom": "walk_pad_road-gate",
+   "visibleFrac": 0.7656,
+   "probes": 64,
+   "baked": "2026-08-10T16:15:39Z",
+   "seconds": 466.3,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 3.14,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "orchard",
+   "name": "The Orchard Rows",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    41.236,
+    49.465,
+    22.21
+   ],
+   "aim": [
+    41.236,
+    23.342,
+    1.8
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    3.9548,
+    98.119
+   ],
+   "depth": {
+    "near": 7.909691333770752,
+    "far": 61.32451248168945,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/orchard/bg.png",
+    "depth": "cameras/orchard/depth.png"
+   },
+   "spawn": [
+    39.939,
+    0.6,
+    -24
+   ],
+   "spawnFrom": "walk_lm_orchard",
+   "visibleFrac": 0.6,
+   "probes": 10,
+   "baked": "2026-08-10T14:41:58Z",
+   "seconds": 488.2,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 1.5,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "therise",
+   "name": "The Rise",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    58.45,
+    2.713,
+    7.276
+   ],
+   "aim": [
+    58.45,
+    24.124,
+    1.938
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.0468,
+    482.239
+   ],
+   "depth": {
+    "near": 10.093521118164062,
+    "far": 301.3996276855469,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/therise/bg.png",
+    "depth": "cameras/therise/depth.png"
+   },
+   "spawn": [
+    57.987,
+    0.6,
+    -21.219
+   ],
+   "spawnFrom": "walk_e_road-gate__square-plaza_l4",
+   "visibleFrac": 0.5,
+   "probes": 50,
+   "baked": "2026-08-10T14:51:17Z",
+   "seconds": 469.5,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 3.75,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "square",
+   "name": "Festival Square",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    69.676,
+    76.251,
+    31.125
+   ],
+   "aim": [
+    64.197,
+    45.177,
+    2.715
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    11.7512,
+    114.638
+   ],
+   "depth": {
+    "near": 23.502399444580078,
+    "far": 71.64855194091797,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/square/bg.png",
+    "depth": "cameras/square/depth.png"
+   },
+   "spawn": [
+    65.8,
+    1.5,
+    -45.8
+   ],
+   "spawnFrom": "walk_lm_square-plaza.032",
+   "visibleFrac": 0.7812,
+   "probes": 64,
+   "baked": "2026-08-10T17:10:32Z",
+   "seconds": 520.1,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 1.5,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "pondlane",
+   "name": "Pond Lane",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    58.659,
+    46.619,
+    10.17
+   ],
+   "aim": [
+    82.638,
+    50.847,
+    2.258
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.8742,
+    420.11
+   ],
+   "depth": {
+    "near": 9.748340606689453,
+    "far": 262.56890869140625,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/pondlane/bg.png",
+    "depth": "cameras/pondlane/depth.png"
+   },
+   "spawn": [
+    79.6,
+    1.179,
+    -47.9
+   ],
+   "spawnFrom": "walk_pad_pips-den",
+   "visibleFrac": 0.3906,
+   "probes": 64,
+   "baked": "2026-08-10T17:10:32Z",
+   "seconds": 547.5,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 1.5,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "homerow",
+   "name": "Home Row",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    52.837,
+    23.395,
+    34.269
+   ],
+   "aim": [
+    40.676,
+    56.808,
+    3.359
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    10.9973,
+    97.679
+   ],
+   "depth": {
+    "near": 21.994611740112305,
+    "far": 61.049102783203125,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/homerow/bg.png",
+    "depth": "cameras/homerow/depth.png"
+   },
+   "spawn": [
+    41.111,
+    2.204,
+    -60.556
+   ],
+   "spawnFrom": "walk_pad_elder-house",
+   "visibleFrac": 0.7812,
+   "probes": 64,
+   "baked": "2026-08-10T16:32:27Z",
+   "seconds": 900.0,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 2.71,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "northlane",
+   "name": "The North Lane",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    101.171,
+    63.609,
+    42.3
+   ],
+   "aim": [
+    65.595,
+    69.882,
+    3.56
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    17.0059,
+    105.806
+   ],
+   "depth": {
+    "near": 34.01174545288086,
+    "far": 66.12863159179688,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/northlane/bg.png",
+    "depth": "cameras/northlane/depth.png"
+   },
+   "spawn": [
+    66.311,
+    2.41,
+    -71.416
+   ],
+   "spawnFrom": "walk_pad_barn",
+   "visibleFrac": 0.5781,
+   "probes": 64,
+   "baked": "2026-08-10T16:49:09Z",
+   "seconds": 891.6,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "gateroad",
+   "name": "The Quiet Road",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    71.957,
+    132.67,
+    13.021
+   ],
+   "aim": [
+    65.56,
+    96.392,
+    3.837
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    8.5283,
+    515.529
+   ],
+   "depth": {
+    "near": 17.056686401367188,
+    "far": 322.2055969238281,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/gateroad/bg.png",
+    "depth": "cameras/gateroad/depth.png"
+   },
+   "spawn": [
+    65.5,
+    2.662,
+    -100
+   ],
+   "spawnFrom": "walk_e_barn__gate-court_l11",
+   "visibleFrac": 0.6875,
+   "probes": 64,
+   "baked": "2026-08-10T15:40:02Z",
+   "seconds": 830.2,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  },
+  {
+   "id": "gatefield",
+   "name": "The Old Gate",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    79.046,
+    78.679,
+    36.032
+   ],
+   "aim": [
+    72.641,
+    115.006,
+    3.967
+   ],
+   "fov": 20,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    17.7392,
+    105.556
+   ],
+   "depth": {
+    "near": 35.47846984863281,
+    "far": 65.97241973876953,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/gatefield/bg.png",
+    "depth": "cameras/gatefield/depth.png"
+   },
+   "spawn": [
+    76.791,
+    2.8,
+    -120.217
+   ],
+   "spawnFrom": "walk_lm_gate-court",
+   "visibleFrac": 0.9833,
+   "probes": 60,
+   "baked": "2026-08-10T15:40:02Z",
+   "seconds": 787.1,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
+  }
+ ]
+}

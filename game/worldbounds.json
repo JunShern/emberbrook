@@ -1,0 +1,52 @@
+{
+  "_doc": [
+    "WHERE THE WORLD ENDS, as runtime data. Read by public/play3d.html on boot and",
+    "applied per scene by sceneParams(); a scene with no entry here is unbounded and",
+    "behaves exactly as it did before this file existed.",
+    "",
+    "WHY IT EXISTS (playtest round 6, 2026-08-03). ow-valley's terrain is an ANALYTIC",
+    "FIELD over the whole 280x200 region tile, and tools/valley_map.py deliberately",
+    "SUPPRESSES the north/south/west rims and the east escarpment within 22 u of the",
+    "river channel — its own words, 'A RIM CANNOT STAND IN THE RIVER' — so that Chapter",
+    "Two's boat can leave the Moorage. That breach is correct for the boat and fatal for",
+    "the walker: the ground runs continuously downhill out of the gorge, under the water",
+    "plane, to y -6.07 at the tile's north-east corner, with nothing in the way. Round 5's",
+    "playtest agent walked past the Dellhollow gate (y 12.65) and spent 56 of its 60 steps",
+    "at y -2 .. -4.6, under the water, and never got back.",
+    "",
+    "MEASURED (tools/playtest/edge_probe.mjs, 4 u lattice, SIM.floors in the running",
+    "page): 3031 of 3500 cells carry a standable top surface, y -6.07 .. 50.67. Exactly",
+    "126 of them (3.6%) are BELOW y = 0, and they form exactly TWO connected components:",
+    "  * the Long Reach   x 50..114, z -98..-50, floor to -6.07, zone 'water' — the river",
+    "                     leaving the region for a region that does not exist yet",
+    "  * the tile apron   the single column x = 138, z -98..78, floor ~ -4 — the terrain",
+    "                     tile's own edge skirt",
+    "Nothing the game authors is down there. The LOWEST authored place in the region is",
+    "the Moorage — valley.region.json's `boat-tar` landmark, world [200.96, 152.87, 1.30]",
+    "= runtime [61.0, 1.30, -52.9], measured floor y 1.71 — which is why the bound is 0.0",
+    "and not higher: THE RIVERBED IS LEGITIMATE LEVEL DESIGN down to the boat, and a fence",
+    "drawn round the road would have taken Chapter Two's own landing with it.",
+    "",
+    "SO ONE NUMBER CLOSES BOTH LEAKS AND NOTHING ELSE, and it reads as a shoreline rather",
+    "than as a wall: upstream the riverbed sits at y 23..27 and the rule never fires at",
+    "all, so the shallow upper river stays waded. It only bites where the world stops.",
+    "",
+    "IT IS A FENCE YOU CAN ALWAYS CLIMB BACK OVER — see walkStep(). Below the bound the",
+    "rule refuses only steps that go DEEPER; level and uphill steps are always allowed, so",
+    "a body that is already outside (an old save, a jump off the bank) is never trapped by",
+    "the thing that exists to stop it getting there. A boundary that can strand a player is",
+    "the bug it was meant to fix, wearing the other coat.",
+    "",
+    "THIS FILE MUST BE IN GIT. public/game/lightrigs.json shipped untracked once — the code",
+    "that fetched it was committed and the data was not, so every clone silently fell back",
+    "with a console warning. A runtime data file that is not in git is a bug that only",
+    "reproduces off the author's machine."
+  ],
+  "scenes": {
+    "ow-valley": {
+      "floorY": 0.0,
+      "label": "the water line",
+      "note": "Below this the region is the Long Reach and the tile apron: no landmark, no beat, no NPC, no portal. The three valley portals stand at elevation 12.01 (dellhollow-valley-gate), 26.5 (old-gate) and 27.1 (emberbrook-gate); the lowest authored point in the region is the Moorage boat at 1.30."
+    }
+  }
+}

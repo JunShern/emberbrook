@@ -1,0 +1,41 @@
+{
+  "_schema": "monster def: stats are level-1 values; family+tier let later regions palette-swap (classic FF economy). zone ids match the canonical zone taxonomy.",
+  "monsters": {
+    "reed-nibbler": {
+      "name": "Reed Nibbler", "family": "nibbler", "tier": 1, "zones": ["meadow"],
+      "hp": 16, "atk": 5, "def": 2, "spd": 4,
+      "xp": 6, "gold": 4, "drops": [{ "item": "reed-tuft", "rate": 0.35 }],
+      "desc": "A round, harmless-looking grazer that bites when startled."
+    },
+    "brook-sprite": {
+      "name": "Brook Sprite", "family": "sprite", "tier": 1, "zones": ["meadow", "water"],
+      "hp": 12, "atk": 6, "def": 1, "spd": 8,
+      "xp": 8, "gold": 6, "drops": [{ "item": "sprite-dust", "rate": 0.25 }],
+      "desc": "A flicker of river-light with a temper."
+    },
+    "duskpad": {
+      "name": "Duskpad", "family": "duskpad", "tier": 1, "zones": ["forest"],
+      "hp": 22, "atk": 6, "def": 3, "spd": 7,
+      "xp": 13, "gold": 9, "drops": [{ "item": "duskpad-pelt", "rate": 0.4 }],
+      "desc": "A soft-footed wood-dog; hunts in pairs under the canopy."
+    },
+    "bramble-shade": {
+      "name": "Bramble Shade", "family": "shade", "tier": 1, "zones": ["forest"],
+      "hp": 18, "atk": 7, "def": 2, "spd": 5,
+      "xp": 14, "gold": 8, "drops": [{ "item": "bramble-sap", "rate": 0.3 }],
+      "desc": "A thicket that was watching you the whole time."
+    },
+    "scree-shell": {
+      "name": "Scree Shell", "family": "shell", "tier": 1, "zones": ["crag"],
+      "hp": 30, "atk": 9, "def": 9, "spd": 2,
+      "xp": 18, "gold": 12, "drops": [{ "item": "cracked-shell", "rate": 0.45 }],
+      "desc": "A boulder with legs and a grudge. Slow, and very hard."
+    },
+    "weir-eel": {
+      "name": "Weir Eel", "family": "eel", "tier": 1, "zones": ["water"],
+      "hp": 20, "atk": 7, "def": 3, "spd": 10,
+      "xp": 16, "gold": 10, "drops": [{ "item": "eel-skin", "rate": 0.35 }],
+      "desc": "Strikes from the shallows at anything that lingers on the bank."
+    }
+  }
+}
