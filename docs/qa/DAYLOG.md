@@ -23915,8 +23915,18 @@ spawn, never a second Blender, no Metal kernel-cache SIGABRT this window.
   4. **`mat_boil` IS THE NORTH-LANDING "STEPPING STONES"** — opaque, near-neutral, 33% brighter
      than its pool, four hard wedge silhouettes, one camera. Material and opacity, not
      placement. water-transparency.md is the canon.
-  5. **`cine_test` CANNOT SEE A STALE PLATE CAUSED BY A LINKED TEXTURE** (trap 2). Eight
-     cameras are currently 0.001-0.007% behind the master's material set with the gate green.
+  5. **`cine_test` CANNOT SEE A STALE PLATE CAUSED BY A LINKED TEXTURE** (trap 2) — the
+     MECHANISM STANDS: a texture regenerated on disk is live in the next render with nothing
+     in the blend changing, and it contaminated this round's own first draft arm.
+     **BUT THE EIGHT-CAMERA FIGURE IS NOT EVIDENCE OF IT, AND I AM STRIKING IT** (2026-08-12).
+     Those eight — lockhead/shelf-west 0.007%, loop-stairs/boatyard 0.006%, north-landing/
+     fishdock/cottage 0.001%, lockfive 0.000% — are **EXACTLY THIS ROUND'S EIGHT PASS-2
+     REFUSALS, WITH THEIR OWN NUMBERS**. They are "behind the master" *because the round
+     correctly refused to rebake them as under the noise floor*. **A REFUSAL THAT IS RIGHT
+     LOOKS EXACTLY LIKE STALENESS** — the same sentence Emberbrook round 2 had to write about
+     `gatefield`. A real instance of trap 2 would show a camera behind the master that the
+     A/B did NOT refuse; none was found. Round 14 should not inherit "eight stale cameras" as
+     a defect to fix.
   6. **THE REST OF THE `t2c_` FAMILY IS MEASURED AND MOSTLY FINE.** The census is in
      `evidence/t2c-census.json`: the flat-shaded 4v/1f PAINT PANELS (8 objects — `*_hut_paint`,
      `*_shed_doors`, `*_gable_paint`, `*_shutters_hi`) are the next candidate class, and
