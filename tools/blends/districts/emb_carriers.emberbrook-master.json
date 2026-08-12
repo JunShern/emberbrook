@@ -1,0 +1,14 @@
+{
+ "blend": "emberbrook-master",
+ "carriers": {
+  "embpc": 222,
+  "embpf": 17,
+  "embpl": 16
+ },
+ "effects": {
+  "gable_members": 0,
+  "lamp_glass_unsealed": 0,
+  "lucam_members": 0
+ },
+ "embml_by": null
+}

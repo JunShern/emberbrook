@@ -2297,6 +2297,27 @@ def build_mill():
     box("emb_dress_mill_hoistsack", HW(- 1.6, - hd / 2 - 3.4, RIDGE - 6.7),
         (1.05, 0.90, 1.5), rot=(0, 0, HRZ), mat=SACK)
 
+    # THE LUCAM IS BOARDED BY ITS OWN CARRIER, CALLED — NOT BY A COPY OF IT.  Round 3 put
+    # 36 members on `emb_dress_mill_lucam` through `tools/emb_millucam.py` and left this
+    # file knowing nothing about them; MEASURED 2026-08-12, a re-dress of the shipped
+    # master into a scratch `--out` carried `emb_dress_mill_lucamx*` **36 -> 0** and took
+    # the `embml` snapshot with it.  Round 2's answer for the GABLE was to copy the recipe
+    # into this file, and that copy has already drifted where anyone can see it: the
+    # shipped blend holds the carrier's 84 boards named `gableboard+1board00`, a fresh
+    # dress builds this file's 86 named `gableboard+1_00`.  Two tools, one object, two
+    # answers — CLAUDE.md's own rule, paid again.
+    #   So the lucam has ONE owner and two entry points.  `board_lucams()` derives every
+    # member in the box's own local frame with OUTWARD taken from the roof deck's centroid
+    # (never assumed), and it writes the `embml` snapshot itself, so a blend dressed here
+    # is stamped exactly as a blend the carrier carried and the carrier's own guard
+    # refuses to board the boards from either direction.
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("emb_millucam",
+                                         os.path.join(REPO, "tools/emb_millucam.py"))
+    _mu = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_mu)                      # import-safe: the CLI is __main__
+    _mu.board_lucams(bpy.context.scene, by="emb_dress")
+
     # the yard: the millstone, the sacks, the waiting barrels — dressing.dressing_doc's
     # "hay stooks + threshing floor" class of domestic life, at the mill's own door
     cyl("emb_dress_millstone", HW(5.3, - 2.4, MZ + 1.55), 1.60, 0.42,
@@ -7169,6 +7190,31 @@ def realtime_texture_budget():
 
 if TIER == "realtime":
     realtime_texture_budget()
+
+# ===================================== WHAT THIS BUILD JUST THREW AWAY ==========
+# THIS FILE BUILDS ITS OUTPUT FROM THE MASTER, SO IT OWNS NOTHING A CARRIER PUT ON THAT
+# OUTPUT.  Measured 2026-08-12: a re-dress of the shipped master dropped `emb_millucam`'s
+# 36 lucam members, `emb_lightbodies`' 14 unsealed lamp glasses (half the crushed frame at
+# homerow), `emb_padcoplanar`'s 4 mm nudge (the black hole on the path at
+# grandmother's bench) and `emb_brookchop` + `emb_water_shader` (the water goes back to a
+# raft of floating boxes) — silently, with every gate green, exactly the way round 3's
+# lucam went missing.  The lucam is now built here (see build_mill); the other four cannot
+# be, because three of them are order-dependent reshapes of geometry this file emits.
+#   So the LAST thing a dress prints is the list of carriers the previous good build of
+# this OUT carried and this one does not, each with the command that puts it back.  It is
+# a REPORT and not a refusal — a re-dress is legitimate — and `tools/emb_carriers.py` is
+# the same census as a hard gate for anything that needs an exit code.
+try:
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("emb_carriers",
+                                         os.path.join(REPO, "tools/emb_carriers.py"))
+    _ec = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_ec)
+    _stem = os.path.splitext(os.path.basename(OUT))[0]
+    _cur = _ec.census(_stem)
+    _ec.report(_cur, _ec.check(_cur, _stem), _stem)
+except Exception as _e:                       # a receipt may never fail a build
+    print("CARRIER LEDGER: could not be read (%s)" % _e)
 
 if not NOSAVE:
     os.makedirs(os.path.dirname(OUT), exist_ok=True)

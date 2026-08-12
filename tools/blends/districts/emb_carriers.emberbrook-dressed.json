@@ -1,0 +1,20 @@
+{
+ "blend": "emberbrook-dressed",
+ "carriers": {
+  "embbc": 3,
+  "emblb": 1,
+  "embmg": 1,
+  "embml": 1,
+  "embpad": 1,
+  "embpc": 222,
+  "embpf": 17,
+  "embpl": 16,
+  "embws": 5
+ },
+ "effects": {
+  "gable_members": 88,
+  "lamp_glass_unsealed": 14,
+  "lucam_members": 36
+ },
+ "embml_by": null
+}

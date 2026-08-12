@@ -1,0 +1,17 @@
+{
+ "blend": "emberbrook-realtime",
+ "carriers": {
+  "embbc": 3,
+  "embmg": 1,
+  "embpc": 222,
+  "embpf": 17,
+  "embpl": 16,
+  "embws": 5
+ },
+ "effects": {
+  "gable_members": 88,
+  "lamp_glass_unsealed": 0,
+  "lucam_members": 0
+ },
+ "embml_by": null
+}
