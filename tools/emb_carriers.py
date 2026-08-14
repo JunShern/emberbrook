@@ -75,6 +75,17 @@ CARRIERS = {
     "embpl":  ("obj",     "-P tools/emb_padlevel.py -- save", ""),
 }
 
+# An effect measured with NO STAMP still needs to name its own repair.  `emb_uvbox`
+# is deliberately stampless: a Blender custom property is exported as glTF `extras`,
+# so stamping 3,918 objects would put the carrier's own bookkeeping into the shipped
+# bundle.  The uv layer it writes IS the footprint, so the layer is what is counted.
+EFFECT_CMD = {
+    "uvbox_members": ("-P tools/emb_uvbox.py -- --apply --save",
+                      "REALTIME TIER ONLY, and after any dressing rebuild: without it "
+                      "every BOX-projected mesh exports with no TEXCOORD_0 and the "
+                      "walkable town is one texel per surface (rt_visual_gate)"),
+}
+
 
 # A CARRIER THE GENERATOR HAS TAKEN OVER IS CHECKED BY ITS EFFECT, NOT BY ITS STAMP —
 # otherwise every legitimate fresh dress prints a red line for `embmg` (whose boards
@@ -113,6 +124,8 @@ def census(stem=None):
                                    if o.name.startswith("emb_lamp_")
                                    and o.name.endswith("_glass")
                                    and o.visible_shadow is False),
+        "uvbox_members": sum(1 for o in bpy.data.objects
+                             if o.type == 'MESH' and o.data.uv_layers.get("uv_box")),
     }
     by = None
     if sc.get("embml"):
@@ -144,7 +157,8 @@ def check(cur, stem):
     for k, v in sorted(old.get("effects", {}).items()):
         now = cur["effects"].get(k, 0)
         if now < v:
-            bad.append(("effect %s" % k, v, now, "", ""))
+            cmd, note = EFFECT_CMD.get(k, ("", ""))
+            bad.append(("effect %s" % k, v, now, cmd, note))
     return bad
 
 

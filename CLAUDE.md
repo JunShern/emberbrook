@@ -60,6 +60,32 @@ git runs here, on branch `migration/3d-hybrid`.
   Each prints its own faithfulness gate; roadchop's `repro` mode proves the copy bit-exact
   BEFORE it builds. tools/walk_rederive.py `--drop` takes a deleted map entity's walk records
   out (an orphaned walk record goes on paving the town).
+- **tools/emb_uvbox.py — THE WALKABLE TOWN WAS DRAWN BY A PROJECTION glTF CANNOT SAY**
+  (2026-08-14; the fix for `rt_visual_gate`'s founding finding). Every Emberbrook Image
+  Texture is driven `Geometry>Position -> Mapping -> ImageTexture(BOX)`, so Cycles renders
+  world-space tri-planar and every PLATE is correct, while glTF — which samples a TEXCOORD
+  and nothing else — exported 3,918 of 8,366 drawn meshes with NO uv and three.js painted
+  ONE TEXEL each. The carrier writes the box projection into a uv layer and **TOUCHES NO
+  MATERIAL**: Cycles keeps reading `Geometry>Position` and never reads the attribute, so
+  ONE ARTIFACT GAINS A FIX AND THE OTHER CANNOT MOVE. Measured: texNoUv 3918/391868 -> 0/0,
+  flat share homerow 93.2 -> 0, pondlane 83.7 -> 0, square 79.9 -> 0.2; `emberbrook-dressed.
+  blend` byte-identical throughout (the tiers are two files, so the plates were never at
+  risk). **THE CONVENTION WAS RENDERED, NOT RECALLED** (docs/qa/rtvis/uvbox-cal.json, 72/72):
+  **the axis comes from the OBJECT-space normal and the coordinate from the WORLD-space
+  position** — proved by a control quad of identical world pose whose object was rotated 90°
+  about X and whose sampled axis moved Z->Y. That is load-bearing: 2,445 targets share ONE
+  `dt_cube` at arbitrary rotations, so a world-normal build would be wrong nearly everywhere
+  AND STILL PASS EVERY COUNT-BASED GATE. Object Info>Random is measured too
+  (`hash_uint2(hash_string(name),0)/0xFFFFFFFF`, 24/24). **AND THE MAPPING NODE IS NOT OURS**:
+  only the shipped artifact revealed that io_scene_gltf2 ALREADY exports it as
+  `KHR_texture_transform`, so baking it here too would tile the town at s² invisibly — `co`
+  stops before it, and the flipped branch must store `-x` not `1-x` (equal mod 1; only `-x`
+  survives being multiplied by s), which needs a REPEAT sampler. Cost: 2,453 objects unshared
+  (a world projection is a function of the OBJECT transform), bundle 94.1 -> 114.3 MB.
+  Registered in `emb_carriers` as the effect `uvbox_members` (3918) — STAMPLESS ON PURPOSE,
+  because a Blender custom property ships as glTF `extras`. **WHAT SURVIVES IS A DIFFERENT
+  DEFECT**: the flat green wedge is `emb_mat_leaf_green`, which has no texture at all — the
+  `blockout_material_coverage` class, unreachable by any UV work.
 - **tools/emb_brookchop.py — EMBERBROOK'S WATER WAS A RAFT OF FLOATING BOXES** (2026-08-07):
   every sheet an independent 0.55 m cell 0.12 m THICK standing 0.09–2.04 m above its own bed —
   0.17 m of air, a lit underside, four lit walls and a shadow cast on the bed the water is

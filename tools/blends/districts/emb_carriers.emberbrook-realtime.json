@@ -11,7 +11,8 @@
  "effects": {
   "gable_members": 88,
   "lamp_glass_unsealed": 0,
-  "lucam_members": 0
+  "lucam_members": 0,
+  "uvbox_members": 3918
  },
  "embml_by": null
 }
