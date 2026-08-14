@@ -1605,6 +1605,49 @@ git runs here, on branch `migration/3d-hybrid`.
   not is wrong — but boarding it was still REFUSED, because the boards would land on an
   untextured white box in a town that is 93% flat paint. It should ride the same re-export as the
   UV fix.
+- **tools/emb_uvbox.py — WRITE A UV, TOUCH NO MATERIAL** (2026-08-14 — the walkable town stops
+  being flat paint). `texNoUv` **3,918 meshes / 391,868 tris → 0 / 0**; textured primitives with
+  no TEXCOORD_0 in the artifact **1,477 → 0**; per-viewpoint flat share **homerow 93.2% → 0.104,
+  pondlane 83.7 → 0, square 79.9 → 0, spawn 71.0 → 0**. Looked at
+  (`docs/qa/rtvis/evidence/emb-townwalk-uvbox-{before,after}.jpg`): ground, lane, rubble, stone
+  stair and plank posts all carry their material now. Corroborated by a number the fix does NOT
+  optimise — modal colour bin homerow 14.3 → 5.9, i.e. the frame gained variety.
+  **THE LEVER IS THE WHOLE IDEA: it writes the box projection into a `uv_box` layer and EDITS NO
+  MATERIAL.** Cycles keeps reading `Geometry>Position`; the exporter, having no UVMap node to
+  follow, falls through to TEXCOORD_0 and now finds one. **ONE ARTIFACT GAINS A FIX AND THE OTHER
+  CANNOT MOVE** — and the proof the plates did not change is STRUCTURAL, not a tolerance: the
+  dressed blend's sha256 is **byte-identical across the whole lane**, and no material was touched,
+  so Cycles never reads the attribute that was added. Nothing was rebaked and no refusal was
+  needed. Rejected: baking tri-planar to textures (new image assets, atlas decisions, and it must
+  touch materials) and per-class unwrap (strictly worse than the exact box projection, which is
+  free).
+  **THREE THINGS MEASURED RATHER THAN RECALLED, AND THE FIRST IS LOAD-BEARING**: the box
+  convention was derived BY RENDERING IT (72/72 samples) — **the axis comes from the OBJECT-space
+  normal and the coordinate from the WORLD-space position**, proved with a control quad of
+  identical world pose whose object was rotated 90° about X (the sampled axis moved Z→Y).
+  **2,445 of the 3,918 targets share ONE `dt_cube` at arbitrary rotations, so a world-normal
+  build would have been wrong nearly everywhere AND STILL PASSED EVERY COUNT-BASED GATE.**
+  `Object Info > Random` is `hash_uint2(hash_string(name),0)/0xFFFFFFFF` (24/24 real names).
+  **AND THE MAPPING NODE IS NOT OURS** — only the shipped artifact revealed that io_scene_gltf2
+  already exports it as `KHR_texture_transform` on 57 refs, so baking it in too would have tiled
+  the whole town at s² INVISIBLY. The flipped branch therefore stores `-x`, not `1-x` (equal mod
+  1; only `-x` survives the ×s), which needs REPEAT sampling.
+  **THE SIZE WALL, AND A RULE THIS REPO HAS NOW PAID FOR TWICE**: unsharing meshes took the bundle
+  94.1 → 114.3 MB and **GitHub REJECTED the push at 109 MiB against a 100 MiB HARD limit** — and
+  the lane's own `PUSH_DONE` was **its own echo, not git's verdict**, exactly the "never trust a
+  piped exit code" rule; `git ls-remote` is what caught it. Only TEXCOORD_0 (+5.9 MB) was new
+  information — POSITION (+6.3) and NORMAL (+6.3) were the same cube written 2,445 times. New
+  **`tools/glb_dedup_accessors.py`** gates on CONTENT IDENTITY (4,911/4,911 primitives
+  byte-identical): 14,219 → 8,215 accessors, **114.3 → 99.9 MB**, then re-verified by gate AND by
+  picture. **`emb-townwalk` now sits at 95.2 MiB against a 100 MiB wall — the next thing that adds
+  geometry hits it.** Levers in order: quantisation, Draco (DRACOLoader is already in the build),
+  or splitting the bundle.
+  `emb_uvbox` is idempotent, **must run AFTER any `emb_dress --tier realtime`**, and is registered
+  in `emb_carriers` as the effect `uvbox_members: 3918` so a re-dress that drops it goes red.
+  **STILL FLAT AND UNREACHABLE BY UV WORK**: `emb_mat_leaf_green`/`_autumn`, 652 prims / ~52k tris,
+  **no texture at all** — the `blockout_material_coverage` class, and now the largest flat area
+  left in the walkable town. **Dellhollow's `townwalk` is untouched**: 532 meshes / 289,790 tris,
+  court 56.5%, shelf 51.9% — same mechanism, different blend, material chains not yet censused.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder
