@@ -1,6 +1,6 @@
 {
  "scene": "ow-valley",
- "recorded": "2026-08-12T11:42:43.214Z",
+ "recorded": "2026-08-14T01:33:48.399Z",
  "drawn": 72,
  "texMeshes": 42,
  "texNoUv": {
@@ -31,8 +31,8 @@
    ],
    "blownFrac": 0,
    "crushedFrac": 0,
-   "modalFrac": 39.649,
-   "colourBins": 308,
+   "modalFrac": 41.263,
+   "colourBins": 332,
    "flatFrac": 0
   },
   {
@@ -52,7 +52,7 @@
    "blownFrac": 0,
    "crushedFrac": 0,
    "modalFrac": 5.985,
-   "colourBins": 381,
+   "colourBins": 385,
    "flatFrac": 0
   }
  ]

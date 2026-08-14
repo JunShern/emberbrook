@@ -1,195 +1,18 @@
 {
  "scene": "emb-townwalk",
- "recorded": "2026-08-12T11:42:43.214Z",
+ "recorded": "2026-08-14T01:33:48.399Z",
  "drawn": 8366,
  "texMeshes": 7166,
  "texNoUv": {
-  "meshes": 3918,
-  "tris": 391868
+  "meshes": 0,
+  "tris": 0
  },
- "byMat": {
-  "mat_shingle_cedar": {
-   "meshes": 828,
-   "tris": 89424,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_mill_sh-1_0_0",
-    "emb_dress_mill_sh-1_0_1",
-    "emb_dress_mill_sh-1_0_2"
-   ]
-  },
-  "emb_dress_town_timber": {
-   "meshes": 734,
-   "tris": 35288,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "veg_emb_rim_000_trunk",
-    "veg_emb_rim_001_trunk",
-    "veg_emb_rim_002_trunk"
-   ]
-  },
-  "emb_dress_masonry_rubble": {
-   "meshes": 687,
-   "tris": 74148,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_dam_cope00",
-    "emb_dress_dam_cope01",
-    "emb_dress_dam_cope02"
-   ]
-  },
-  "mat_rock": {
-   "meshes": 404,
-   "tris": 43632,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_dam_stone000",
-    "emb_dress_dam_stone003",
-    "emb_dress_dam_stone006"
-   ]
-  },
-  "emb_dress_town_stone": {
-   "meshes": 256,
-   "tris": 3204,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "lm_far-rooftops-nw_0_chim",
-    "lm_far-rooftops-nw_1_chim",
-    "lm_far-rooftops-nw_2_chim"
-   ]
-  },
-  "emb_dress_lane": {
-   "meshes": 236,
-   "tris": 49202,
-   "slot": "map@uv",
-   "eg": [
-    "emb_lanestub_upper-lane-closed_0",
-    "emb_lanestub_upper-lane-closed_1",
-    "emb_lanestub_upper-lane-closed_2"
-   ]
-  },
-  "mat_timber_dark": {
-   "meshes": 195,
-   "tris": 21700,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_wheel_axle",
-    "emb_dress_innerband-1",
-    "emb_dress_spoke-1_0"
-   ]
-  },
-  "emb_dress_ground": {
-   "meshes": 107,
-   "tris": 36084,
-   "slot": "normalMap@uv",
-   "eg": [
-    "emb_ground_valley",
-    "emb_ground_far",
-    "emb_pondbed_pond"
-   ]
-  },
-  "emb_dress_masonry_dressed": {
-   "meshes": 106,
-   "tris": 11416,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_dam_wall",
-    "emb_dress_pit-1",
-    "emb_dress_pit+1"
-   ]
-  },
-  "mat_shingle_mossy": {
-   "meshes": 92,
-   "tris": 9936,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_mill_sh-1_13_2",
-    "emb_dress_mill_sh-1_13_3",
-    "emb_dress_mill_sh-1_13_6"
-   ]
-  },
-  "mat_qm_sack": {
-   "meshes": 79,
-   "tris": 8532,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_mill_hoistsack",
-    "emb_dress_sack0",
-    "emb_dress_sack1"
-   ]
-  },
-  "emb_dress_gate_flag": {
-   "meshes": 63,
-   "tris": 6804,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_gate_flag0000",
-    "emb_dress_gate_flag0001",
-    "emb_dress_gate_flag0002"
-   ]
-  },
-  "emb_dress_town_thatch": {
-   "meshes": 53,
-   "tris": 516,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "lm_far-rooftops-nw_0_roof",
-    "lm_far-rooftops-nw_1_roof",
-    "lm_hillside-cottages_0_roof"
-   ]
-  },
-  "emb_dress_town_plaster": {
-   "meshes": 51,
-   "tris": 660,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "lm_far-rooftops-nw_0_body",
-    "lm_far-rooftops-nw_1_body",
-    "lm_far-rooftops-nw_2_body"
-   ]
-  },
-  "emb_dress_town_tile": {
-   "meshes": 22,
-   "tris": 174,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "lm_far-rooftops-nw_2_roof",
-    "lm_far-rooftops-nw_3_roof",
-    "lm_hillside-cottages_1_roof"
-   ]
-  },
-  "emb_dress_town_slate": {
-   "meshes": 2,
-   "tris": 16,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "lm_inn_roof",
-    "lm_smokehouse_roof"
-   ]
-  },
-  "mat_timber": {
-   "meshes": 2,
-   "tris": 1024,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_shroud-1",
-    "emb_dress_shroud+1"
-   ]
-  },
-  "emb_dress_daub": {
-   "meshes": 1,
-   "tris": 108,
-   "slot": "metalnessMap@uv",
-   "eg": [
-    "emb_dress_mill_infill"
-   ]
-  }
- },
+ "byMat": {},
  "gpu": {
   "collide": 6478,
   "meshes": 8340,
   "walk": 222,
-  "geometries": 2201
+  "geometries": 3675
  },
  "views": [
   {
@@ -207,10 +30,10 @@
     -0.484
    ],
    "blownFrac": 0,
-   "crushedFrac": 0.002,
-   "modalFrac": 13.05,
-   "colourBins": 230,
-   "flatFrac": 79.735
+   "crushedFrac": 0.003,
+   "modalFrac": 8.669,
+   "colourBins": 240,
+   "flatFrac": 0.162
   },
   {
    "id": "mill",
@@ -227,10 +50,10 @@
     0.904
    ],
    "blownFrac": 0,
-   "crushedFrac": 2.863,
-   "modalFrac": 14.005,
-   "colourBins": 178,
-   "flatFrac": 34.751
+   "crushedFrac": 2.88,
+   "modalFrac": 13.997,
+   "colourBins": 199,
+   "flatFrac": 0.102
   },
   {
    "id": "pondlane",
@@ -248,9 +71,9 @@
    ],
    "blownFrac": 0.005,
    "crushedFrac": 0.001,
-   "modalFrac": 15.058,
-   "colourBins": 162,
-   "flatFrac": 83.788
+   "modalFrac": 6.323,
+   "colourBins": 199,
+   "flatFrac": 0
   },
   {
    "id": "homerow",
@@ -268,9 +91,9 @@
    ],
    "blownFrac": 0,
    "crushedFrac": 0,
-   "modalFrac": 14.276,
-   "colourBins": 170,
-   "flatFrac": 93.179
+   "modalFrac": 5.834,
+   "colourBins": 191,
+   "flatFrac": 0.104
   },
   {
    "id": "spawn",
@@ -287,10 +110,10 @@
     -0.578
    ],
    "blownFrac": 0,
-   "crushedFrac": 0.03,
-   "modalFrac": 16.148,
-   "colourBins": 184,
-   "flatFrac": 70.98
+   "crushedFrac": 0.063,
+   "modalFrac": 16.172,
+   "colourBins": 209,
+   "flatFrac": 0
   }
  ]
 }

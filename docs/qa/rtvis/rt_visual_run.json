@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-12T11:50:12.648Z",
+ "generated": "2026-08-14T01:53:46.570Z",
  "port": 3000,
  "tol": 0.6,
  "scenes": {
@@ -7,192 +7,15 @@
    "drawn": 8366,
    "texMeshes": 7166,
    "texNoUv": {
-    "meshes": 3918,
-    "tris": 391868
+    "meshes": 0,
+    "tris": 0
    },
-   "byMat": {
-    "mat_shingle_cedar": {
-     "meshes": 828,
-     "tris": 89424,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_mill_sh-1_0_0",
-      "emb_dress_mill_sh-1_0_1",
-      "emb_dress_mill_sh-1_0_2"
-     ]
-    },
-    "emb_dress_town_timber": {
-     "meshes": 734,
-     "tris": 35288,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "veg_emb_rim_000_trunk",
-      "veg_emb_rim_001_trunk",
-      "veg_emb_rim_002_trunk"
-     ]
-    },
-    "emb_dress_masonry_rubble": {
-     "meshes": 687,
-     "tris": 74148,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_dam_cope00",
-      "emb_dress_dam_cope01",
-      "emb_dress_dam_cope02"
-     ]
-    },
-    "mat_rock": {
-     "meshes": 404,
-     "tris": 43632,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_dam_stone000",
-      "emb_dress_dam_stone003",
-      "emb_dress_dam_stone006"
-     ]
-    },
-    "emb_dress_town_stone": {
-     "meshes": 256,
-     "tris": 3204,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lm_far-rooftops-nw_0_chim",
-      "lm_far-rooftops-nw_1_chim",
-      "lm_far-rooftops-nw_2_chim"
-     ]
-    },
-    "emb_dress_lane": {
-     "meshes": 236,
-     "tris": 49202,
-     "slot": "map@uv",
-     "eg": [
-      "emb_lanestub_upper-lane-closed_0",
-      "emb_lanestub_upper-lane-closed_1",
-      "emb_lanestub_upper-lane-closed_2"
-     ]
-    },
-    "mat_timber_dark": {
-     "meshes": 195,
-     "tris": 21700,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_wheel_axle",
-      "emb_dress_innerband-1",
-      "emb_dress_spoke-1_0"
-     ]
-    },
-    "emb_dress_ground": {
-     "meshes": 107,
-     "tris": 36084,
-     "slot": "normalMap@uv",
-     "eg": [
-      "emb_ground_valley",
-      "emb_ground_far",
-      "emb_pondbed_pond"
-     ]
-    },
-    "emb_dress_masonry_dressed": {
-     "meshes": 106,
-     "tris": 11416,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_dam_wall",
-      "emb_dress_pit-1",
-      "emb_dress_pit+1"
-     ]
-    },
-    "mat_shingle_mossy": {
-     "meshes": 92,
-     "tris": 9936,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_mill_sh-1_13_2",
-      "emb_dress_mill_sh-1_13_3",
-      "emb_dress_mill_sh-1_13_6"
-     ]
-    },
-    "mat_qm_sack": {
-     "meshes": 79,
-     "tris": 8532,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_mill_hoistsack",
-      "emb_dress_sack0",
-      "emb_dress_sack1"
-     ]
-    },
-    "emb_dress_gate_flag": {
-     "meshes": 63,
-     "tris": 6804,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_gate_flag0000",
-      "emb_dress_gate_flag0001",
-      "emb_dress_gate_flag0002"
-     ]
-    },
-    "emb_dress_town_thatch": {
-     "meshes": 53,
-     "tris": 516,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lm_far-rooftops-nw_0_roof",
-      "lm_far-rooftops-nw_1_roof",
-      "lm_hillside-cottages_0_roof"
-     ]
-    },
-    "emb_dress_town_plaster": {
-     "meshes": 51,
-     "tris": 660,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lm_far-rooftops-nw_0_body",
-      "lm_far-rooftops-nw_1_body",
-      "lm_far-rooftops-nw_2_body"
-     ]
-    },
-    "emb_dress_town_tile": {
-     "meshes": 22,
-     "tris": 174,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lm_far-rooftops-nw_2_roof",
-      "lm_far-rooftops-nw_3_roof",
-      "lm_hillside-cottages_1_roof"
-     ]
-    },
-    "emb_dress_town_slate": {
-     "meshes": 2,
-     "tris": 16,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lm_inn_roof",
-      "lm_smokehouse_roof"
-     ]
-    },
-    "mat_timber": {
-     "meshes": 2,
-     "tris": 1024,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_shroud-1",
-      "emb_dress_shroud+1"
-     ]
-    },
-    "emb_dress_daub": {
-     "meshes": 1,
-     "tris": 108,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "emb_dress_mill_infill"
-     ]
-    }
-   },
+   "byMat": {},
    "gpu": {
     "collide": 6478,
     "meshes": 8340,
     "walk": 222,
-    "geometries": 2201
+    "geometries": 3588
    },
    "views": [
     {
@@ -211,9 +34,9 @@
      ],
      "blownFrac": 0,
      "crushedFrac": 0.003,
-     "modalFrac": 13.012,
-     "colourBins": 231,
-     "flatFrac": 79.825
+     "modalFrac": 8.674,
+     "colourBins": 241,
+     "flatFrac": 0
     },
     {
      "id": "mill",
@@ -230,10 +53,10 @@
       0.904
      ],
      "blownFrac": 0,
-     "crushedFrac": 2.88,
+     "crushedFrac": 2.886,
      "modalFrac": 13.996,
-     "colourBins": 178,
-     "flatFrac": 34.785
+     "colourBins": 199,
+     "flatFrac": 0
     },
     {
      "id": "pondlane",
@@ -250,10 +73,10 @@
       -0.366
      ],
      "blownFrac": 0.005,
-     "crushedFrac": 0.001,
-     "modalFrac": 15.062,
-     "colourBins": 163,
-     "flatFrac": 83.728
+     "crushedFrac": 0.002,
+     "modalFrac": 6.334,
+     "colourBins": 202,
+     "flatFrac": 0
     },
     {
      "id": "homerow",
@@ -271,9 +94,9 @@
      ],
      "blownFrac": 0,
      "crushedFrac": 0,
-     "modalFrac": 14.27,
-     "colourBins": 169,
-     "flatFrac": 93.204
+     "modalFrac": 5.856,
+     "colourBins": 191,
+     "flatFrac": 0
     },
     {
      "id": "spawn",
@@ -290,332 +113,9 @@
       -0.578
      ],
      "blownFrac": 0,
-     "crushedFrac": 0.031,
-     "modalFrac": 16.148,
-     "colourBins": 182,
-     "flatFrac": 70.946
-    }
-   ],
-   "canvas": [
-    1344,
-    768
-   ]
-  },
-  "townwalk": {
-   "drawn": 2415,
-   "texMeshes": 718,
-   "texNoUv": {
-    "meshes": 532,
-    "tris": 289790
-   },
-   "byMat": {
-    "mat_timber": {
-     "meshes": 127,
-     "tris": 19460,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "boatwright_shed_2",
-      "bunting_masts",
-      "by_yard_clutter_2"
-     ]
-    },
-    "mat_timber_dark": {
-     "meshes": 67,
-     "tris": 19870,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "yard_joists",
-      "yard_piles",
-      "wf_stairmouth_1"
-     ]
-    },
-    "mat_wallwood_dark": {
-     "meshes": 56,
-     "tris": 7732,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "boatwright_shed_3",
-      "hero_hull_clinker_2",
-      "kit_barrel001"
-     ]
-    },
-    "mat_rock": {
-     "meshes": 28,
-     "tris": 68843,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "k_pitch_kettle_1",
-      "riverbed",
-      "slipway_ramp_1"
-     ]
-    },
-    "mat_freshwood": {
-     "meshes": 22,
-     "tris": 552,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "foreground_timber_2",
-      "shed_bench_clutter_1",
-      "wf_fish_gear_1"
-     ]
-    },
-    "mat_deck": {
-     "meshes": 21,
-     "tris": 11376,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "by_yard_clutter_1",
-      "hero_hull_clinker_1",
-      "lock_four_dam_7"
-     ]
-    },
-    "mat_wet": {
-     "meshes": 17,
-     "tris": 6228,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "slipway_ramp_3",
-      "wf_stakenet_1",
-      "wf_piles"
-     ]
-    },
-    "mat_shelf_stone": {
-     "meshes": 13,
-     "tris": 718,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "shelf_inn001",
-      "shelf_item_shop001",
-      "shelf_weapon_shop001"
-     ]
-    },
-    "mat_shingle_mossy": {
-     "meshes": 12,
-     "tris": 29580,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lock_four_dam_11",
-      "gate_arch001_4",
-      "shelf_inn001_9"
-     ]
-    },
-    "mat_shelf_paint_teal": {
-     "meshes": 12,
-     "tris": 668,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "shelf_item_shop001_1",
-      "shelf_weapon_shop001_10",
-      "shelf_home_c001_1"
-     ]
-    },
-    "mat_shelf_paint_ochre": {
-     "meshes": 11,
-     "tris": 404,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "shelf_item_shop001_9",
-      "shelf_armor_shop001_1",
-      "t2c_DS1_yard_tarps_1"
-     ]
-    },
-    "mat_qm_deck": {
-     "meshes": 11,
-     "tris": 6030,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "qm_planking",
-      "lk_rail_2",
-      "lk_surface_3"
-     ]
-    },
-    "mat_rock_townwall": {
-     "meshes": 9,
-     "tris": 13206,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "cliff_town_west2",
-      "cliff_town_skirt",
-      "cliff_town_west"
-     ]
-    },
-    "mat_shelf_paint_bone": {
-     "meshes": 9,
-     "tris": 482,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "shelf_inn001_10",
-      "shelf_item_shop001_5",
-      "shelf_armor_shop001_5"
-     ]
-    },
-    "mat_shelf_paint_rust": {
-     "meshes": 8,
-     "tris": 346,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "shelf_inn001_12",
-      "shelf_weapon_shop001_1",
-      "shelf_armor_shop001_12"
-     ]
-    },
-    "mat_qm_stone": {
-     "meshes": 8,
-     "tris": 3324,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "qm_revetment_1",
-      "qm_cookhouse_1",
-      "qm_notice_board_2"
-     ]
-    },
-    "mat_qm_paint_red": {
-     "meshes": 8,
-     "tris": 458,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "qm_cookhouse_2",
-      "qm_notice_board_7",
-      "qm_stall_0_2"
-     ]
-    },
-    "mat_gate_timber": {
-     "meshes": 6,
-     "tris": 1092,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "lock_four_dam_2",
-      "gate_arch001_1",
-      "gate_leaves001"
-     ]
-    },
-    "mat_qm_paint_bone": {
-     "meshes": 6,
-     "tris": 168,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "qm_notice_board_6",
-      "qm_stairhead_4",
-      "qm_stall_4_2"
-     ]
-    },
-    "mat_shelf_paint_madder": {
-     "meshes": 6,
-     "tris": 94,
-     "slot": "metalnessMap@uv",
-     "eg": [
-      "t2c_DS2_hull_paint",
-      "t2c_G5_gatehouse_door",
-      "t2c_LH6_hut_gable_paint_1"
-     ]
-    }
-   },
-   "gpu": {
-    "collide": 1512,
-    "meshes": 2383,
-    "walk": 275,
-    "geometries": 1157
-   },
-   "views": [
-    {
-     "id": "court",
-     "W": 1344,
-     "H": 768,
-     "cam": [
-      33.26,
-      20.05,
-      -14.66
-     ],
-     "fwd": [
-      -0.661,
-      -0.343,
-      -0.667
-     ],
-     "blownFrac": 0.005,
-     "crushedFrac": 0,
-     "modalFrac": 17.578,
-     "colourBins": 207,
-     "flatFrac": 56.426
-    },
-    {
-     "id": "shelf",
-     "W": 1344,
-     "H": 768,
-     "cam": [
-      64.26,
-      20.05,
-      -21.37
-     ],
-     "fwd": [
-      0.553,
-      -0.343,
-      -0.759
-     ],
-     "blownFrac": 0,
-     "crushedFrac": 0.095,
-     "modalFrac": 25.599,
-     "colourBins": 168,
-     "flatFrac": 51.926
-    }
-   ],
-   "canvas": [
-    1344,
-    768
-   ]
-  },
-  "ow-valley": {
-   "drawn": 72,
-   "texMeshes": 42,
-   "texNoUv": {
-    "meshes": 0,
-    "tris": 0
-   },
-   "byMat": {},
-   "gpu": {
-    "collide": 31,
-    "meshes": 55,
-    "walk": 5,
-    "geometries": 86
-   },
-   "views": [
-    {
-     "id": "road-w",
-     "W": 1344,
-     "H": 768,
-     "cam": [
-      -4.99,
-      40.49,
-      35.19
-     ],
-     "fwd": [
-      -0.674,
-      -0.286,
-      -0.681
-     ],
-     "blownFrac": 0,
-     "crushedFrac": 0,
-     "modalFrac": 39.638,
-     "colourBins": 311,
-     "flatFrac": 0
-    },
-    {
-     "id": "road-e",
-     "W": 1344,
-     "H": 768,
-     "cam": [
-      -11.92,
-      40.49,
-      2.25
-     ],
-     "fwd": [
-      0.707,
-      -0.286,
-      -0.647
-     ],
-     "blownFrac": 0,
-     "crushedFrac": 0,
-     "modalFrac": 5.984,
-     "colourBins": 367,
+     "crushedFrac": 0.064,
+     "modalFrac": 16.167,
+     "colourBins": 213,
      "flatFrac": 0
     }
    ],

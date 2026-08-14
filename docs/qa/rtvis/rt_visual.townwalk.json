@@ -1,6 +1,6 @@
 {
  "scene": "townwalk",
- "recorded": "2026-08-12T11:42:43.214Z",
+ "recorded": "2026-08-14T01:33:48.399Z",
  "drawn": 2415,
  "texMeshes": 718,
  "texNoUv": {
@@ -232,9 +232,9 @@
    ],
    "blownFrac": 0.005,
    "crushedFrac": 0,
-   "modalFrac": 17.569,
-   "colourBins": 211,
-   "flatFrac": 56.657
+   "modalFrac": 17.528,
+   "colourBins": 209,
+   "flatFrac": 56.589
   },
   {
    "id": "shelf",
@@ -251,10 +251,10 @@
     -0.759
    ],
    "blownFrac": 0,
-   "crushedFrac": 0.094,
-   "modalFrac": 25.599,
-   "colourBins": 168,
-   "flatFrac": 51.93
+   "crushedFrac": 0.092,
+   "modalFrac": 25.602,
+   "colourBins": 170,
+   "flatFrac": 51.923
   }
  ]
 }
