@@ -51,26 +51,44 @@ still produce a UV layer that passes every count-based gate.
 
   co = A . p_world + t      (the node chain, evaluated as an affine map)
   a  = argmax |n_object|
-  |N.x| : u = (N.x<0) ? 1-co.y : co.y ,  v = co.z
-  |N.y| : u = (N.y>0) ? 1-co.x : co.x ,  v = co.z
-  |N.z| : u = (N.z>0) ? 1-co.y : co.y ,  v = co.x
+  |N.x| : u = (N.x<0) ? -co.y : co.y ,  v = co.z
+  |N.y| : u = (N.y>0) ? -co.x : co.x ,  v = co.z
+  |N.z| : u = (N.z>0) ? -co.y : co.y ,  v = co.x
   FLAT  : u = co.x , v = co.y
+
+=================== AND THE MAPPING NODE IS NOT OURS TO BAKE ===================
+
+MEASURED IN THE SHIPPED ARTIFACT, which is the only place this is visible: the
+exporter ALREADY writes the Mapping node adjacent to each texture as
+`KHR_texture_transform` — `scale=[s,s]`, `offset=[0,1-s]` (the offset is glTF's
+V-down origin) — on 57 texture references, even though the Vector never touches a
+UVMap node.  So `co` here stops BEFORE that Mapping and the exporter supplies it.
+Bake it here as well and the town's texture scale is applied TWICE, at s^2, with
+every count-based gate still green.  `--census` prints `exporter_khr_scale` per
+material precisely so it can be diffed against the bundle.
+
+That is also why the flipped branch stores `-x` where Cycles computes `1-x`: they
+are equal modulo 1, and only `-x` survives being multiplied by s afterwards
+(s*(-x) == 1 - s*x (mod 1), while s*(1-x) is a different number).  It therefore
+requires a REPEAT-wrapping sampler, which is asserted against the artifact.
+
+  A HAPPY CONSEQUENCE: because each texture keeps its OWN transform, a material
+  whose textures disagree on scale is no longer a residual.  `emb_dress_ground`
+  (3 textures, 2 scales) is served exactly.
 
 =========================== WHAT IT CANNOT REPRODUCE ===========================
 
 `projection_blend = 0.3` on every BOX material.  Cycles blends up to three
 projections where a normal sits near an axis boundary; ONE UV set is one projection
-and cannot. THE COST IS BOUNDED AND MEASURED, not assumed: `--census` reports the
-share of target area whose face normal is within the blend band.  A face whose
-normal lies ON an axis — which is what a town of boxes, shingles and planks mostly
-is — takes weight 1 on that axis and is reproduced EXACTLY.
+and cannot.  THE COST IS BOUNDED WITHOUT GUESSING CYCLES' BAND WIDTH: `--census`
+reports the share of target area whose face normal is more than 1/5/15/30 degrees
+off its nearest axis.  A face ON an axis takes weight 1 there and is reproduced
+EXACTLY whatever the blend is set to; measured, 91.0% of target area is within 5
+degrees and only 1.5% is more than 30 off.
 
-Two further residuals, both printed by `--census` rather than hidden:
-  * a material whose textures do not share ONE transform cannot be served by one UV
-    layer.  `emb_dress_ground` is the only one (3 textures, 2 scales); the dominant
-    transform wins and the odd map tiles at a measured ratio.
-  * SMOOTH-shaded faces: Cycles picks the axis per shading point from the
-    interpolated normal, this picks it per FACE.  Reported as an area share.
+One further residual, printed rather than hidden: SMOOTH-shaded faces (0.031% of
+area) — Cycles picks the axis per shading point from the interpolated normal, this
+picks it per FACE.
 
 MESH SHARING IS THE STRUCTURAL COST.  A UV layer lives on the MESH; a world-space
 projection is a function of the OBJECT's transform.  Any datablock with more than
@@ -204,8 +222,17 @@ def mapping_apply(n, ob, A, t):
 
 
 def affine_of(tex_node, ob):
-    """Walk back from an Image Texture's Vector input, returning (A, t) with
-    co = A . p_world + t.  Hard-fails on anything it does not understand."""
+    """Walk back from an Image Texture's Vector input, returning (A, t, khr) with
+    co = A . p_world + t.  Hard-fails on anything it does not understand.
+
+    THE MAPPING NODE ADJACENT TO THE TEXTURE IS NOT OURS.  Measured in the shipped
+    bundle: io_scene_gltf2 already exports it as `KHR_texture_transform`
+    (`scale=[s,s]`, `offset=[0,1-s]` — the second term is glTF's V-down origin), on
+    57 texture references, even though the Vector is driven from Geometry>Position.
+    So this stops BEFORE it and returns what the exporter will apply, and the caller
+    verifies that against the artifact.  Baking it here as well would apply the
+    town's texture scale TWICE and nothing in the pipeline would say so.
+    """
     vec = tex_node.inputs["Vector"]
     if not vec.links:
         raise Unsupported("unlinked Vector (already reads the active uv layer)")
@@ -213,6 +240,20 @@ def affine_of(tex_node, ob):
     stack = []
     n = vec.links[0].from_node
     sock = vec.links[0].from_socket.name
+    khr = None
+    if n.type == 'MAPPING':
+        S = const_of(n.inputs['Scale'], ob)
+        L = const_of(n.inputs['Location'], ob)
+        R = const_of(n.inputs['Rotation'], ob)
+        if abs(S.x - S.y) > 1e-6 or L.length > 1e-9 or R.length > 1e-9:
+            raise Unsupported(
+                "adjacent Mapping is not a uniform scale (S=%s L=%s R=%s): a 2D "
+                "KHR_texture_transform cannot express it" % (tuple(S), tuple(L), tuple(R)))
+        khr = (round(S.x, 7), round(S.y, 7))
+        if not n.inputs['Vector'].links:
+            raise Unsupported("adjacent Mapping has an unlinked Vector")
+        sock = n.inputs['Vector'].links[0].from_socket.name
+        n = n.inputs['Vector'].links[0].from_node
     guard = 0
     while guard < 24:
         guard += 1
@@ -265,7 +306,7 @@ def affine_of(tex_node, ob):
                 A, t = A * s, t * s
             else:
                 raise Unsupported("VECT_MATH %s" % op)
-    return A, t
+    return A, t, khr
 
 
 def mat_recipe(mat):
@@ -283,12 +324,17 @@ def mat_recipe(mat):
 # the measured box convention
 # --------------------------------------------------------------------------
 def box_uv(co, n_obj):
+    """The measured convention, with ONE deliberate departure: the flipped branch
+    stores -x where Cycles computes 1-x.  They are equal modulo 1, and only -x
+    survives the exporter's `KHR_texture_transform` scale s -- s*(-x) == 1 - s*x
+    (mod 1), while s*(1-x) is a different number.  The sampler must therefore wrap
+    REPEAT, which is asserted against the artifact."""
     ax = max(range(3), key=lambda i: abs(n_obj[i]))
     if ax == 0:
-        return ((1.0 - co.y) if n_obj.x < 0 else co.y, co.z)
+        return ((-co.y) if n_obj.x < 0 else co.y, co.z)
     if ax == 1:
-        return ((1.0 - co.x) if n_obj.y > 0 else co.x, co.z)
-    return ((1.0 - co.y) if n_obj.z > 0 else co.y, co.x)
+        return ((-co.x) if n_obj.y > 0 else co.x, co.z)
+    return ((-co.y) if n_obj.z > 0 else co.y, co.x)
 
 
 def flat_uv(co, n_obj):
@@ -304,8 +350,16 @@ def textured(o):
 
 
 def targets():
-    return [o for o in bpy.data.objects
-            if o.type == 'MESH' and len(o.data.uv_layers) == 0 and textured(o)]
+    """0 uv layers, or exactly the one THIS tool wrote -- so the carrier is
+    re-runnable and a second run re-derives rather than refusing."""
+    out = []
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not textured(o):
+            continue
+        names = [l.name for l in o.data.uv_layers]
+        if not names or names == [UVNAME]:
+            out.append(o)
+    return out
 
 
 def run():
@@ -345,8 +399,10 @@ def run():
                 continue
             try:
                 maps = []
+                khrs = []
                 for tnode in texs:
-                    A, t = affine_of(tnode, o)
+                    A, t, khr = affine_of(tnode, o)
+                    khrs.append(khr)
                     maps.append((tuple(round(x, 8) for r in A for x in r),
                                  tnode.projection, round(tnode.projection_blend, 6)))
                 votes = collections.Counter(maps)
@@ -362,6 +418,7 @@ def run():
                     "unserved": [texs[i].image.name for i, k in enumerate(maps) if k != win],
                     "proj": sorted(set(c for _, c, _ in maps)),
                     "blend": sorted(set(d for _, _, d in maps)),
+                    "exporter_khr_scale": sorted(set(k for k in khrs if k)),
                 }
             except Unsupported as e:
                 fails[m.name] = str(e)
@@ -446,10 +503,13 @@ def run():
             if m and mat_recipe(m):
                 texs = mat_recipe(m)
                 tn = texs[MATREP.get(m.name, 0)]
-                A, t = affine_of(tn, o)
+                A, t, _khr = affine_of(tn, o)
                 cache[i] = (A, t, tn.projection)
         if not cache:
             continue
+        old = me.uv_layers.get(UVNAME)
+        if old:
+            me.uv_layers.remove(old)
         uv = me.uv_layers.new(name=UVNAME, do_init=False)
         data = uv.data
         co_cache = [M @ v.co for v in me.vertices]
